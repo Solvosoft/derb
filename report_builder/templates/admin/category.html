@@ -1,0 +1,22 @@
+<ul id="ul_subcategories" class="subcategory nav nav-tabs">
+    {% for subcategory in category.subcategories %}
+        <li ondblclick="edit_text_subcategory(this);" {% if forloop.counter == 1 %}class="active" {% endif %}>
+            <button type="button" onclick="delete_category(this);" class="close_category btn"
+                    title="Delete">&times;</button>
+            <a id="categ_{{ subcategory.name }}" class="admin_subcategory" href="#{{ subcategory.name }}"
+               data-toggle="tab" title="{{ subcategory.human_name }}">{{ subcategory.name | truncatechars:20 }}</a>
+        </li>
+    {% endfor %}
+    <li id="end_subcategory" onclick="add_subcategory(this);" class="btn btn-success add_subcategory"
+        title="Add subcategory">
+        <span class="glyphicon glyphicon-plus-sign"></span>
+    </li>
+</ul>
+
+<div id="content_subcategory" class="tab-content">
+    {% for subcategory in category.subcategories %}
+        <div class="subcategory tab-pane {% if forloop.counter == 1 %}active{% endif %}" id="{{ subcategory.name }}">
+            {% include 'admin/sortable_body.html' %}
+        </div>
+    {% endfor %}
+</div>

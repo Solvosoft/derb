@@ -1,21 +1,22 @@
 import ast
+
 import random
 import reversion
-
 from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.utils.datastructures import OrderedDict
 from django.views.defaults import bad_request
 from django.views.generic.base import View
-from django.utils.datastructures import OrderedDict
+
 from report_builder.Observation.ObservationView import ObservationView
-from report_builder.Question.question_loader import process_questions
-from report_builder.models import Question as QuestionModel, Answer
-from report_builder.Question.forms import QuestionForm, AnswerForm
-from report_builder.report_shortcuts import get_question_permission
-from report_builder.shortcuts import transform_request_to_get, get_children, get_reportbyproj_question_answer
-from report_builder.shortcuts import get_report_question
 from report_builder.Question import question_loader
+from report_builder.Question.question_loader import process_questions
+from report_builder.forms import QuestionForm, AnswerForm
+from report_builder.models import Question as QuestionModel, Answer
+from report_builder.report_shortcuts import get_question_permission
+from report_builder.shortcuts import get_report_question
+from report_builder.shortcuts import transform_request_to_get, get_children, get_reportbyproj_question_answer
 
 
 class Question(View):

@@ -1,0 +1,15 @@
+<div class="col-md-offset-1 col-md-7 report_form">
+    <form id="report_form" action="{% url 'report_builder:admin_save_report' report.pk %}" method="post"
+          class="form-inline">
+        {% csrf_token %}
+        {{ form.as_p }}
+    </form>
+    <br/>
+    <button type="submit" class="btn btn-info pull-right" onclick="save_all_questions();">
+        <span class="glyphicon glyphicon-save">Save report</span>
+    </button>
+</div>
+
+<script>
+    $('input, select').addClass('form-control');
+</script>

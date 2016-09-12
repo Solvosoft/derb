@@ -1,0 +1,60 @@
+{% extends 'derb/base.html' %}
+{% load static %}
+
+{% block title %}Report template management{% endblock %}
+
+{% block header_js %}
+    <script src="{% static 'report_builder/js/derb_subcomponents/report_save.js' %}"></script>
+    <script src="{% static 'report_builder/ckeditor/ckeditor.js' %}"></script>
+{% endblock %}
+
+{% block main_block %}
+    <div class="row" id="derb_report">
+        {% include 'admin/report_form.html' %}
+    </div>
+
+    {# CATEGORIES #}
+    <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
+        <div class="container-fluid">
+            <ul id="ul_categories" class="nav nav-pills">
+                {% for category in categories %}
+                    <li {% if forloop.counter == 1 %}class="active"{% endif %} ondblclick="edit_text_category(this);">
+                        <button type="button" onclick="delete_category(this);" class="close_category btn"
+                                title="Delete">&times;</button>
+                        <a id="categ_{{ category.name }}" href="#{{ category.name }}" data-toggle="tab"
+                           title="{{ category.human_name }}"
+                           class="admin_category">{{ category.name | truncatechars:20 }}</a>
+                    </li>
+                {% endfor %}
+                <li id="end_categories" class="btn btn-success add_category_subcategory" onclick="add_category();" title="Add category">
+                    <span class="glyphicon glyphicon-plus-sign"></span>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    {# CATEGORIES BODY #}
+    <div class="row">
+        <div id="category_content" class="col-md-9 tab-content">
+            {% for category in categories %}
+                <div class="category tab-pane {% if forloop.counter == 1 %}active{% endif %}" id="{{ category.name }}">
+                    {% include 'admin/category.html' %}
+                </div>
+            {% endfor %}
+        </div>
+
+        {# FLOATING PALETTE #}
+        {% include 'admin/palette.html' %}
+    </div>
+
+    {% include 'admin/dialogs/categories_modal.html' %}
+    {% include 'admin/dialogs/categories_delete_modal.html' %}
+    {% include 'admin/dialogs/question_delete_modal.html' %}
+
+{% endblock %}
+
+{% block body_js %}
+  <script src="{% url 'report_builder:js_ckeditor_config' %}"></script>
+  <script src="{% static  'report_builder/js/derb/report_loader.js' %}"></script>
+  <script src="{% static 'report_builder/js/derb/derb_admin.js' %}"></script>
+{% endblock %}

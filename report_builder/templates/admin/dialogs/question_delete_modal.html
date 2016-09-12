@@ -1,0 +1,25 @@
+<div class="modal fade" id="question_delete_modal" tabindex="-1" role="dialog" aria-labelledby="question_delete_modal"
+     aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="question_delete_modal">Are you sure you want to delete?</h4>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger">
+          This operation is irreversible <br>
+          <strong>Note: All of the children questions will be deleted</strong>
+        </div>
+        <h3>This content will be deleted:</h3>
+        text <!-- TODO -->
+        <br><br>
+        <strong>Note: </strong>you must save the report, for this change to take effect
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="delete_question_admin('id_name');">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

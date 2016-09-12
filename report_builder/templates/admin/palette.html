@@ -1,0 +1,45 @@
+{# TODO #}
+<div class="col-md-3 floating-palette">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <button type="button" class="close" title="Minimize/Maximize" onclick="$('#palette_body').toggle();">
+                <span class="glyphicon glyphicon-resize-small"></span>
+            </button>
+            <h3 class="panel-title">Toolbar</h3>
+        </div>
+        <div id="palette_body" class="panel-body">
+            <ul class="nav nav-tabs" id="palette_tab">
+                <li class="active"><a href="#question_palette" data-toggle="tab">Questions</a></li>
+                <li><a href="#config_palette" data-toggle="tab">Configuration</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="question_palette" class="tab-pane in active">
+                    <ul class="list-group sorteable_palette">
+                        {% for name, value in palette.items %}
+                            <li orden="{{ forloop.counter0 }}" class="list-group-item palette_item"
+                                id="palette_{{ name }}" url="{% url 'admin_processing' 'admin' name report.pk %}"
+                                style="background-color: {{ value.color }}">
+                                <span title="{{ valor.help }}" class="question_admin_palette">{{ value.human_name }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div id="palette_config" class="tab-pane fade text-center">
+                    <div class="row">
+                        <span class="info">Report type: <strong>{{ report.type }}</strong></span>
+                    </div>
+                    <hr/>
+                    <button type="submit" class="btn btn-info" onclick="save_all_questions();">
+                        <span class="glyphicon glyphicon-save"></span>Save report
+                    </button>
+                </div>
+            </div>
+
+            <button type="button" class="close btn btn-sm" title="Minimize/Maximize" onclick="$('#palette_body').toggle();">
+                <span class="glyphicon glyphicon-resize-small"></span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -8,3 +8,8 @@ urlpatterns = [
     url(r'^accounts/', include('registration.backends.hmac.urls')),
     url(r'^password_recovery/', include('password_reset.urls')),
 ]
+
+# DEPENDENCIES URLS
+urlpatterns += [
+    #url(r'^ckeditor/', include('ckeditor.urls'))
+]

@@ -107,7 +107,7 @@ class InitialTemplateAdminView(ListView):
         context = super(InitialTemplateAdminView, self).get_context_data(**kwargs)
         new_object_list = []
         for report in context['object_list']:
-            open_reports = (report, report.opening_date > datetime.datime.now().date())
+            open_reports = (report, report.opening_date > datetime.datetime.now().date())
             new_object_list.append(open_reports)
         context['object_list'] = new_object_list
         return context
@@ -119,6 +119,7 @@ class NewReportView(CreateView):
         Takes advantage of the generic view for creating objects
     '''
     model = Report
+    fields = ('type', 'name', 'opening_date')
     template_name = 'initials/new_report.html'
 
     def get_success_url(self):
@@ -129,7 +130,7 @@ class NewReportView(CreateView):
         return reverse('report_admin', args=[self.object.id])
 
 
-def NewTemplateReportView(request, pk):
+def NewReportTemplate(request, pk):
     '''
          TODO: docstring
     '''
@@ -168,7 +169,7 @@ class InitialResponsableView(ListView):
         collaborators of the project. Takes advantage of the Django generic view for object creation
     '''
     template_name = 'initials/initial_responsable.html'
-    all_reports = False     # Only the current reports
+    all_reports = False  # Only the current reports
 
     def get_queryset(self):
         '''
