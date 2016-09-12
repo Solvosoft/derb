@@ -1,0 +1,27 @@
+<script>
+    $(document).ready(function () {
+        $('#table_responsable_reports').dataTable({
+            "sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sEmptyTable": "No reports created",
+                "sLengthMenu": "Show_MENU_ elements by page",
+                "sZeroRecords": "No hay informes que coincidan con los criterios de búsqueda",
+                "sInfo": "Showing _END_ of _TOTAL_ elements",
+                "sInfoFiltered": "(Filtered of _MAX_ records)",
+                "sInfoEmpty": "No reports to show",
+                "sSearch": "Search:",
+                "oPaginate": {
+                    "sFirst": "<<",
+                    "sLast": ">>",
+                    "sNext": ">",
+                    "sPrevious": "<"
+                }
+            }
+        });
+        $("div.dataTables_filter input, div.dataTables_length select").addClass("form-control");
+    });
+    $('.btn-all-current').click(function () {
+        var btn = $(this);
+        btn.button('loading');
+    });
+</script>
