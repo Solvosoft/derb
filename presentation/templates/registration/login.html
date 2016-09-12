@@ -1,0 +1,12 @@
+{% extends 'derb/base.html' %}
+
+{% block main_block %}
+    <h1>Login</h1>
+
+    <form method="post" action="{% url 'auth_login' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Log in">
+    </form>
+    <a href="{% url 'registration_register' %}">Sign up</a>
+{% endblock %}

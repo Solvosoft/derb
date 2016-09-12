@@ -1,0 +1,7 @@
+{% extends "derb/base.html" %}
+{% load i18n %}
+
+{% block main_block %}
+<h4>{% trans "Logged out" %}</h4>
+<a href="{% url 'auth_login' %}"><strong>Login</strong></a>
+{% endblock %}

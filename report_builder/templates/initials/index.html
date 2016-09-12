@@ -1,0 +1,48 @@
+{% extends 'derb/base.html' %}
+
+{# TITLE #}
+{% block title %}Derb | Django Enterprise Report Builder{% endblock %}
+
+{# TODO: FAVICON #}
+{% block favicon %}
+    <link rel="icon" href="{% static 'admin/img/icon-alert.svg' %}" type="image/svg"/>
+    <link rel="shorcut icon" href="{% static 'admin/img/icon-alert.svg' %}"/>
+{% endblock %}
+
+{% block header_js %}
+    {# TODO: jquery.dataTables.css #}
+{% endblock %}
+
+{% block body_js %}
+    {# TODO: jquery.dataTables.min.js #}
+{% endblock %}
+
+{% block main_block %}
+    <div class="row">
+        <div class="panel-group col-md-10 col-md-offset-1" id="accordion">
+            {% for view in views %}
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#a_{{ forloop.counter }}">
+                                {{ view.title }}
+                            </a>
+                        </h3>
+                    </div>
+                    <div id="#a_{{ forloop.counter }}"
+                         class="panel-collapse collapse {% if forloop.counter == 1 %}in{% endif %}">
+                        <div class="panel-body">
+                            {{ view.content | safe }}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="well col-md-10 col-md-offset-1 text-center">
+                    <h1><small>Sorry, currently you don't have any funcionality in the system.</small></h1>
+                    <br/>
+                    <p class="text-danger">If you have any question, ask the administrator.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

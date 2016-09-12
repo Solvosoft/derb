@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {# METADATA #}
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta charset="UTF-8">
+
+    {# TITLE #}
+    <title>Derb | {% block title %}Django Enterprise Report Builder{% endblock %}</title>
+
+    {# TODO: FAVICON #}
+    {% block favicon %}
+        <link rel="icon" href="{% static 'admin/img/icon-alert.svg' %}" type="image/svg"/>
+        <link rel="shorcut icon" href="{% static 'admin/img/icon-alert.svg' %}"/>
+    {% endblock %}
+
+    {# CSS #}
+    <link rel="stylesheet" href="{% static 'report_builder/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'report_builder/css/bootstrap-theme.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'report_builder/css/derb.css' %}"/>
+    <link rel="stylesheet" href="{% static 'report_builder/css/jquery-ui.css' %}"/>
+    {% block css %}
+    {% endblock %}
+
+    {# Javascript #}
+    <script src="{% static 'report_builder/js/jquery.min.js' %}"></script>
+    <script src="{% static 'report_builder/js/jquery-ui.min.js' %}"></script>
+    {% block header_js %}
+    {% endblock %}
+</head>
+<body>
+{# Nav Bar #}
+{% include 'derb/components/navbar.html' %}
+
+<div class="container" id="id_contents">
+    <div id="messages" class="derb_alert">
+        <ul id="message_queue"></ul>
+    </div>
+    {% block main_block %}{% endblock %}
+</div>
+
+{# Footer #}
+{% include 'derb/components/footer.html' %}
+
+<script src="{% static 'report_builder/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'report_builder/js/derb.js' %}"></script>
+<script src="{% static 'report_builder/js/derb_datepicker.js' %}"></script>
+{% block body_js %}
+{% endblock %}
+</body>
+</html>
