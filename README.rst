@@ -5,7 +5,7 @@ Derb
 
 Documentation_.
 
-.. Documentation: http://derb.readthedocs.io/en/latest/
+.. _Documentation: http://derb.readthedocs.io/en/latest/
 
 Installation 
 ''''''''''''''
@@ -22,7 +22,7 @@ Installation
 
 Postgres is a requirement, because we use JSONField_.
 
-.. JSONField: https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#django.contrib.postgres.fields.JSONField
+.. _JSONField: https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#django.contrib.postgres.fields.JSONField
 
 **Install requirements (require python3-dev for compilation)**
 
