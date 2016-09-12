@@ -119,7 +119,6 @@ class NewReportView(CreateView):
         Takes advantage of the generic view for creating objects
     '''
     model = Report
-    fields = ('type', 'name', 'opening_date')
     template_name = 'initials/new_report.html'
 
     def get_success_url(self):
