@@ -26,6 +26,10 @@ Postgres is a requirement, because we use JSONField_.
 
 **Install requirements (require python3-dev for compilation)**
 
+.. code:: bash
+
+	apt-get install python3-dev
+
 Install rabbitmq-server for send emails notifications
 
 .. code:: bash
