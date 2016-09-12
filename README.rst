@@ -1,21 +1,27 @@
-# Derb #
+Derb 
+=========
 
-### Work in progress ###
+**Work in progress**
 
-## Installation 
+[Documentation](http://derb.readthedocs.io/en/latest/)
 
-* clone the repository
+
+Installation 
+''''''''''''''
+
+
+**Clone the repository**
 
 .. code: bash
 
 	git clone https://github.com/solvo/derb.git
 	cd derb
 
-* Set up postgres database (require libpq-dev for psycopg2 compillation)
+**Set up postgres database (require libpq-dev for psycopg2 compillation)**
 
 Postgres is a requirement, because we use [JSONField](https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#django.contrib.postgres.fields.JSONField)
 
-* Install requirements (require python3-dev for compilation)
+**Install requirements (require python3-dev for compilation)**
 
 Install rabbitmq-server for send emails notifications
 
