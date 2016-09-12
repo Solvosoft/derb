@@ -1,1 +1,75 @@
-{# TODO #}
+<div id="message" class="hide">
+    <div class="alert alert-danger alert-dismissable fade in">
+        <button type="button" class="close" onclick="$('#message').addClass('hide')">&times;</button>
+        <strong>Atention:</strong> you cannot edit a report template that's already open
+    </div>
+</div>
+
+<div class="modal fade" id="new_with_template" tabindex="-1" role="dialog" aria-labelledby="new_template_modal"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="new_template_modal">Select a report template</h4>
+            </div>
+            <div class="modal-body form-inline">
+                <div class="alert alert-info">Please select the template you want to use to create a new one</div>
+                Report:
+                <select class="form-control" id="modal_select_new"
+                        onchange="new_report_template('{% url "report_builder:new_report_template" 0 %}');">
+                    {% for report in object_list %}
+                        <option value="{{ report.0.pk }}">{{ report.0.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
+                <a type="button" href="
+
+                        {% if object_list %}{% url 'report_builder:new_report_template' object_list.0.0.pk %}{% else %}#{% endif %}"
+                   class="btn btn-primary" id="new_report_template">Accept</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="well text-center">
+    <div id="div_table_admin_reports">
+        <table id="table_admin_reports">
+            <thead>
+            <tr>
+                <th class="text-center">Name</th>
+                <th class="text-center">Type</th>
+                <th class="text-center">Opening date</th>
+                <th class="text-center">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for report in object_list %}
+                <tr>
+                    <td>{{ report.0.name }}</td>
+                    <td>{{ report.0.type }}</td>
+                    <td>{{ report.0.opening_date }}</td>
+                    <td>
+                        {% if report.1 %}
+                            <a href="{% url 'report_builder:report_admin' report.0.pk %}">Edit</a>
+                        {% else %}
+                            <a href="#accordion" onclick="$('#message').removeClass('hide');">Edit</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <br><br><br>
+    <button class="btn btn-default text-center" onclick="$('#new_with_template').modal();">
+        Create new report from existing template
+    </button>
+    <a class="btn btn-default text-center" href="{% url 'report_builder:new_empty_report' %}">
+        Create new empty report
+    </a>
+</div>
+
+{% include 'initials/components/table_admin_report_js_handler.html' %}

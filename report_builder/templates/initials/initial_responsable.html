@@ -1,1 +1,62 @@
-{# TODO #}
+{% load project_tags %}
+
+<div class="well text-center" id="div_table_responsable_reports">
+    <div class="form-inline">
+        <table id="table_responsable_reports">
+            <thead>
+            <tr>
+                <th class="text-center">Project code</th>
+                <th class="text-center">Project name</th>
+                <th class="text-center">Organization</th>
+                <th class="text-center">Project validity</th>
+                <th class="text-center">Status</th>
+                <th class="text-center">Revision</th>
+                <th class="text-center">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for element in object_list %}
+                {{ element.report | get_project }}
+                <tr>
+                    <td>{{ element.report.projects.project_code }}</td>
+                    <td>{{ element.report.projects.project_name }}</td>
+                    <td>{{ element.report.projects.organization }}</td>
+                    <td>{{ element.report.opening_date }} - {{ element.report.submit_date }}</td>
+                    <td>{{ element.report.get_state_display }}</td>
+                    <td>
+                        {% include 'initials/components/reviewer_action_modal.html' %}
+                        <a href="#accordion">
+                            <div class="progress progress-striped" data-toggle="modal"
+                                 data-target="#mod_{{ element.report.pk }}" title="Click for details">
+                                <div class="progress-bar" role="progressbar"
+                                     aria-valuenow="{{ element.report.review_percentage }}" aria-valuemin="0"
+                                     aria-valuemax="100" style="width: {{ element.report.review_percentage }}%;">
+                                    <span class="text-danger">{{ element.report.review_percentage }}%</span>
+                                </div>
+                            </div>
+                        </a>
+                    </td>
+                    {% if element.report.state != 1 amd element.report.state != 4 %}
+                        {% if element.type == 'responsable' %}
+                            <td><a href="{% url 'report_builder:report_responsable' %}">Go to report</a></td>
+                        {% else %}
+                            <td><a href="{% url 'report_builder:report_reviewer' %}">Go to report</a></td>
+                        {% endif %}
+                    {% else %}
+                        <td>---</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <br><br><br>
+    {% if not all_reports %}
+        <a class="btn btn-default btn-all-current" data-loading-text="Loading all reports..."
+           onclick="show_reports('{% url "report_builder:previous_reports_responsable" %}');">Show all reports</a>
+    {% else %}
+        <a class="btn btn-default" data-loading-text="Loading current reports..." onclick="show_reports('{% url "report_builder:initial_responsable" %}');">Show only current reports</a>
+    {% endif %}
+</div>
+
+{% include 'initials/components/table_responsable_reports_js_handler.html' %}

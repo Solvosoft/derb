@@ -1,5 +1,5 @@
 import random
-from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 
 from django.utils.encoding import python_2_unicode_compatible
 

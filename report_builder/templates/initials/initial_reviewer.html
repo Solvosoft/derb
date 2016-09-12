@@ -22,7 +22,7 @@
                     <td>{{ report.projects.organization }}</td>
                     <td>{{ report.start_date }} - {{ report.submit_date }}</td>
                     <td>
-                        {# TODO: include modal_action #}
+                        {% include 'initials/components/reviewer_action_modal.html' %}
                         <a href="#accordion">
                             <div class="progress progress-striped" data-toggle="modal"
                                  data-target="#mod_{{ report.pk }}" title="Click for details">
@@ -41,6 +41,5 @@
         </table>
     </div>
 </div>
-<script>
-    {# TODO: jQuery.dataTable processing #}
-</script>
+
+{% include 'initials/components/table_reviewer_reports_js_handler.html' %}

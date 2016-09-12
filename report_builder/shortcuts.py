@@ -105,8 +105,8 @@ def copy_report(report):
     today = datetime.date.today()
     tomorrow = today + datetime.timedelta(days=1)
     new = Report.objects.create(type=report.type, name=report.name + '_copy', opening_date=tomorrow)
-    question_list = []
     global question_list
+    question_list = []
 
     questions = {}
     for quest in report.questions:
