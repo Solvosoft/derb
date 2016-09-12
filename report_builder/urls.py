@@ -1,5 +1,7 @@
 from django.conf.urls import url
+
 from report_builder import views
+
 from report_builder import initial_views as init
 
 urlpatterns = [
