@@ -1,1 +1,41 @@
-{# TODO #}
+{% extends 'derb/base.html' %}
+{% load static %}
+
+{% block title %}New report template{% endblock %}
+
+{# TODO: FAVICON #}
+{% block favicon %}
+    <link rel="icon" href="{% static 'admin/img/icon-alert.svg' %}" type="image/svg"/>
+    <link rel="shorcut icon" href="{% static 'admin/img/icon-alert.svg' %}"/>
+{% endblock %}
+
+{% block main_block %}
+    <div class="col-md-5 col-md-offset-4">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title text-center">New report template</h3>
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-info text-center">
+                    Please fill the required information. You will be automatically redirected to the report's question
+                    definition page
+                </div>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <table class="table-condensed">
+                        {{ form.as_table }}
+                    </table>
+                    <input class="btn btn-info pull-right" type="submit" value="Create" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $('input[type=text], select').addClass('form-control');
+    </script>
+{% endblock %}
+
+{% block body_js %}
+    <script src="{% static 'report_builder/js/derb_subcomponents/new_report.js' %}"></script>
+{% endblock %}
