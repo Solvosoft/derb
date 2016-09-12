@@ -113,6 +113,96 @@ function save_form(question_id, async, display_alert) {
     });
 }
 
-function save_answer() {
+function save_answer(element) {
+    form = $(element).closest('form');
+    no_pk = form.attr('id').charAt(form.attr('id').length - 1) == '_';
+    $.ajax({
+        type: 'POST',
+        url: form.attr('action'),
+        data: form.serialize(),
+        error: function (jqXHR, textStatus, errorThrown) {
+            django_ajax_alert(jqXHR);
+        },
+        success: function (data) {
+            if ($.isNumeric(data)) {
+                if (no_pk) {
+                    form.attr('action', form.attr('action') + data);
+                    form.attr('id', form.attr('id') + data);
+                }
+            } else {
+                var parent = form.parent();
+                parent.html('');
+                parent.before(data);
+                parent.remove();
+            }
+        }
+    });
+}
 
+function clean_table_modal() {
+    table_modal = $('#id_table_body_modal');
+    table_modal.find('input').removeAttr('value');
+    table_modal.find('textarea').text('');
+    table_modal.find('input').removeAttr('checked');
+    table_modal.find('option').removeAttr('selected');
+}
+
+function save_table_answer(element) {
+    form = $(element).closest('form');
+
+    $.ajax({
+        type: 'POST',
+        url: form.attr('action'),
+        data: form.serialize(),
+        error: function (jqXHR, textStatus, errorThrown) {
+            django_ajax_alert(jqXHR);
+        },
+        success: function (data) {
+            $('#modal_add').modal('hide');
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+            var parent = form.parent();
+            parent.replaceWith(data);
+        }
+    });
+}
+
+function edit_table(element, url) {
+    form = $(element).closest('form');
+    $.ajax({
+        type: 'GET',
+        url: url,
+        error: function (jqXHR, textStatus, errorThrown) {
+            django_ajax_alert(jqXHR);
+        },
+        success: function (data) {
+            $('#modal_add').modal('hide');
+            $('body').removeClass('modal-open')
+            $('.modal-backdrop').remove();
+            var parent = form.parent();
+            parent.html(data);
+        }
+    });
+}
+
+function save_notes(element, url) {
+    text = $(element).val();
+    form = $(element).closest('form');
+    no_pk = form.attr('id').charAt(form.attr('id').length - 1) == '_';
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        error: function (jqXHR, textStatus, errorThrown) {
+            django_ajax_alert(jqXHR);
+        },
+        success: function (data) {
+            if ($.isNumeric(data)) {
+                if (no_pk) {
+                    form.attr('action', form.attr('action') + data);
+                    form.attr('id', form.attr('id') + data);
+                }
+            }
+        }
+    });
 }

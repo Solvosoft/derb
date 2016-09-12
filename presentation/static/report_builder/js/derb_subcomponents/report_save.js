@@ -210,9 +210,79 @@ function save_questions() {
             for (var z = 0; z < question_li.length; z++) {
                 var question_div = $(question_li[z]).find('.question_panel')[0];
                 if (question_div != undefined) {
-                    
+
                 }
             }
         }
     }
+}
+
+function save_all_questions() {
+    saving = true;
+    categories = [];
+    save_ckeditor();
+
+    var save_inmediatly = true;
+    for (var q = 0; q < question_pool.length; q++) {
+        question_pool[q].saving = true;
+    }
+
+    for (var q = 0; q < question_pool.length; q++) {
+        if (question_pool[q].saving) {
+            if (question_pool[q].state == 0 || question_pool[q].pk == -1) {
+                if ($('#' + question_pool[q].html_id).length != 0) {
+                    save_inmediatly = false;
+                    save_form(question_pool[q].html_id, true, false);
+                } else {
+                    remove(question_pool[q].html_id);
+                }
+            }
+        }
+    }
+    if (save_inmediatly) {
+        save_questions();
+    }
+}
+
+function set_modified_question(id) {
+    var question_id = get_question_from_pool(id);
+    if (question_id != undefined) {
+        question_pool[question_id].state = 0;
+    }
+}
+
+function save(id, pk) {
+    var question_id = get_question_from_pool(id);
+    if (question_id != undefined) {
+        question_pool[question_id].state = 1;
+        question_pool[question_id].pk = pk;
+        var keep_going = true;
+        if (saving) {
+            for (var q = 0; q < question_pool.length && keep_going; q++) {
+                if (question_pool[q].state == 0) {
+                    keep_going = false;
+                }
+            }
+            if (keep_going) {
+                save_questions();
+            }
+        }
+    }
+}
+
+function remove(id) {
+    var question_id = get_question_from_pool(id);
+    var parent = $('#' + id).closest('#questions').closest('.question_panel').attr('id');
+    set_modified_question(parent);
+    if (question_id != undefined) {
+        question_pool.splice(question_id, 1);
+        var children = $('#' + id).find('.question_panel');
+        for (var c = 0; c < children.length; c++){
+            remove($(children[c].attr(id)));
+        }
+    }
+}
+
+function save_report() {
+    save_all_questions();
 }
