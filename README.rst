@@ -13,7 +13,7 @@ Installation
 
 **Clone the repository**
 
-.. code: bash
+.. code:: bash
 
 	git clone https://github.com/solvo/derb.git
 	cd derb
@@ -28,7 +28,7 @@ Postgres is a requirement, because we use JSONField_.
 
 Install rabbitmq-server for send emails notifications
 
-.. code: bash
+.. code:: bash
 
 	apt-get install rabbitmq-server
 
@@ -38,7 +38,7 @@ Install rabbitmq-server for send emails notifications
 
 * Run migrations
 
-.. code: bash
+.. code:: bash
 	
 	python manage.py migrate
 
@@ -46,12 +46,13 @@ Install rabbitmq-server for send emails notifications
 
 First run in separated terminal an email client 
 
-.. code: bash
+.. code:: bash
 
 	python -m smtpd -n -c DebuggingServer localhost:1025
 
 Then run in the other terminal 
 
-.. code: bash
+.. code:: bash
 
 	python manage.py runserver
+
