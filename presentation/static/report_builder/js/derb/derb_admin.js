@@ -193,17 +193,57 @@ function do_sortable() {
     });
 }
 
+function delete_question_admin(question_ids) {
+    var ids = question_ids.split(',');
+    var id = '#' + ids[0];
+    var li = $(id).closest('li');
+    var ul = li.closest('ul');
 
+    for (var x = ids.length - 1; x >= 0; x--) {
+        remove(ids[x]);
+        $('#' + ids[x]).remove();
+    }
 
+    li.remove();
+    if (ul.children().length == 0) {
+        ul.append('<li class="list-group-item">Drag and drop your questions here</li>')
+    }
+}
 
+function delete_question(button) {
+    var question = $(button).closest('.question_panel');
+    var dialog = $('#delete_question_modal').clone();
+    var forms = question.find('form');
+    var text = '<ul>';
+    var question_id = '$';
 
+    for (var x = 0; x < forms.length; x++) {
+        var value = $($(forms[x]).find('#id_text')[0]).val();
+        if (value == undefined || value == '') {
+            value = 'Unnamed question';
+        }
+        text += '<li>' + value + '</li>';
+        question_id += ',' + $(forms[x]).closest('.question_panel').attr('id');
+    }
+    question_id = question_id.replace('$,', '');
+    text += '</ul>';
 
+    var html = dialog.html().replace(/text/gi, text).replace(/id_name/gi, question_id);
+    dialog.html(html);
+    dialog.modal('show').bind('closed.bs.alert', function () {
+        this.remove();
+    });
+}
 
+function sort_categories() {
+    $('#ul_categories').sortable({
+        connectWith: '#ul_categories',
+        cancel: '#end_categories'
+    });
+}
 
-
-
-
-
-
-
-
+function sort_subcategories() {
+    $('.subcategory').sortable({
+        connectWith: '.subcategory'
+    });
+}
