@@ -1,6 +1,6 @@
-from report_builder.models import QuestionInfoRelation
+#from report_builder.models import QuestionInfoRelation
 
-
+'''
 def get_question_with_permission(questions, parent):
     try:
         question = questions[parent]
@@ -8,8 +8,9 @@ def get_question_with_permission(questions, parent):
         relation = QuestionInfoRelation.objects.filter(question__pk=parent)
         question = get_question_with_permission(questions, relation[0].parent_question.pk)
     return question
+'''
 
-
+'''
 def get_question_permission(question):
     """
         TODO: docstring
@@ -26,3 +27,7 @@ def get_question_permission(question):
             else:
                 return_value = questions[parent]['required']
     return return_value
+'''
+
+def get_question_permission(question):
+    pass
