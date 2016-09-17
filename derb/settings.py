@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'report_builder',
     'presentation',
     'password_reset',
-    'async_notifications'
+    'async_notifications',
+    'django_wysiwyg',
+    'ckeditor'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -151,3 +153,8 @@ CELERYBEAT_SCHEDULE = {
         'schedule': crontab(minute=30, hour=0),
     },
 }
+
+# If you wish to use CKEditor set the flavor in settings.py:
+DJANGO_WYSIWYG_FLAVOR = "ckeditor"
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
