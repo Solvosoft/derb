@@ -162,3 +162,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 STATIC_ROOT = os.path.join(BASE_DIR, 'media/')
 
 CKEDITOR_UPLOAD_PATH = "media/"
+
+CKEDITOR_CONFIGS = {
+    'basic_ckeditor': {
+        'toolbar': 'Basic',
+    },
+}

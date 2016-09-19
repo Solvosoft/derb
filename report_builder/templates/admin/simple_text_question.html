@@ -1,5 +1,12 @@
 {% extends 'derb/base.html' %}
 
+{% load static %}
+
+{% block body_js %}
+  <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+  <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+{% endblock %}
+
 {% block main_block %}
 
   <div class="panel panel-default">
