@@ -1,0 +1,41 @@
+{% extends 'derb/base.html' %}
+
+{% block main_block %}
+
+{% load wysiwyg %}
+
+{% wysiwyg_setup %}
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Simple text question (administrator)
+	</div>
+	<div class="panel-body">
+		{% csrf_token %}
+		{{form.as_p}}
+		{% wysiwyg_editor "foo" %}
+		<div class="modal-footer">
+			<button type="submit" class="btn btn-primary">
+				Submit
+			</button>
+		</div>
+
+		<div class="col-md-3" style="background-color: #DFDCDC">
+
+			<button type="button" class="btn btn-primary">
+				See/Hide
+			</button>
+			<button type="button" class="btn btn-danger">
+				Delete
+			</button>
+			<button type="button" class="btn btn-success">
+				#
+			</button>
+		</div>
+	</div>
+
+	<!-- div buttons -->
+
+</div>
+
+</div>
+{% endblock %}
