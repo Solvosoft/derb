@@ -164,7 +164,38 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'media/')
 CKEDITOR_UPLOAD_PATH = "media/"
 
 CKEDITOR_CONFIGS = {
-    'basic_ckeditor': {
-        'toolbar': 'Basic',
+    'default': {
+        'toolbar': 'Full',
+        'height': 300,
+        'width': 600,
     },
+    'basico': {
+        'toolbar': 'Basic',
+        'height': 200,
+        'width': 600,
+        "toolbar_Basic": [['Source', '-', 'Save', 'NewPage', 'DocProps', 'Preview', 'Print', '-', 'Templates'],
+                          ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],
+                          ['Find', 'Replace', '-', 'SelectAll', '-', 'SpellChecker', 'Scayt'],
+                          ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
+                           'HiddenField'],
+                          ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
+                          ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv',
+                           '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr',
+                           'BidiRtl'],
+                          ['Link', 'Unlink', 'Anchor'],
+                          ['Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],
+                          ['Styles', 'Format', 'Font', 'FontSize'],
+                          ['TextColor', 'BGColor'],
+                          ['Maximize', 'ShowBlocks', '-', 'About']],
+        "language": "en",
+        "skin": "moono",
+    },
+    'vacio': {
+        'toolbar': 'Basic',
+        'height': 200,
+        'width': 500,
+        "toolbar_Basic": [],
+        "language": "en",
+        "skin": "moono",
+    }
 }

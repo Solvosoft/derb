@@ -37,8 +37,8 @@ class SimpleTextQuestionForm(forms.ModelForm):
         model = Question
         fields = ('text', 'help', 'id')
         widgets = {
-            'text': CKEditorWidget(config_name='basic_ckeditor'),
-            'help': CKEditorWidget(config_name='basic_ckeditor')
+            'text': CKEditorWidget(config_name='default'),
+            'help': CKEditorWidget(config_name='default')
         }
 
 class AnswerForm(forms.ModelForm):
