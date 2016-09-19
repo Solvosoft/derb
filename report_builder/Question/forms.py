@@ -5,6 +5,8 @@ from django.utils.translation import ugettext as _
 from report_builder.models import Question, Answer
 from report_builder.report_shortcuts import get_question_permission
 
+from ckeditor.widgets import CKEditorWidget
+
 
 class QuestionForm(forms.ModelForm):
     children = forms.CharField
@@ -26,29 +28,18 @@ class QuestionForm(forms.ModelForm):
             })
         }
         exclude = ('order',)
-        
+
 
 class SimpleTextQuestionForm(forms.ModelForm):
-    children = forms.CharField
+    children = forms.CharField(max_length=512)
 
     class Meta:
         model = Question
         fields = ('text', 'help', 'id')
         widgets = {
-            'text': forms.Textarea(attrs={
-                'rows': 6,
-                'placeholder': 'Write your question here',
-                'class': 'ckeditor'
-            }),
-            'help': forms.Textarea(attrs={
-                'cols': 80,
-                'rows': 5,
-                'placeholder': 'A little help never hurts',
-                'class': 'ckeditor'
-            })
+            'text': CKEditorWidget(),
+            'help': CKEditorWidget()
         }
-        exclude = ('order','required')
-
 
 class AnswerForm(forms.ModelForm):
     """
@@ -67,13 +58,13 @@ class AnswerForm(forms.ModelForm):
         fields = ('annotation', 'text')
         widgets = {
             'annotation': forms.Textarea(attrs={
-                'id':'foo',
+                'id': 'foo',
                 'rows': 9,
                 'placeholder': 'Annotations',
                 'class': 'form-control'
             }),
             'text': forms.Textarea(attrs={
-                'id':'foo',
+                'id': 'foo',
                 'rows': 6,
                 'placeholder': 'Write here your answer',
                 'class': 'form-control'
