@@ -434,3 +434,64 @@ function show_related_numeric_question(element, id) {
         }
     }
 }
+
+function get_active_tab() {
+    var active_category = $('#ul_categories').find('.active');
+    var category_id = active_category.find('a').attr('href');
+    var prev_category = active_category.prev();
+    var next_category = active_category.next();
+    var active_subcategory = $(category_id + ' #ul_subcategories .active');
+    var prev_subcategory = active_subcategory.prev();
+    var next_subcategory = active_subcategory.next();
+
+    return {
+        'active_category': active_category,
+        'prev_category': prev_category,
+        'next_category': next_category,
+        'active_subcategory': active_subcategory,
+        'prev_subcategory': prev_subcategory,
+        'next_subcategory': next_subcategory
+    }
+}
+
+function next_tab() {
+    var tab = get_active_tab();
+
+    if (tab.next_subcategory.length > 0) {
+        tab.next_subcategory.find('a').click();
+        $('body').animate({
+            scrollTop: $('#category_content').offset().top
+        }, 'slow');
+        $('#previous_button').removeClass('disabled');
+    } else {
+        if (tab.next_category.length > 0 && tab.next_category.attr('id') != 'buttons') {
+            tab.next_category.find('a').click();
+            $('body').animate({
+                scrollTop: $('#category_content').offset().top
+            }, 'slow');
+        } else {
+            $('#next_button').addClass('disabled');
+        }
+    }
+}
+
+function prev_tab() {
+    var tab = get_active_tab();
+
+    if (tab.prev_subcategory.length > 0) {
+        tab.prev_subcategory.find('a').click();
+        $('body').animate({
+            scrollTop: $('#category_content').offset().top
+        }, 'slow');
+        $('#next_button').removeClass('disabled');
+    } else {
+        if (tab.prev_category.length > 0 && tab.prev_category.attr('id') != 'buttons') {
+            tab.prev_category.find('a').click();
+            $('body').animate({
+                scrollTop: $('#category_content').offset().top
+            }, 'slow');
+        } else {
+            $('#previous_button').addClass('disabled');
+        }
+    }
+}
