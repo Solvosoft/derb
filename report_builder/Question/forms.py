@@ -63,11 +63,16 @@ class AnswerForm(forms.ModelForm):
 
 #Unique_Selection_Question
 class UniqueSelectionForm(QuestionForm):
+    catalogs = (
+        ('01',('City')),
+        ('02',('Country')),
+    )
+    catalog = forms.ChoiceField(choices=catalogs)
     
     class Meta:
         model = Question
-        fields = ('text', 'help', 'required', 'id')
-        catalog = forms.CharField(max_length=100)
+        fields = ('text', 'help', 'required', 'catalog', 'id')
+
 
         
     
