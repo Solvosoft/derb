@@ -9,6 +9,18 @@ var max_message_queue = 3;
 var last_type = '';
 var otables = {};
 
+$(document).ready(function () {
+    $('.sortable-palette').sortable({
+        connectWith: '.sortable'
+    });
+
+    $('#categories_modal').modal('hide');
+
+    $('#id_opening_date').datepicker({
+        'dateFormat': 'dd/mm/yy'
+    });
+});
+
 function randomInt(min, max) {
     return Math.floor(Math.random() * (max - (min + 1)) + (min + 1));
 }
@@ -303,4 +315,122 @@ function see_hide_combo(combo) {
         $(options.children()[i]).attr('class', 'hidden');
     }
     options.find('#' + selected_option).attr('class', 'container');
+}
+
+function fill_names(value, name, name_type, value_type) {
+    modal = $('#categories_modal');
+    var input = $(modal.find('#category_modal_update')[0]);
+    var type = $(modal.find('#modal_category_type')[0]);
+
+    input.val(value);
+    input.attr('name', name);
+    type.attr('name', name_type);
+    type.val(value_type);
+}
+
+function edit_category_text(li) {
+    var nav = $($($(li)[0]).find('a'));
+    var text = nav.attr('title');
+    var name = nav.attr('href');
+
+    fill_names(text, name, 'category', '');
+    $('#categories_modal').find('#categories_modal').text('Edit category');
+    modal.modal();
+}
+
+function edit_subcategory_text(li) {
+    var div = $(li).closest('div');
+    var category = div.attr('id');
+    nav = $($($($(li)[0]).find('a'))[0]);
+    var text = nav.attr('title');
+    var name = nav.attr('href');
+    fill_names(text, 'aa', 'subcategory', category);
+    $('#categories_modal').find('#categories_modal').text('Edit subcategory');
+    modal.modal();
+}
+
+function add_category() {
+    fill_names('', '', 'category', '');
+    $('#categories_modal').find('#categories_modal').text('Add category');
+    modal.modal();
+}
+
+function add_subcategory(li) {
+    var div = $(li).closest('div');
+    var category = div.attr('id');
+    fill_names('', '', 'subcategory', category);
+    $('#categories_modal').find('#categories_modal').text('Add subcategory');
+    modal.modal();
+}
+
+function clean_modal() {
+    fill_names('', '', 'category', '');
+    modal.modal('hide');
+}
+
+function show_related_question(element) {
+    var parent_form = $(element).closest('form');
+    var question_id = parent_form.find('#id_question').val();
+    var objects = parent_form.find(':checkbox');
+    var selected_options;
+
+    if (objects.length > 0) {
+        selected_options = parent_form.find('input:checked');
+    } else {
+        objects = parent_form.find('select option');
+        selected_options = parent_form.find('select option:select')
+    }
+
+    objects.each(function (index, value) {
+        $('#' + question_id + '_' + $(value).val()).hide();
+    });
+
+    selected_options.each(function (index, value) {
+        $('#' + question_id + '_' + $(value).val()).show();
+    });
+}
+
+function set_related_question(form) {
+    var objects = $(form).find(':checkbox');
+    var selected_options = undefined;
+    var option = false;
+    if (objects.length == 0) {
+        objects = $(form).find('select');
+        selected_options = $(form).find('select option:selected');
+        option = true;
+    } else {
+        selected_options = $(form).find('input:checked');
+    }
+
+    objects.each(function (index, value) {
+        $(value).attr('onchange', 'show_related_question(this)');
+    });
+
+    if (selected_options.length > 0) {
+        show_related_question(selected_options[0]);
+    }
+}
+
+function show_related_boolean_question(id) {
+    var list = $(id).closest('ul');
+    var type = list.find('input:checked').val();
+    var qid = list.closest('form').find('#id_question').val();
+
+    $($('#' + qid + '_nr')[0]).hide();
+    $($('#' + qid + '_yes')[0]).hide();
+    $($('#' + qid + '_no')[0]).hide();
+    $($('#' + qid + '_' + type)[0]).show();
+}
+
+function show_related_numeric_question(element, id) {
+    $($(id + '_question_max')[0]).hide();
+    $($(id + '_question_no_max')[0]).hide();
+
+    if ($(element).attr('aria-valuenow') != undefined) {
+        if (parseFloat($(element).attr('aria-valuenow')) >= parseFloat($(element).attr('aria-valuemax'))) {
+            $($(id + '_question_max')[0]).show();
+        } else {
+            $($(id + '_question_no_max')[0]).show();
+        }
+    }
 }
