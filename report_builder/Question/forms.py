@@ -60,3 +60,15 @@ class AnswerForm(forms.ModelForm):
         instance = super(AnswerForm, self).save(db_use)
         instance.display_text = instance.text
         return instance
+
+#Unique_Selection_Question
+class UniqueSelectionForm(QuestionForm):
+    
+    class Meta:
+        model = Question
+        fields = ('text', 'help', 'required', 'id')
+        catalog = forms.CharField(max_length=100)
+
+        
+    
+    
