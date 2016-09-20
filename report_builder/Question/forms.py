@@ -67,11 +67,18 @@ class UniqueSelectionForm(QuestionForm):
         ('01',('City')),
         ('02',('Country')),
     )
+    city = (
+        ('01',('Name')),
+        ('02',('Code')),
+        ('03',('Capital')),
+    )
+    
+    city = forms.MultipleChoiceField(choices=city,widget=forms.CheckboxSelectMultiple)
     catalog = forms.ChoiceField(choices=catalogs)
     
     class Meta:
         model = Question
-        fields = ('text', 'help', 'required', 'catalog', 'id')
+        fields = ('text', 'help', 'required', 'catalog', 'city', 'id')
 
 
         

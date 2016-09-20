@@ -8,16 +8,34 @@
 	</div>
 
 	<div class="panel-body">
+		
+		<!-- Question Area -->
 		<div class="col-md-8">
 			{{ form.text}}
 			<br />
 			{{ form.help }}
+			
+			<div style="background-color: #DFDCDC">
+				<p align="center">Selec the display fields</p>
+				<p style="color: blue">			City</p>
+				{{ form.city }}
+			</div>
 		</div>
 		
+		<!-- Buttons Area -->
 		<div class="col-md-4" style="background-color: #DFDCDC">
+			<button type="button" class="btn btn-primary">See/Hide</button>
+			<button type="button" class="btn btn-danger">Delete</button>
+			<button type="button" class="btn btn-success">#</button>
+			<br /><br />
 			Requirement: {{ form.required }}
-			<br />
+			<br /><br />
 			Catalog: {{ form.catalog }}
+			<br /><br />
+		</div>
+		
+		<div align="right">
+			<input class="btn btn-primary" type="submit" value="Submit">
 		</div>
 
 	</div>
