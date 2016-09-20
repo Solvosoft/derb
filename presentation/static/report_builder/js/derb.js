@@ -58,6 +58,29 @@ function django_ajax_alert(response) {
     }
 }
 
+function rearrange_options(html_id) {
+    var element = $('#' + html_id);
+    var option = element.find('.contain_schema')[0];
+    $(element.find('#no_schema')[0]).append(option);
+}
+
+function get_cookie(name) {
+    var cookie_value = null;
+
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookie_value = decodeURIComponent(cookie.substring(name.length + 1));
+            }
+        }
+    }
+    return cookie_value;
+}
+
 function save_form(question_id, async, display_alert) {
     if (async == undefined) async = true;
     if (display_alert == undefined) display_alert = true;
@@ -205,4 +228,79 @@ function save_notes(element, url) {
             }
         }
     });
+}
+
+function delete_question_table_row(element, url, form_number) {
+    dialog = $('<div id="dialog-confirm" title="Delete">\
+		<p><span class="ui-icon ui-icon-alert" style="float:left; margin:20px 10px 20px 0;"></span>\
+		This operation is irreversible: are you sure you want to delete this element?</p></div>');
+
+    dialog.dialog({
+        resizable: false,
+        height: 200,
+        open: function () {
+            var close_button = $('.ui-dialog-titlebar-close');
+            close_button.append('<span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span>');
+        },
+        close: function () {
+            $(this).remove();
+        },
+        buttons: {
+            'No': function () {
+                $(this).dialog('close');
+            },
+            'Yes': function () {
+                $(this).dialog('close');
+                var current_table = $(element).closest('tbody');
+                var to_delete = $($('table tbody')[0]).find('.eliminator');
+                for (var x = 0; x < to_delete.length; x++) {
+                    if (element == to_delete[x]) {
+                        url += x;
+                        x = to_delete.length;
+                    }
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: {
+                        'csrfmiddlewaretoken': get_cookie('csrftoken')
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        django_ajax_alert(jqXHR);
+                    },
+                    success: function (data) {
+                        if (data == 'True') {
+                            otable = otables['dataTb_' + form_number];
+                            var position = otable.fnGetPosition($(element).closest('tr').get(0));
+                            otable.fnDeleteRow(parseInt(position));
+                        } else {
+                            _alert('alert-warning', 'The element could not be deleted, please try again.');
+                        }
+                    }
+                })
+            }
+
+        }
+    });
+}
+
+function see_hide(button) {
+    panel = $(button).closest('.question_panel');
+    body = panel.find('.panel-body');
+    content = panel.find('#content');
+
+    body.toggle();
+    content.toggle();
+}
+
+function see_hide_combo(combo) {
+    option = $(combo);
+    content = option.closest('.question_panel');
+    options = content.find('#properties');
+    selected_option = option.find(':selected').val();
+    for (var i = 0; i < options.children().length; i++) {
+        $(options.children()[i]).attr('class', 'hidden');
+    }
+    options.find('#' + selected_option).attr('class', 'container');
 }
