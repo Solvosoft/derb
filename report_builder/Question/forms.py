@@ -79,7 +79,19 @@ class UniqueSelectionForm(QuestionForm):
     class Meta:
         model = Question
         fields = ('text', 'help', 'required', 'catalog', 'city', 'id')
-
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'rows': 6,
+                'placeholder': 'Write your question here',
+                'class': 'form-control'
+            }),
+            'help': forms.Textarea(attrs={
+                'cols': 80,
+                'rows': 5,
+                'placeholder': 'A little help never hurts',
+                'class': 'form-control'
+            })
+        }
 
         
     
