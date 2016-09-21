@@ -1,37 +1,44 @@
 {% extends 'derb/base.html' %}
 
 {% block main_block %}
-   <div class="panel panel-default">
-  <div class="panel-heading">Integer Question (admin)</div>
-  <div class="panel-body">
-   <!-- div text area -->
-   <div class="col-md-8" >
-  
-  <textarea id="writeQuestion" name="writeQuestion"
-           maxlength="100" style="margin-bottom: 3%" 
-           class="form-control"rows="6">
-  	Write down your question... </textarea>
-   
-  <textarea id="writeHelp" name="writeHelp"
-           maxlength="100"
-           class="form-control"rows="6">
-  	A little help never hurts ... </textarea>
-  
-  
- </div>
-  
-   <!-- div buttons -->
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Integer Question (admin)
+	</div>
+	<div class="panel-body">
+		<!-- div text area -->
+		<div class="col-md-8" >
 
-   <div class="col-md-4" style="background-color: #DFDCDC">
-  
+			{{form.text}}
+			<br />
+			{{ form.help }}
 
+		</div>
 
-<button type="button" class="btn btn-primary">See/Hide</button>
-<button type="button" class="btn btn-danger">Delete</button>
-<button type="button" class="btn btn-success">#</button>
+		<!-- div buttons -->
 
+		<div class="col-md-4" style="background-color: #DFDCDC">
 
-   </div>
-  </div>
+			<button type="button" class="btn btn-primary">
+				See/Hide
+			</button>
+			<button type="button" class="btn btn-danger">
+				Delete
+			</button>
+			<button type="button" class="btn btn-success">
+				#
+			</button>
+			<br /><br />
+Requirement: {{ form.required }}
+<br /><br />
+Minimum: 
+<br /><br />
+Maximum:
+<br /><br />
+Steps:
+
+		</div>
+	</div>
+
 </div>
 {% endblock %}
