@@ -6,6 +6,15 @@ Created on 14/9/2016
 from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF
 from django.shortcuts import render
 
+
 class IntegerQuestionAdmin(QuestionViewAdmin):
+
     def get(self, request, *args, **kwargs):
-        return render(request, 'admin/integer_question.html')
+        form = self.get_form(instance=self.question)
+        print(form)
+        parameters = {
+            'form': form,
+         }
+        return render(request,'admin/integer_question.html', parameters)
+
+    
