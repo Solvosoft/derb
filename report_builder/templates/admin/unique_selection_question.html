@@ -16,8 +16,8 @@
 				{{ form.help }}
 				<br />
 						
-				<div style="background-color: #DFDCDC">
-					<br /><br /><br /><br /><br /><br />
+				<div id="display" style="background-color: #DFDCDC">
+				
 				</div>
 			</div>
 		</div>
@@ -45,7 +45,7 @@
 			<br /><br />
 		</div>
 		
-		<div class="modal-footer">
+		<div align="right">
 			<input class="btn btn-primary" type="submit" value="Submit">
 		</div>
 
@@ -64,6 +64,10 @@
 			else
 				e.style.display = 'block'; 
     	});	
-	});ss
+    	
+    	$("#id_catalog").change(function(){
+    		$("#display").html("<p>Hello world!</p>");
+    	});
+	});	
 </script>
 {% endblock %}
