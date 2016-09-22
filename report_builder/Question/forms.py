@@ -30,17 +30,7 @@ class QuestionForm(forms.ModelForm):
         exclude = ('order',)
 
 
-class SimpleTextQuestionForm(forms.ModelForm):
-    children = forms.CharField(max_length=512)
-
-    class Meta:
-        model = Question
-        fields = ('text', 'help', 'id')
-        widgets = {
-            'text': CKEditorWidget(config_name='default'),
-            'help': CKEditorWidget(config_name='default')
-        }
-
+     
 class AnswerForm(forms.ModelForm):
     """
         TODO: docstring
@@ -75,3 +65,14 @@ class AnswerForm(forms.ModelForm):
         instance = super(AnswerForm, self).save(db_use)
         instance.display_text = instance.text
         return instance
+    
+
+class SimpleTextQuestionForm(forms.ModelForm):
+
+    class Meta:
+        model = Question
+        fields = ('text', 'help', 'id','required')
+        widgets = {
+            'text': CKEditorWidget(config_name='default'),
+            'help': CKEditorWidget(config_name='default')
+        }
