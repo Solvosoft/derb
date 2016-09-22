@@ -21,6 +21,10 @@ $(document).ready(function () {
     });
 });
 
+$(document).ready(function () {
+    $('a[data-toggle="tab"]').on('shown.bs.tab', update_previous_next);
+});
+
 function randomInt(min, max) {
     return Math.floor(Math.random() * (max - (min + 1)) + (min + 1));
 }
@@ -494,4 +498,138 @@ function prev_tab() {
             $('#previous_button').addClass('disabled');
         }
     }
+}
+
+
+function update_previous_next(e) {
+    var tab = get_active_tab();
+
+    if (tab.next_subcategory.length > 0 || (tab.next_category.length > 0 && tab.next_category.attr('id') != 'buttons')) {
+        $('#next_button').removeClass('disabled');
+    } else {
+        $('#next_button').addClass('disabled');
+    }
+
+    if (tab.prev_subcategory.length > 0 || (tab.prev_category.length > 0 && tab.prev_category.attr('id') != 'buttons')) {
+        $('#previous_button').removeClass('disabled');
+    } else {
+        $('#previous_button').addClass('disabled');
+    }
+}
+
+function load_observations_page(element, url, page) {
+    div = $(element).closest('div');
+    url = url + '?page=' + page;
+    $.ajax({
+        type: 'GET',
+        url: url,
+        error: function (jqXHR, textStatus, errorThrown) {
+            django_ajax_alert(jqXHR);
+        },
+        success: function (data) {
+            div.parent().parent().html(data);
+        }
+    });
+}
+
+function show_context(element_text) {
+    var name = '#context_modal';
+    var body_name = name + ' #id_body_context_modal';
+    var text = $(element_text).html();
+    if (text == '') {
+        text = 'Unanswered question';
+    }
+    $(body_name).html(text);
+    $(name).modal();
+}
+
+function show_status(content) {
+    $('#question_errors').removeClass('hidden');
+}
+
+function show_question(pk) {
+    pk = '#question_' + pk;
+    question = $(pk);
+    subcategory = question.closest('.tab-pane');
+    category = subcategory.closest('#subcategory_content').closest('.tab-pane');
+    $('#categ_' + category.attr('id')).click();
+    $('#categ_' + subcategory.attr('id')).click();
+    windows.location = pk;
+}
+
+function create_new_report_template(url) {
+    id = $('#modal_select_new option:selected').val();
+    url = url.replace('0', id);
+    $('#new_report_template').attr('href', url);
+}
+
+function approve_disapprove(approve) {
+    if (approve) {
+        $('#message_approve').removeClass('hidden');
+        $('#message_disapprove').addClass('hidden');
+    } else {
+        $('#message_disapprove').removeClass('hidden');
+        $('#message_approve').addClass('hidden');
+    }
+}
+
+function revise_report() {
+    $('#message_revision').removeClass('hidden');
+    $('#refresh_status').click();
+}
+
+function revised_fun(content) {
+    $('#message_revision').addClass('hidden');
+}
+
+function remove_messages() {
+    $('#message_revision').addClass('hide');
+    $('#message_approve').addClass('hide');
+    $('#message_disapprove').addClass('hide');
+}
+
+function request_name_button_info(element) {
+    if ($(element).is(':checked')) {
+        $(element).parent().parent().find('#id_help').removeClass('hidden');
+    } else {
+        $(element).parent().parent().find('#id_help').addClass('hidden');
+    }
+}
+
+function authenticate(btn) {
+    var form = $(btn).parent();
+    var url = form.attr('action');
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: form.serialize(),
+        error: function (jqXHR, textStatus, errorThrown) {
+            django_ajax_alert(jqXHR);
+            $(btn).button('reset');
+        },
+        success: function (data) {
+            if ($.isNumeric(data)) {
+                var message_auth = $('#message_auth');
+                message_auth.find('p').html('User or password incorrect');
+                message_auth.removeClass('hidden');
+                $(btn).button('reset');
+            } else {
+                window.location = data;
+            }
+        }
+    });
+}
+
+function show_reports(url) {
+    $.ajax({
+        type: 'GET',
+        url: url,
+        error: function (jqXHR, textStatus, errorThrown) {
+			django_ajax_alert(jqXHR);
+	    },
+        success: function (data) {
+            $('#div_table_responsable_reports').parent().html(data);
+        }
+    });
 }
