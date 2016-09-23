@@ -1,4 +1,4 @@
-import thread
+import threading
 from report_builder.models import Question
 
 
@@ -77,7 +77,8 @@ def build_report_object(*args, **kwargs):
         for subcategory in category['subcategories']:
             if subcategory['question']:
                 for question in subcategory['questions']:
-                    report_questions.update(dict(get_question_children(question, category['name'], subcategory['name'])))
+                    report_questions.update(
+                        dict(get_question_children(question, category['name'], subcategory['name'])))
 
     kwargs['report'].questions = report_questions
     kwargs['report'].save()
@@ -103,7 +104,9 @@ def delete_questions_with_thread(initial_template, final_template):
         'initial_template': initial_template,
         'final_template': final_template
     }
-    thread.start_new_thread(delete_questions, ('',), report_dict)
+    thread = threading.Thread(target=delete_questions, kwargs=report_dict)
+    thread.setDaemon(True)
+    thread.start()
 
 
 def build_report_object_with_thread(report):
@@ -113,7 +116,9 @@ def build_report_object_with_thread(report):
     report_dict = {
         'report': report
     }
-    thread.start_new_thread(build_report_object, ('',), report_dict)
+    thread = threading.Thread(target=build_report_object, kwargs=report_dict)
+    thread.setDaemon(True)
+    thread.start()
 
 
 def get_question_with_permission(questions, parent):
@@ -125,6 +130,7 @@ def get_question_with_permission(questions, parent):
         pass
 
     return question
+
 
 def get_question_permission(question):
     '''
