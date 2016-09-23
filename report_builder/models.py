@@ -57,6 +57,14 @@ REVIEWER_ORDERS = (
     (REV_SEVENTH, _('Seventh'))
 )
 
+#Prueba_Modelo
+CATALOGS = (
+    (1, ('Catalog 1')),
+    (2, ('Catalog 2')),
+    (3, ('Catalog 3')),
+    (4, ('Catalog 4')),
+)
+
 
 @python_2_unicode_compatible
 class Project(models.Model):

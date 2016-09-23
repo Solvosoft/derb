@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
-from report_builder.models import Question, Answer
+from report_builder.models import Question, Answer, CATALOGS
 from report_builder.report_shortcuts import get_question_permission
 
 
@@ -63,16 +63,12 @@ class AnswerForm(forms.ModelForm):
 
 #Unique_Selection_Question
 class UniqueSelectionForm(QuestionForm):
-    catalogs = (
-        ('01',('City')),
-        ('02',('Country')),
-    )
 
-    catalog = forms.ChoiceField(choices=catalogs)
+    catalog = forms.ChoiceField(choices=CATALOGS)
     
     class Meta:
         model = Question
-        fields = ('text', 'help', 'required', 'catalog', 'id')
+        fields = ('text', 'help', 'required', 'id')
         widgets = {
             'text': forms.Textarea(attrs={
                 'rows': 6,
