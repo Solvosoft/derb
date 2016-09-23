@@ -13,5 +13,6 @@ urlpatterns = [
 
 # Report views
 urlpatterns += [
-    url(r'^admin/template/(?P<pk>\d+)$', Report.admin, name='report_admin'),
+    url(r'^admin/template/(?P<pk>\d+)$', Report.admin, name='admin_report'),
+    url(r'^admin/template/(?P<pk>\d+)/save$', Report.save_admin, name='admin_save_report')
 ]

@@ -46,6 +46,7 @@ def admin(request, pk=None):
         if report.opening_date <= datetime.now().date():
             return render(request, 'admin/out_of_date.html')
         admin_views = get_view_type('admin')
+
         palette = {}
 
         for name, value in admin_views.items():
