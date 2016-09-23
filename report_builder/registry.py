@@ -65,7 +65,7 @@ def register(model, name=None, human_name=None, fields=None, exclude=None, type=
     if human_name is None:
         human_name = model._meta.verbose_name
 
-    models.append(query, name, human_name, fields, type, func, filters, derb_type)
+    models.append((query, name, human_name, fields, type, func, filters, derb_type))
 
 
 def get_properties_by_name(name, type='select'):

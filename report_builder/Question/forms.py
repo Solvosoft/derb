@@ -2,8 +2,11 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
-from report_builder.models import Question, Answer, CATALOGS
+from report_builder.models import Question, Answer
 from report_builder.report_shortcuts import get_question_permission
+
+from report_builder.registry import models
+from report_builder.catalogs import register_test_catalogs
 
 
 class QuestionForm(forms.ModelForm):
@@ -63,7 +66,8 @@ class AnswerForm(forms.ModelForm):
 
 #Unique_Selection_Question
 class UniqueSelectionForm(QuestionForm):
-
+    register_test_catalogs()
+    CATALOGS = ((index, model[1]) for index, model in enumerate(models))
     catalog = forms.ChoiceField(choices=CATALOGS)
     
     class Meta:
