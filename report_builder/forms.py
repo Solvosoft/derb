@@ -68,4 +68,4 @@ class AdminReportForm(forms.ModelForm):
 
     class Meta:
         model = Report
-        exclude = ('type',)
+        exclude = ('type', 'questions')
