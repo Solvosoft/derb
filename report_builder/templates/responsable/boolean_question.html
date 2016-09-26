@@ -1,0 +1,50 @@
+{% include 'derb/base.html' %}
+
+{% block main_block %}
+  <div class="row">
+    <div class="col-md-offset-2 col-md-8">
+      {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+          <div class="alert alert-success">
+            <strong>Success:</strong> {{ message }}
+          </div>
+        {% endif %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+          <div class="alert alert-danger">
+            <strong>Error:</strong> {{ message }}
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          Boolean question (responsable)
+        </div>
+        <div class="panel-body">
+          <form action="{% url 'report_builder:boolean_question_resp' question.pk %}" method="post">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-12">
+                <div class="page-header"><h4>{{ question }}</h4></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div>{{ form.text }}</div>
+              </div>
+              <br><br>
+              <div class="col-md-12">
+                <div>{{ form.annotation }}</div>
+              </div>
+            </div>
+            <div class="row text-right">
+              <div class="col-md-12">
+                <input class="btn btn-primary" type="submit" value="Save">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

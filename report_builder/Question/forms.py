@@ -1,3 +1,5 @@
+import random
+
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
@@ -59,4 +61,25 @@ class AnswerForm(forms.ModelForm):
     def save(self, db_use):
         instance = super(AnswerForm, self).save(db_use)
         instance.display_text = instance.text
+        return instance
+
+
+class BooleanAnswerForm(AnswerForm):
+    option = forms.ChoiceField
+    attrs = {
+        'onchange': 'show_related_question_boolean(this);'
+    }
+    choices = (('yes', 'Yes'), ('no', 'No'), ('na', 'Don\'t know/Don\'t answer'))
+
+    def __init__(self, *args, **kwargs):
+        self.attrs['id'] = 'combo_' + str(random.randint(5000, 10000))
+        super(BooleanAnswerForm, self).__init__(*args, **kwargs)
+
+        self.fields['text'] = self.option(widget=forms.RadioSelect(self.attrs), choices=self.choices)
+
+
+    def save(self, db_use):
+        instance = super(BooleanAnswerForm, self).save(db_use)
+        selected_option = dict(self.fields['text'].choices)
+        instance.display_text = selected_option[instance.text]
         return instance

@@ -7,7 +7,9 @@ from django.shortcuts import render
 from report_builder.Question.QuestionView import QuestionViewAdmin
 from report_builder.Question.QuestionView import QuestionViewResp
 from report_builder.Question.QuestionView import QuestionViewPDF
-from report_builder.shortcuts import get_children, get_report_question
+from report_builder.Question.forms import BooleanAnswerForm
+from report_builder.models import Question, Answer
+from report_builder.shortcuts import get_children, get_report_question, get_reportbyproj_question_answer
 
 
 class BooleanQuestionViewAdmin(QuestionViewAdmin):
@@ -59,9 +61,76 @@ class BooleanQuestionViewAdmin(QuestionViewAdmin):
         return self.get(request, *args, **kwargs)
 
 
-
 class BooleanQuestionViewResp(QuestionViewResp):
-    pass
+    template_name = 'responsable/boolean_question.html'
+    name = 'boolean_question'
+    form_class = BooleanAnswerForm
+
+    def additional_template_parameters(self, **kwargs):
+        parameters = self.get_question_answer_options()
+        parameters['children'] = self.process_children(self.request, parameters, kwargs)
+        return parameters
+
+    def is_valid_question(self, reportbyproj_pk, question_pk, answer_pk):
+        valid = super(BooleanQuestionViewResp, self).is_valid_question(reportbyproj_pk, question_pk, answer_pk)
+        if valid is None:
+            self.question = Question.objects.get(pk=question_pk)
+            values = self.get_question_answer_options()
+            if answer_pk is not None:
+                answer = Answer.objects.get(pk=answer_pk)
+                selected_children = answer.text
+            else:
+                selected_children = 'na'
+
+        return valid
+
+    def get(self, request, *args, **kwargs):
+        """
+            TODO: docstring
+        """
+        self.request = request
+        self.form_number = random.randint(self.start_number, self.end_number)
+        self.question = Question.objects.get(pk=kwargs['question_pk'])
+        form = self.get_form(instance=self.answer)
+
+        parameters = {
+            'name': self.name,
+            'form': form,
+            'question': self.question,
+            'question_number': self.question.order,
+            'answer': self.answer,
+            'form_number': str(self.form_number)
+        }
+        return render(request, self.template_name, parameters)
+
+    def post(self, request, *args, **kwargs):
+        """
+            TODO: docstring
+        """
+        self.request = request
+        self.form_number = random.randint(self.start_number, self.end_number)
+        self.question = Question.objects.get(pk=kwargs['question_pk'])
+
+        if self.answer is None:
+            self.answer = Answer()
+        self.answer.question = self.question
+        self.answer.user = request.user
+        self.answer.text = ''
+        self.answer.display_text = '\n'
+
+        form = self.get_form(request.POST, instance=self.answer)
+        if form.is_valid():
+            answer = form.save(False)
+            answer.question = self.question
+            answer.user = request.user
+            answer.report_id = 1
+            self.answer = answer
+            self.save(answer)
+            messages.add_message(request, messages.SUCCESS, 'Question answered successfully')
+        else:
+            messages.add_message(request, messages.ERROR, 'An error ocurred while answering the question')
+
+        return self.get(request, *args, **kwargs)
 
 
 class BooleanQuestionViewPDF(QuestionViewPDF):

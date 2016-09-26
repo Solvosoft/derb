@@ -14,5 +14,8 @@ urlpatterns = [
 
 # Question types
 urlpatterns += [
-    url(r'^question_types/boolean/admin', boolean_question.BooleanQuestionViewAdmin.as_view(), name='boolean_question_admin')
+    url(r'^question_types/boolean/admin', boolean_question.BooleanQuestionViewAdmin.as_view(),
+        name='boolean_question_admin'),
+    url(r'^question_types/boolean/resp/(?P<question_pk>\d+)', boolean_question.BooleanQuestionViewResp.as_view(),
+        name='boolean_question_resp')
 ]
