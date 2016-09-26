@@ -9,7 +9,6 @@ from report_builder.Question.QuestionView import QuestionViewResp
 from report_builder.Question.QuestionView import QuestionViewPDF
 from report_builder.Question.forms import BooleanAnswerForm
 from report_builder.models import Question, Answer
-from report_builder.shortcuts import get_children, get_report_question, get_reportbyproj_question_answer
 
 
 class BooleanQuestionViewAdmin(QuestionViewAdmin):
