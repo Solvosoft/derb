@@ -31,7 +31,7 @@
               <div class="col-md-4 question_option_panel text-center">
                 <br>
                 <div class="btn-group">
-                  <a class="btn btn-primary" onclick="alert('To do');">See/Hide</a>
+                  <a class="btn btn-primary" onclick="toggle_help_input();">See/Hide</a>
                   <a class="btn btn-danger" onclick="alert('To do');">Delete</a>
                   <a class="btn btn-success" onclick="alert('To do');">#</a>
                 </div>
@@ -50,4 +50,12 @@
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block body_js %}
+  <script type="application/javascript">
+    function toggle_help_input() {
+      $('#id_help').toggle();
+    }
+  </script>
 {% endblock %}
