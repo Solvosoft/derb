@@ -21,18 +21,6 @@ class BooleanQuestionViewAdmin(QuestionViewAdmin):
         'color': '#330065'
     }
 
-    def pre_save(self, object, request, form):
-        children = get_children(form)
-        object.answer_options = repr({'children': children})
-        return object
-
-    def additional_template_parameters(self, **kwargs):
-        parameters = self.get_question_answer_options()
-        if not parameters:
-            parameters = {}
-        parameters['children'] = self.process_children(self.request, parameters, kwargs)
-        return parameters
-
     def get(self, request, *args, **kwargs):
         self.form_number = random.randint(self.start_number, self.end_number)
         self.request = request
