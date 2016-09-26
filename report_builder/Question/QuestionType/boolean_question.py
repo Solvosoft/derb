@@ -66,24 +66,6 @@ class BooleanQuestionViewResp(QuestionViewResp):
     name = 'boolean_question'
     form_class = BooleanAnswerForm
 
-    def additional_template_parameters(self, **kwargs):
-        parameters = self.get_question_answer_options()
-        parameters['children'] = self.process_children(self.request, parameters, kwargs)
-        return parameters
-
-    def is_valid_question(self, reportbyproj_pk, question_pk, answer_pk):
-        valid = super(BooleanQuestionViewResp, self).is_valid_question(reportbyproj_pk, question_pk, answer_pk)
-        if valid is None:
-            self.question = Question.objects.get(pk=question_pk)
-            values = self.get_question_answer_options()
-            if answer_pk is not None:
-                answer = Answer.objects.get(pk=answer_pk)
-                selected_children = answer.text
-            else:
-                selected_children = 'na'
-
-        return valid
-
     def get(self, request, *args, **kwargs):
         """
             TODO: docstring
