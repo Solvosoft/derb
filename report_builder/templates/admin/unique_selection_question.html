@@ -9,8 +9,8 @@
 
 	<div class="panel-body">
 		{% csrf_token %}
-		<!-- Question Area -->
 		<div class="row">
+			<!-- Question Area -->
 			<div class="col-md-8">
 				<div> {{ form.text}} </div>
 				<br />
@@ -56,6 +56,7 @@
 			</div>
 		</div>
 		
+		<!-- Submit -->
 		<div class="row text-right">
 			<div class="col-md-12">
 				<input class="btn btn-primary" type="submit" value="Submit">
