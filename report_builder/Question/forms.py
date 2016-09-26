@@ -60,3 +60,39 @@ class AnswerForm(forms.ModelForm):
         instance = super(AnswerForm, self).save(db_use)
         instance.display_text = instance.text
         return instance
+    
+    
+
+#Integer question
+class IntegerQuestionForm(QuestionForm):
+    
+    
+    MINIMUM =((p,p) for p in range(0,99))
+    minimum = forms.ChoiceField(choices=MINIMUM)
+    MAXIMUM =((p,p) for p in range(99,200))
+    maximum = forms.ChoiceField(choices=MAXIMUM)
+    STEPS =((p,p) for p in range(100,200))
+    steps = forms.ChoiceField(choices=STEPS)
+    
+    class Meta:
+        model = Question
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'rows': 6,
+                'placeholder': 'Write your question here',
+                'class': 'form-control'
+            }),
+            'help': forms.Textarea(attrs={
+                'cols': 80,
+                'rows': 5,
+                'placeholder': 'A little help never hurts',
+                'class': 'form-control'
+            })
+            
+                   
+        }
+        fields = ('text', 'help', 'required', 'minimum', 'maximum','steps','id')
+    
+
+
+        
