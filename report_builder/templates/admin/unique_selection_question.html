@@ -1,22 +1,21 @@
 {% extends 'derb/base.html' %}
 
 {% block main_block %}
-<div class="panel panel-default">
+<div class="panel panel-info">
 
 	<div class="panel-heading">
 		Unique Selection Question (Admin)
 	</div>
 
 	<div class="panel-body">
-		
+		{% csrf_token %}
 		<!-- Question Area -->
-		<div class="col-md-8">
-			<div>
-				{{ form.text}}
-				<div id="help">
-					{{ form.help }}
-				</div>
+		<div class="row">
+			<div class="col-md-8">
+				<div> {{ form.text}} </div>
 				<br />
+				<div id="help"> {{ form.help }} </div>
+				<br />	
 					
 				<div style="display: none; background-color: #DFDCDC" id="city">
 					<p align="center">Select the display fields</p>
@@ -29,36 +28,39 @@
 					<p style="color: blue">Country</p>
 					{{ form.country }}
 				</div>
-				<br />
-				
+				<br />	
+			</div>
+			
+			<!-- Buttons Area -->
+			<div class="col-md-4 question_option_panel text-center" style="background-color: #DFDCDC">
+				<div class="btn-group">
+					<button id="SeeHide" type="button" class="btn btn-primary">
+						See/Hide
+					</button>
+					<button type="button" class="btn btn-danger">
+						Delete
+					</button>
+					<button type="button" class="btn btn-success">
+						#
+					</button>
+				</div>
+				<br /><br /><br />
+			
+				Requirement: {{ form.required }}
+				<br /><br /><br /><br />
+			
+				Catalog: {{ form.catalog }}
+				<br /><br /><br /><br />
+				<br /><br /><br /><br />
+				<br /><br /><br /><br />
+				<br /><br /><br /><br />
 			</div>
 		</div>
 		
-		<!-- Buttons Area -->
-		<div class="col-md-4" style="background-color: #DFDCDC">
-			<button id="SeeHide" type="button" class="btn btn-primary">
-				See/Hide
-			</button>
-			<button type="button" class="btn btn-danger">
-				Delete
-			</button>
-			<button type="button" class="btn btn-success">
-				#
-			</button>
-			<br /><br /><br />
-			
-			Requirement: {{ form.required }}
-			<br /><br /><br /><br />
-			
-			Catalog: {{ form.catalog }}
-			<br /><br /><br /><br />
-			<br /><br /><br /><br />
-			<br /><br /><br /><br />
-			<br /><br /><br />
-		</div>
-		
-		<div align="right">
-			<input class="btn btn-primary" type="submit" value="Submit">
+		<div class="row text-right">
+			<div class="col-md-12">
+				<input class="btn btn-primary" type="submit" value="Submit">
+			</div>
 		</div>
 
 	</div>
