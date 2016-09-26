@@ -16,7 +16,7 @@
         {% endif %}
       {% endfor %}
 
-      <div class="panel panel-info">
+      <div class="panel panel-default">
         <div class="panel-heading">
           Boolean question (responsable)
         </div>
@@ -24,24 +24,39 @@
           <form action="{% url 'report_builder:boolean_question_resp' question.pk %}" method="post">
             {% csrf_token %}
             <div class="row">
-              <div class="col-md-12">
-                <div class="page-header"><h4>{{ question }}</h4></div>
+              <div class="col-md-offset-1 col-md-10">
+                <div class="panel panel-info">
+                  <div class="panel-heading">
+                    <div class="panel-title">{{ question }}</div>
+                  </div>
+                  <div class="panel-body">
+                    {% if question.required == 0 %}
+                      <span class="label label-success pull-right">{{ question.get_required_display }}</span>
+                    {% elif question.required == 1 %}
+                      <span class="label label-warning pull-right">{{ question.get_required_display }}</span>
+                    {% elif question.required == 2 %}
+                      <span class="label label-danger pull-right">{{ question.get_required_display }}</span>
+                    {% endif %}
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div>{{ form.text }}</div>
+                      </div>
+                      <br><br>
+                      <div class="col-md-12">
+                        <div>{{ form.annotation }}</div>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row text-right">
+                      <div class="col-md-12">
+                        <input class="btn btn-primary" type="submit" value="Save">
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-12">
-                <div>{{ form.text }}</div>
-              </div>
-              <br><br>
-              <div class="col-md-12">
-                <div>{{ form.annotation }}</div>
-              </div>
-            </div>
-            <div class="row text-right">
-              <div class="col-md-12">
-                <input class="btn btn-primary" type="submit" value="Save">
-              </div>
-            </div>
+
           </form>
         </div>
       </div>
