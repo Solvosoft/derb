@@ -11,15 +11,17 @@
 
 			{{form.text}}
 			<br />
-			{{ form.help }}
+			<div id="help">
+				{{ form.help }}
+			</div>
 
 		</div>
 
 		<!-- div buttons -->
 
-		<div class="col-md-4" style="background-color: #DFDCDC">
+		<div class="col-md-4" style="background-color: #DFDCDC; padding:2%; padding-bottom: 5% ">
 
-			<button type="button" class="btn btn-primary">
+			<button id="SeeHide" name="SeeHide" type="button" class="btn btn-primary">
 				See/Hide
 			</button>
 			<button type="button" class="btn btn-danger">
@@ -28,17 +30,35 @@
 			<button type="button" class="btn btn-success">
 				#
 			</button>
-			<br /><br />
-Requirement: {{ form.required }}
-<br /><br />
-Minimum: 
-<br /><br />
-Maximum:
-<br /><br />
-Steps:
+			<br />
+			<br />
+			Requirement: {{ form.required }}
+			<br />
+			<br />
+			Minimum: {{form.minimum}}
+			<br />
+			<br />
+			Maximum: {{form.maximum}}
+			<br />
+			<br />
+			Steps: {{form.steps}}
 
 		</div>
 	</div>
 
 </div>
+{% endblock %}
+
+{% block body_js %}
+<script>
+	$(document).ready(function() {
+		$("#SeeHide").click(function() {
+			var e = document.getElementById('help');
+			if (e.style.display == 'block')
+				e.style.display = 'none';
+			else
+				e.style.display = 'block';
+		});
+	}); 
+</script>
 {% endblock %}
