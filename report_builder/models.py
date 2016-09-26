@@ -227,7 +227,7 @@ class Question(models.Model):
     class_to_load = models.CharField(max_length=30)
     text = models.TextField()
     help = models.TextField(blank=True)
-    answer_options = JSONField()
+    answer_options = JSONField(blank=True, null=True)
     required = models.IntegerField(choices=REQUIREMENT_TYPE, default=0)
     order = models.CharField(max_length=10, blank=True)
     auto = models.BooleanField(default=False)
