@@ -1,52 +1,77 @@
 {% extends 'derb/base.html' %}
 
 {% block main_block %}
-<div class="panel panel-default">
-	<div class="panel-heading">
-		Integer Question (admin)
-	</div>
-	<div class="panel-body">
-		<!-- div text area -->
-		<div class="col-md-8" >
-
-			{{form.text}}
-			<br />
-			<div id="help">
-				{{ form.help }}
+<div class="row">
+	<div class="col-md-offset-2 col-md-8">
+		{% for message in messages %}
+		{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+		<div class="alert alert-success">
+			<strong>Success:</strong> {{ message }}
+		</div>
+		{% endif %}
+		{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+		<div class="alert alert-danger">
+			<strong>Error:</strong> {{ message }}
+		</div>
+		{% endif %}
+		{% endfor %}
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				Integer Question (admin)
 			</div>
+			<div class="panel-body">
+				<form action="{% url 'report_builder:integer_question_admin' %}" method="post">
+					{% csrf_token %}
+					<div class="row">
+						<div class="col-md-7">
+							<div>
+								{{ form.text }}
+							</div>
+							<br/>
+							<div id="help">
+								{{ form.help }}
+							</div>
+						</div>
+						<div class="col-md-4 question_option_panel text-center" style="background-color: #DFDCDC; padding:2%; padding-bottom: 5%;">
+							<button id="SeeHide" name="SeeHide" type="button" class="btn btn-primary">
+								See/Hide
+							</button>
+							<button type="button" class="btn btn-danger">
+								Delete
+							</button>
+							<button type="button" class="btn btn-success">
+								#
+							</button>
+							<br />
+							<br />
+							Requirement: {{ form.required }}
+							<br />
+							<br />
+							Minimum: {{form.minimum}}
+							<br />
+							<br />
+							Maximum: {{form.maximum}}
+							<br />
+							<br />
+							Steps: {{form.steps}}
 
-		</div>
+						</div>
+					</div>
+					<div class="row text-right">
+						<div class="col-md-12">
+							<br />
+							<br />
+							<br />
+							<input class="btn btn-primary" type="submit" value="Save">
+						</div>
+					</div>
 
-		<!-- div buttons -->
-
-		<div class="col-md-4" style="background-color: #DFDCDC; padding:2%; padding-bottom: 5% ">
-
-			<button id="SeeHide" name="SeeHide" type="button" class="btn btn-primary">
-				See/Hide
-			</button>
-			<button type="button" class="btn btn-danger">
-				Delete
-			</button>
-			<button type="button" class="btn btn-success">
-				#
-			</button>
-			<br />
-			<br />
-			Requirement: {{ form.required }}
-			<br />
-			<br />
-			Minimum: {{form.minimum}}
-			<br />
-			<br />
-			Maximum: {{form.maximum}}
-			<br />
-			<br />
-			Steps: {{form.steps}}
-
+				</form>
+			</div>
 		</div>
 	</div>
-
 </div>
+
 {% endblock %}
 
 {% block body_js %}
