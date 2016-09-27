@@ -1,0 +1,20 @@
+{% extends 'derb/base.html' %}
+{% load static %}
+{% block main_block %}
+<div class="panel panel-default">
+
+	<div class="panel-heading">
+		Simple text question (Administrator)
+	</div>
+
+	<div class="panel-body">
+		{% csrf_token %}
+
+		<div id="toggle" class="col-md-8">
+			{{ form}}
+		</div>
+
+	</div>
+
+</div>
+{% endblock %}

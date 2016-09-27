@@ -72,7 +72,29 @@ class SimpleTextQuestionForm(forms.ModelForm):
     class Meta:
         model = Question
         fields = ('text', 'help', 'id','required')
+        success_url = "/"
         widgets = {
             'text': CKEditorWidget(config_name='default'),
             'help': CKEditorWidget(config_name='default')
         }
+        
+class SimpleTextResp(forms.ModelForm):
+    children = forms.CharField
+
+    class Meta:
+        model = Question
+        fields = ('text', 'help', 'required', 'id')
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'rows': 6,
+                'placeholder': 'Write your question here',
+                'class': 'form-control'
+            }),
+            'help': forms.Textarea(attrs={
+                'cols': 80,
+                'rows': 5,
+                'placeholder': 'A little help never hurts',
+                'class': 'form-control'
+            })
+        }
+        exclude = ('order',)
