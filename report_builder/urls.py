@@ -16,6 +16,4 @@ urlpatterns = [
 urlpatterns += [
     url(r'^simple_text_question_admin$', simple_text_question.SimpleTextQuestionAdmin.as_view(),
         name='simple_text_question_admin'),
-    url(r'^simple_text_question_responsable$', simple_text_question.SimpleTextQuestionResp.as_view(),
-        name='simple_text_question_responsable')
 ]
