@@ -91,7 +91,7 @@ class SimpleTextQuestionForm(forms.ModelForm):
         instance.display_text = instance.text
         return instance
         
-class SimpleTextResp(forms.ModelForm):
+class SimpleTextRespForm(forms.ModelForm):
     children = forms.CharField
 
     class Meta:
