@@ -24,60 +24,63 @@
 			</div>
 
 			<div class="panel-body">
+				<form action="{% url 'report_builder:unique_selection_admin' %}" method="post">
 				{% csrf_token %}
-				<div class="row">
-					<!-- Question Area -->
-					<div class="col-md-8">
-						<div> {{ form.text}} </div>
-						<br />
-						<div id="help"> {{ form.help }} </div>
-						<br />	
+					<div class="row">
+						<!-- Question Area -->
+						<div class="col-md-8">
+							<div> {{ form.text}} </div>
+							<br />
+							<div> {{ form.help }} </div>
+							<br />	
 					
-						<div style="display: none; background-color: #DFDCDC" id="city">
-							<p align="center">Select the display fields</p>
-							<p style="color: blue">City</p>
-							{{ form.city }}
-						</div>
+							<div style="display: none; background-color: #DFDCDC" id="city">
+								<p align="center">Select the display fields</p>
+								<p style="color: blue">City</p>
+								{{ form.city }}
+							</div>
 				
-						<div style="display: none; background-color: #DFDCDC" id="country">
-							<p align="center">Select the display fields</p>
-							<p style="color: blue">Country</p>
-							{{ form.country }}
+							<div style="display: none; background-color: #DFDCDC" id="country">
+								<p align="center">Select the display fields</p>
+								<p style="color: blue">Country</p>
+								{{ form.country }}
+							</div>
+						</div>
+			
+						<!-- Buttons Area -->
+						<div class="col-md-4 question_option_panel text-center" style="background-color: #DFDCDC">
+							<div class="btn-group">
+								<button onclick="toggle_help_input();" type="button" class="btn btn-primary">
+									See/Hide
+								</button>
+								<button type="button" class="btn btn-danger">
+									Delete
+								</button>
+								<button type="button" class="btn btn-success">
+									#
+								</button>
+							</div>
+							<br /><br /><br />
+				
+							Requirement: {{ form.required }}
+							<br /><br /><br /><br />
+				
+							Catalog: {{ form.catalog }}
+							<br /><br /><br /><br />
+							<br /><br /><br /><br />
+							<br /><br /><br /><br />
+							<br /><br /><br /><br />
 						</div>
 					</div>
-			
-					<!-- Buttons Area -->
-					<div class="col-md-4 question_option_panel text-center" style="background-color: #DFDCDC">
-						<div class="btn-group">
-							<button id="SeeHide" type="button" class="btn btn-primary">
-								See/Hide
-							</button>
-							<button type="button" class="btn btn-danger">
-								Delete
-							</button>
-							<button type="button" class="btn btn-success">
-								#
-							</button>
+							
+					<!-- Submit -->
+					<div class="row text-right">
+						<div class="col-md-12">
+							<input class="btn btn-primary" type="submit" value="Save">
 						</div>
-						<br /><br /><br />
-			
-						Requirement: {{ form.required }}
-						<br /><br /><br /><br />
-			
-						Catalog: {{ form.catalog }}
-						<br /><br /><br /><br />
-						<br /><br /><br /><br />
-						<br /><br /><br /><br />
-						<br /><br /><br /><br />
 					</div>
-				</div>
-		
-				<!-- Submit -->
-				<div class="row text-right">
-					<div class="col-md-12">
-						<input class="btn btn-primary" type="submit" value="Submit">
-					</div>
-				</div>
+				
+				</form>
 
 			</div>
 		</div>
@@ -86,16 +89,12 @@
 {% endblock %}
 
 {% block body_js %}
-<script>
+<script type="application/javascript" >
+	function toggle_help_input(){
+	  $("#id_help").toggle();
+	}
+
 	$(document).ready(function(){
-    	$("#SeeHide").click(function(){
-        	var e = document.getElementById('help');
-			if (e.style.display == 'block')
-				e.style.display = 'none';
-			else
-				e.style.display = 'block'; 
-    	});	
-    	
     	$("#id_catalog").change(function(){
     		$("#id_catalog option:selected").each(function(){
     			var sel = $(this).text();
