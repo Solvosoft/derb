@@ -1,68 +1,70 @@
-{% extends 'derb/base.html' %}
+{% include 'derb/base.html' %}
 {% load static %}
-
 {% block main_block %}
-<div class="panel panel-default">
-
-	<div class="panel-heading">
-		Simple text question (Administrator)
-	</div>
-
-	<div class="panel-body">
-		{% csrf_token %}
-
-		<div id="toggle" class="col-md-8">
-			{{ form.text}}
-			<div id="help">
-				{{ form.help }}
+<div class="row">
+	<div class="col-md-offset-2 col-md-8">
+		{% for message in messages %}
+		{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+		<div class="alert alert-success">
+			<strong>Success:</strong> {{ message }}
+		</div>
+		{% endif %}
+		{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+		<div class="alert alert-danger">
+			<strong>Error:</strong> {{ message }}
+		</div>
+		{% endif %}
+		{% endfor %}
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				Simple text question (Admin)
 			</div>
-			<br />
-		</div>
+			<div class="panel-body">
+				<form action="{% url 'report_builder:simple_text_question_admin' %}" method="post">
+					{% csrf_token %}
+					<div class="row">
+						<div class="col-md-7">
+							<div>
+								{{ form.text }}
+							</div>
+							<br/>
+							<div id="help">
+								{{ form.help }}
+							</div>
+						</div>
+						<div class="col-md-4 question_option_panel text-center">
+							<br>
+							<button id="SeeHide" name="SeeHide" type="button" class="btn btn-primary">
+								See/Hide
+							</button>
+							<button type="button" class="btn btn-danger">
+								Delete
+							</button>
+							<button type="button" class="btn btn-success">
+								#
+							</button>
+							<br>
+							<br>
+							Requirement: {{ form.required }}
+						</div>
+					</div>
+					<div class="row text-right">
+						<div class="col-md-12">
+							<input class="btn btn-primary" type="submit" value="Save">
+						</div>
+					</div>
 
-		<div class="col-md-4" style="background-color: #DFDCDC">
-			<br />
-			<br />
-			<button id="SeeHide" type="button" class="btn btn-primary">
-				See/Hide
-			</button>
-			<button type="button" class="btn btn-danger">
-				Delete
-			</button>
-			<button type="button" class="btn btn-success">
-				#
-			</button>
-			<br />
-			<br />
-			Requirement: {{ form.required }}
-			<br />
-			<br />
-			<br />
-			<br />
-			<br />
-			<br />
-			<br />
-			<br />
-			<br />
-			<br />
-			<br />
-			<br />
-			<br />
-			<br />
-			<br />
+				</form>
+			</div>
 		</div>
-		<div class="modal-footer">
-			<input class="btn btn-primary" type="submit" value="Submit">
-		</div>
-
 	</div>
-
 </div>
 {% endblock %}
 
 {% block body_js %}
 <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
 <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
-<script>
+<script type="application/javascript">
 	$(document).ready(function() {
 		$("#SeeHide").click(function() {
 			var e = document.getElementById('help');
@@ -71,7 +73,6 @@
 			else
 				e.style.display = 'block';
 		});
-	}); 
+	});
 </script>
 {% endblock %}
-
