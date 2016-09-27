@@ -23,7 +23,6 @@ class SimpleTextQuestionAdmin(QuestionViewAdmin):
         form = self.get_form(request.POST, instance=self.question)
         if form.is_valid():
             question = form.save(False)
-            question = form.cleaned_data()
             question.report = self.report
             question.class_to_load = self.name
             question = self.pre_save(question, request, form)

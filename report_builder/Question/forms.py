@@ -66,7 +66,7 @@ class AnswerForm(forms.ModelForm):
         instance.display_text = instance.text
         return instance
     
-
+#Simple_Text_Question
 class SimpleTextQuestionForm(forms.ModelForm):
 
     class Meta:
@@ -77,6 +77,13 @@ class SimpleTextQuestionForm(forms.ModelForm):
             'text': CKEditorWidget(config_name='default'),
             'help': CKEditorWidget(config_name='default')
         }
+        
+    
+    def save(self, db_use):
+        instance = super(SimpleTextQuestionForm, self).save(db_use)
+        selected_option = dict(self.fields['text'].choices)
+        instance.display_text = selected_option[instance.text]
+        return instance
         
 class SimpleTextResp(forms.ModelForm):
     children = forms.CharField
