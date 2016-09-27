@@ -68,11 +68,18 @@ class AnswerForm(forms.ModelForm):
     
 #Simple_Text_Question
 class SimpleTextQuestionForm(forms.ModelForm):
+    
+    def clean_text(self):
+        text = self.cleaned_data['text']
+        required = get_question_permission(self.instance)
+        if required == 1 and not text and not help:
+            raise ValidationError(_('This field is required'), code='required')
+        return text
+
 
     class Meta:
         model = Question
         fields = ('text', 'help', 'id','required')
-        success_url = "/"
         widgets = {
             'text': CKEditorWidget(config_name='default'),
             'help': CKEditorWidget(config_name='default')
@@ -81,8 +88,7 @@ class SimpleTextQuestionForm(forms.ModelForm):
     
     def save(self, db_use):
         instance = super(SimpleTextQuestionForm, self).save(db_use)
-        selected_option = dict(self.fields['text'].choices)
-        instance.display_text = selected_option[instance.text]
+        instance.display_text = instance.text
         return instance
         
 class SimpleTextResp(forms.ModelForm):
