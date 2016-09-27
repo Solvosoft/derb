@@ -13,7 +13,7 @@ from report_builder.Question.QuestionView import QuestionViewAdmin
 from report_builder.Question.QuestionView import QuestionViewResp
 from report_builder.Question.QuestionView import QuestionViewPDF
 from report_builder.Question.forms import BooleanAnswerForm
-from report_builder.models import Question, Answer
+from report_builder.models import Question, Answer, Report
 
 
 class BooleanQuestionViewAdmin(QuestionViewAdmin):
@@ -45,7 +45,7 @@ class BooleanQuestionViewAdmin(QuestionViewAdmin):
         if form.is_valid():
             question = form.save(False)
             question.class_to_load = self.name
-            question.report_id = 1
+            question.report = Report.objects.first()
             question.save()
             messages.add_message(request, messages.SUCCESS, 'Question created successfully')
         else:
@@ -97,7 +97,7 @@ class BooleanQuestionViewResp(QuestionViewResp):
             answer = form.save(False)
             answer.question = self.question
             answer.user = request.user
-            answer.report_id = 1
+            answer.report = Report.objects.first()
             self.answer = answer
             self.save(answer)
             messages.add_message(request, messages.SUCCESS, 'Question answered successfully')
