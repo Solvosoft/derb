@@ -17,7 +17,7 @@ urlpatterns = [
 urlpatterns += [
     url(r"^unique_selection_admin$", UniqueSelectionAdmin.as_view(),
         name="unique_selection_admin"),
-    url(r"^unique_selection_resp$", UniqueSelectionResp.as_view(),
+    url(r"^unique_selection_resp/(?P<question_pk>\d+)", UniqueSelectionResp.as_view(),
         name="unique_selection_resp"),
     url(r"^unique_selection_pdf$", UniqueSelectionPDF.as_view(),
         name="unique_selection_pdf"),
