@@ -14,6 +14,8 @@ urlpatterns = [
 
 # Question types
 urlpatterns += [
-    url(r'^simple_text_question_admin$', simple_text_question.SimpleTextQuestionAdmin.as_view(),
+    url(r'^question_type/simple/admin', simple_text_question.SimpleTextQuestionAdmin.as_view(),
         name='simple_text_question_admin'),
+    url(r'^question_type/simple/resp/(?P<question_pk>\d+)', simple_text_question.SimpleQuestionViewResp.as_view(),
+        name='simple_text_question_resp')
 ]
