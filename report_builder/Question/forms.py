@@ -65,7 +65,7 @@ class AnswerForm(forms.ModelForm):
         return instance
 
 #Unique_Selection_Question
-class UniqueSelectionForm(QuestionForm):
+class UniqueSelectionAdminForm(QuestionForm):
     register_test_catalogs()
     CATALOGS = ((index, model[1]) for index, model in enumerate(models))
     catalog = forms.ChoiceField(choices=CATALOGS)

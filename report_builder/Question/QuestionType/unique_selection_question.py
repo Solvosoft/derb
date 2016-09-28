@@ -10,14 +10,14 @@ from django.http import Http404
 from django.shortcuts import render
 from django.contrib import messages
 from report_builder.Question import QuestionView
-from report_builder.Question.forms import UniqueSelectionForm
+from report_builder.Question.forms import UniqueSelectionAdminForm
 from django_ajax.decorators import ajax
 
 from report_builder.models import Report
 from report_builder.registry import models
 
 class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
-    form_class = UniqueSelectionForm
+    form_class = UniqueSelectionAdminForm
     template_name = 'admin/unique_selection_question.html'
     name = 'unique_selection_question'
     minimal_representation = {
