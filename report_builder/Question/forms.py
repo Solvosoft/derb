@@ -4,6 +4,8 @@ from django.utils.translation import ugettext as _
 
 from report_builder.models import Question, Answer
 from report_builder.report_shortcuts import get_question_permission
+from django.db.models.fields import DecimalField
+from lib2to3.fixer_util import Attr
 
 
 class QuestionForm(forms.ModelForm):
@@ -66,13 +68,9 @@ class AnswerForm(forms.ModelForm):
 #Integer question
 class IntegerQuestionForm(QuestionForm):
     
-    
-    MINIMUM =((p,p) for p in range(0,99))
-    minimum = forms.ChoiceField(choices=MINIMUM)
-    MAXIMUM =((p,p) for p in range(99,200))
-    maximum = forms.ChoiceField(choices=MAXIMUM)
-    STEPS =((p,p) for p in range(100,200))
-    steps = forms.ChoiceField(choices=STEPS)
+    minimum=forms.DecimalField()
+    maximum=forms.DecimalField()
+    steps=forms.DecimalField()
     
     class Meta:
         model = Question
@@ -87,9 +85,8 @@ class IntegerQuestionForm(QuestionForm):
                 'rows': 5,
                 'placeholder': 'A little help never hurts',
                 'class': 'form-control'
-            })
+            }),
             
-                   
         }
         fields = ('text', 'help', 'required', 'minimum', 'maximum','steps','id')
     
