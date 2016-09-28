@@ -23,7 +23,7 @@
 				<form action="{% url 'report_builder:simple_text_question_admin' %}" method="post">
 					{% csrf_token %}
 					<div class="row">
-						<div class="col-md-7">
+						<div class="col-md-8">
 							<div>
 								{{ form.text }}
 							</div>
@@ -32,7 +32,7 @@
 								{{ form.help }}
 							</div>
 						</div>
-						<div class="col-md-4 question_option_panel text-center">
+						<div class="col-md-4">
 							<br>
 							<button id="SeeHide" name="SeeHide" type="button" class="btn btn-primary">
 								See/Hide

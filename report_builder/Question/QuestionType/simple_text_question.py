@@ -3,6 +3,7 @@ Created on 15/9/2016
 
 @author: nashyra
 '''
+import json
 import random
 
 
@@ -45,6 +46,7 @@ class SimpleTextQuestionAdmin(QuestionViewAdmin):
             question = form.save(False)
             question.class_to_load = self.name
             question.report = Report.objects.first()
+            question.answer_options = json.dumps({})
             question.save()
             messages.add_message(request, messages.SUCCESS, 'Question created successfully')
         else:

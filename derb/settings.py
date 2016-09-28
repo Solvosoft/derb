@@ -167,12 +167,11 @@ CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'Full',
         'height': 300,
-        'width': 600,
+        'width': '100%',
     },
-    'basico': {
+    'basic': {
+        'width': '100%',
         'toolbar': 'Basic',
-        'height': 200,
-        'width': 600,
         "toolbar_Basic": [['Source', '-', 'Save', 'NewPage', 'DocProps', 'Preview', 'Print', '-', 'Templates'],
                           ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],
                           ['Find', 'Replace', '-', 'SelectAll', '-', 'SpellChecker', 'Scayt'],
@@ -190,7 +189,7 @@ CKEDITOR_CONFIGS = {
         "language": "en",
         "skin": "moono",
     },
-    'vacio': {
+    'empty': {
         'toolbar': 'Basic',
         'height': 200,
         'width': 500,
