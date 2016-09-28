@@ -69,20 +69,7 @@ class UniqueSelectionForm(QuestionForm):
     register_test_catalogs()
     CATALOGS = ((index, model[1]) for index, model in enumerate(models))
     catalog = forms.ChoiceField(choices=CATALOGS)
-    
-    CITY = ((index, model[3]) 
-                for index, model in enumerate(models)
-                    if model[1] == 'city'
-            )
-    city = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-                                    choices=CITY) 
-    
-    COUNTRY = ((index, model[3]) 
-                for index, model in enumerate(models)
-                    if model[1] == 'country'
-               )
-    country = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-                                        choices=COUNTRY) 
+    display_fields = forms.MultipleChoiceField(choices=models[0][3], widget=forms.CheckboxSelectMultiple, required=False)
     
     class Meta:
         model = Question

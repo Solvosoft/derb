@@ -4,7 +4,7 @@ from report_builder import views
 
 from report_builder import initial_views as init
 from report_builder.Question.QuestionType.unique_selection_question import UniqueSelectionAdmin,\
-    UniqueSelectionResp, UniqueSelectionPDF
+    UniqueSelectionResp, UniqueSelectionPDF, get_catalog_display_fields
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
@@ -21,4 +21,5 @@ urlpatterns += [
         name="unique_selection_resp"),
     url(r"^unique_selection_pdf$", UniqueSelectionPDF.as_view(),
         name="unique_selection_pdf"),
+    url(r"^get_catalog_display_fields", get_catalog_display_fields, name='get_catalog_display_fields')
 ]

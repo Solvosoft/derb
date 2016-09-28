@@ -3,13 +3,18 @@ Created on 14/9/2016
 
 @author: adolfo
 '''
+import json
 import random
 
+from django.http import Http404
 from django.shortcuts import render
 from django.contrib import messages
-
 from report_builder.Question import QuestionView
 from report_builder.Question.forms import UniqueSelectionForm
+from django_ajax.decorators import ajax
+
+from report_builder.models import Report
+from report_builder.registry import models
 
 class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
     form_class = UniqueSelectionForm
@@ -39,9 +44,14 @@ class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
         self.form_number = random.randint(self.start_number, self.end_number)
         form = self.get_form(request.POST, instance=self.question)
         if form.is_valid():
+            answer_options = {
+                'catalog': int(form.cleaned_data.get('catalog')),
+                'display_fields': form.cleaned_data.get('display_fields')
+            }
             question = form.save(False)
             question.class_to_load = self.name
-            question.report_id = 1
+            question.report = Report.objects.first()
+            question.answer_options = json.dumps(answer_options)
             question.save()
             messages.add_message(request, messages.SUCCESS, 'Question created successfully')
         else:
@@ -55,3 +65,13 @@ class UniqueSelectionResp(QuestionView.QuestionViewResp):
 class UniqueSelectionPDF(QuestionView.QuestionViewPDF):
     def get(self, request, *args, **kwargs):
         return render(request, 'pdf/unique_selection_question.html')
+
+@ajax
+def get_catalog_display_fields(request):
+    if request.method == 'GET':
+        if request.is_ajax():
+            catalog_id = int(request.GET.get('catalog_id', False))
+            if catalog_id >= 0:
+                catalog = models[catalog_id]
+                return catalog[3]
+    return 0
