@@ -62,16 +62,14 @@ class AnswerForm(forms.ModelForm):
         instance = super(AnswerForm, self).save(db_use)
         instance.display_text = instance.text
         return instance
-    
-    
 
-#Integer question
+
+# Integer question
 class IntegerQuestionForm(QuestionForm):
-    
-    minimum=forms.DecimalField()
-    maximum=forms.DecimalField()
-    steps=forms.DecimalField()
-    
+    minimum = forms.DecimalField(initial=0)
+    maximum = forms.DecimalField(initial=100)
+    steps = forms.DecimalField(initial=1)
+
     class Meta:
         model = Question
         widgets = {
@@ -86,10 +84,6 @@ class IntegerQuestionForm(QuestionForm):
                 'placeholder': 'A little help never hurts',
                 'class': 'form-control'
             }),
-            
+
         }
-        fields = ('text', 'help', 'required', 'minimum', 'maximum','steps','id')
-    
-
-
-        
+        fields = ('text', 'help', 'required', 'minimum', 'maximum', 'steps', 'id')
