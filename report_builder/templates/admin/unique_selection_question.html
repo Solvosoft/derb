@@ -34,17 +34,10 @@
 							<div> {{ form.help }} </div>
 							<br />	
 					
-							<div style="display: none; background-color: #DFDCDC" id="city">
-								<p align="center">Select the display fields</p>
-								<p style="color: blue">City</p>
-								{{ form.city }}
+							<div style="display: none; background-color: #DFDCDC" id="DisplayFields">
+								{{ form.display_fields }}
 							</div>
-				
-							<div style="display: none; background-color: #DFDCDC" id="country">
-								<p align="center">Select the display fields</p>
-								<p style="color: blue">Country</p>
-								{{ form.country }}
-							</div>
+
 						</div>
 			
 						<!-- Buttons Area -->
@@ -98,17 +91,6 @@
     	$("#id_catalog").change(function(){
     		$("#id_catalog option:selected").each(function(){
     			var sel = $(this).text();
-    			var opt = document.getElementById(sel);
-    			if (sel=='city'){
-    			    opt.style.display = 'block';
-    				var doc = document.getElementById('country');
-    				doc.style.display = 'none';
-    			}
-    			if (sel=='country'){
-    			    opt.style.display = 'block';
-    				var doc = document.getElementById('city');
-    				doc.style.display = 'none';
-    			}
     		});
     	});
 	});	
