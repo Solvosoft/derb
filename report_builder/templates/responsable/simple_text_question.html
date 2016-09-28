@@ -1,5 +1,5 @@
 {% include 'derb/base.html' %}
-
+{% load static %}
 {% block main_block %}
   <div class="row">
     <div class="col-md-offset-2 col-md-8">
@@ -42,14 +42,11 @@
                         <div>{{ form.text }}</div>
                       </div>
                       <br><br>
-                      <div class="col-md-12">
-                        <div>{{ form.annotation }}</div>
-                      </div>
                     </div>
                     <br>
                     <div class="row text-right">
                       <div class="col-md-12">
-                        <input class="btn btn-primary" type="submit" value="Save">
+                        <input class="btn btn-primary" type="submit" value="Submit">
                       </div>
                     </div>
                   </div>
@@ -62,4 +59,9 @@
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block body_js %}
+<script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+<script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
 {% endblock %}

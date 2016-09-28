@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.shortcuts import render
 
 from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp
-from report_builder.Question.forms import SimpleTextQuestionForm, SimpleTextRespForm
+from report_builder.Question.forms import SimpleTextQuestionForm
 from report_builder.models import Question, Answer, Report
 
 
@@ -53,10 +53,10 @@ class SimpleTextQuestionAdmin(QuestionViewAdmin):
     
 
 #class SimpleTextQuestionResp(QuestionViewResp):
-class BooleanQuestionViewResp(QuestionViewResp):
+class SimpleQuestionViewResp(QuestionViewResp):
     template_name = 'responsable/simple_text_question.html'
     name = 'simple_text_question'
-    form_class = SimpleTextRespForm
+    form_class = SimpleTextQuestionForm
 
     def get(self, request, *args, **kwargs):
         """
