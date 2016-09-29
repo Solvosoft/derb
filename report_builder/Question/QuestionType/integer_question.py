@@ -7,7 +7,7 @@ import json
 from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF
 from django.shortcuts import render
 from report_builder.Question.forms import IntegerQuestionForm, AnswerForm
-from report_builder.models import Report, Question, Answer
+from report_builder.models import Report, Question, Answer, ReportByProject
 from report_builder.shortcuts import get_children
 import random
 from django.contrib import messages
@@ -134,7 +134,7 @@ class IntegerQuestionResp(QuestionViewResp):
             answer = form.save(False)
             answer.question = self.question
             answer.user = request.user
-            answer.report = Report.objects.first()
+            answer.report = ReportByProject.objects.first()
             self.answer = answer
             self.save(answer)
             messages.add_message(request, messages.SUCCESS, 'Question answered successfully')
