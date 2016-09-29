@@ -67,18 +67,7 @@ class AnswerForm(forms.ModelForm):
         return instance
     
 class SimpleTextAnswerForm(AnswerForm):
-    
-    def clean(self):
-        cleaned_data = super(SimpleTextAnswerForm, self).clean()
-        simple_text = cleaned_data.get('text')
-    
-        if simple_text:
-            # Only do something if both fields are valid so far.
-            if "help" not in simple_text:
-                raise forms.ValidationError(
-                    "Error"
-                )
-    
+
     class Meta:
         model = Question
         fields = ('text', 'help', 'id','required')
