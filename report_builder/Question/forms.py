@@ -66,17 +66,19 @@ class AnswerForm(forms.ModelForm):
         instance.display_text = instance.text
         return instance
     
-#Simple_Text_Question
-class SimpleTextQuestionForm(forms.ModelForm):
+class SimpleTextAnswerForm(AnswerForm):
     
-    def clean_text(self):
-        text = self.cleaned_data['text']
-        required = get_question_permission(self.instance)
-        if required == 1 and not text and not help:
-            raise ValidationError(_('This field is required'), code='required')
-        return text
-
-
+    def clean(self):
+        cleaned_data = super(SimpleTextAnswerForm, self).clean()
+        simple_text = cleaned_data.get('text')
+    
+        if simple_text:
+            # Only do something if both fields are valid so far.
+            if "help" not in simple_text:
+                raise forms.ValidationError(
+                    "Error"
+                )
+    
     class Meta:
         model = Question
         fields = ('text', 'help', 'id','required')
@@ -85,29 +87,23 @@ class SimpleTextQuestionForm(forms.ModelForm):
             'help': CKEditorWidget(config_name='default')
         }
         
-    
     def save(self, db_use):
         instance = super(SimpleTextQuestionForm, self).save(db_use)
         instance.display_text = instance.text
         return instance
-        
-class SimpleTextRespForm(forms.ModelForm):
-    children = forms.CharField
-
+    
+#Simple_Text_Question
+class SimpleTextQuestionForm(QuestionForm):
+    
     class Meta:
         model = Question
-        fields = ('text', 'help', 'required', 'id')
+        fields = ('text', 'help', 'id','required')
         widgets = {
-            'text': forms.Textarea(attrs={
-                'rows': 6,
-                'placeholder': 'Write your question here',
-                'class': 'form-control'
-            }),
-            'help': forms.Textarea(attrs={
-                'cols': 80,
-                'rows': 5,
-                'placeholder': 'A little help never hurts',
-                'class': 'form-control'
-            })
+            'text': CKEditorWidget(config_name='default'),
+            'help': CKEditorWidget(config_name='default')
         }
-        exclude = ('order',)
+
+    def save(self, db_use):
+        instance = super(SimpleTextQuestionForm, self).save(db_use)
+        instance.display_text = instance.text
+        return instance

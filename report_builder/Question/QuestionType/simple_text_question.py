@@ -11,7 +11,7 @@ from django.contrib import messages
 from django.shortcuts import render
 
 from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp
-from report_builder.Question.forms import SimpleTextQuestionForm
+from report_builder.Question.forms import SimpleTextQuestionForm, SimpleTextAnswerForm
 from report_builder.models import Question, Answer, Report
 
 
@@ -58,7 +58,7 @@ class SimpleTextQuestionAdmin(QuestionViewAdmin):
 class SimpleQuestionViewResp(QuestionViewResp):
     template_name = 'responsable/simple_text_question.html'
     name = 'simple_text_question'
-    form_class = SimpleTextQuestionForm
+    form_class = SimpleTextAnswerForm
 
     def get(self, request, *args, **kwargs):
         """
@@ -104,6 +104,7 @@ class SimpleQuestionViewResp(QuestionViewResp):
             self.save(answer)
             messages.add_message(request, messages.SUCCESS, 'Question answered successfully')
         else:
+            print(form.errors)
             messages.add_message(request, messages.ERROR, 'An error ocurred while answering the question')
 
         return self.get(request, *args, **kwargs)
