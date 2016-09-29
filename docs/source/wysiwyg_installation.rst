@@ -10,7 +10,8 @@ Dependencies
 
 .. code-block:: bash
 
-    $ pip install django-wysiwyg
+     pip install django-wysiwyg
+
 
 * Configuration: Add ‘django_wysiwyg’ to your INSTALLED_APPS in settings.py:
 
@@ -19,17 +20,43 @@ Dependencies
     INSTALLED_APPS = (
     ...
     'django_wysiwyg',
+    'ckeditor'
     )
 
+Using the CKEditor
+====
+
+* If you wish to use CKEditor set the flavor in settings.py:
+
 .. code-block:: bash
 
-    pip install --upgrade setuptools pip
+    DJANGO_WYSIWYG_FLAVOR = "ckeditor"
 
-* Finally, you going to install Weasyprint.
+* Install packages: Via pip.
 
 .. code-block:: bash
 
-    pip install WeasyPrint
+     pip install django-ckeditor
+
+* Configuration: Add ‘ckeditor’ to your INSTALLED_APPS in settings.py:
+
+.. code-block:: bash
+
+    INSTALLED_APPS = (
+    ...
+    'ckeditor'
+    )
+
+*Configuration of the media and static path: Add at at the final in settings.py:
+
+.. code-block:: bash
+
+   STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+.. code-block:: bash
+
+   STATIC_ROOT = os.path.join(BASE_DIR, 'media/')
+
 
 Code
 ====
