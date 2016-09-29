@@ -13,5 +13,5 @@ urlpatterns = [
 # Question types
 urlpatterns += [
     url(r'^integer_question_admin', integer_question.IntegerQuestionAdmin.as_view(), name='integer_question_admin'),
-    url(r'^integer_question_responsable', integer_question.IntegerQuestionResp.as_view(), name='integer_question_responsable')
+    url(r'^integer_question_responsable/(?P<question_pk>\d+)', integer_question.IntegerQuestionResp.as_view(), name='integer_question_resp'),
 ]
