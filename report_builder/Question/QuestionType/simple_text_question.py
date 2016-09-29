@@ -12,7 +12,7 @@ from django.shortcuts import render
 
 from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp
 from report_builder.Question.forms import SimpleTextQuestionForm, SimpleTextAnswerForm
-from report_builder.models import Question, Answer, Report
+from report_builder.models import Question, Answer, Report, ReportByProject
 
 
 class SimpleTextQuestionAdmin(QuestionViewAdmin):
@@ -99,7 +99,7 @@ class SimpleQuestionViewResp(QuestionViewResp):
             answer = form.save(False)
             answer.question = self.question
             answer.user = request.user
-            answer.report = Report.objects.first()
+            answer.report = ReportByProject.objects.first()
             self.answer = answer
             self.save(answer)
             messages.add_message(request, messages.SUCCESS, 'Question answered successfully')

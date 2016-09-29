@@ -38,8 +38,8 @@ class AnswerForm(forms.ModelForm):
 
     def clean_text(self):
         text = self.cleaned_data['text']
-        required = get_question_permission(self.instance.question)
-        if required == 1 and not text:
+        #required = get_question_permission(self.instance.question)
+        if not text:
             raise ValidationError(_('This field is required'), code='required')
         return text
 
@@ -69,15 +69,15 @@ class AnswerForm(forms.ModelForm):
 class SimpleTextAnswerForm(AnswerForm):
 
     class Meta:
-        model = Question
-        fields = ('text', 'help', 'id','required')
+        model = Answer
+        fields = ('text', 'annotation')
         widgets = {
             'text': CKEditorWidget(config_name='default'),
-            'help': CKEditorWidget(config_name='default')
+            'annotation': CKEditorWidget(config_name='default')
         }
-        
+
     def save(self, db_use):
-        instance = super(SimpleTextQuestionForm, self).save(db_use)
+        instance = super(SimpleTextAnswerForm, self).save(db_use)
         instance.display_text = instance.text
         return instance
     
