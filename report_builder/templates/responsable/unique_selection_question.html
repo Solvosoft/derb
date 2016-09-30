@@ -39,16 +39,20 @@
                     {% endif %}
                     <div class="row">
                       <div class="col-md-12">
-                        <div> 
-                        	Answer: {{ question.answer_options }}
-                        	<br />
-                        	{{ catalog }}
-                        	{{ field }}
-                       	</div>
+                        <div> Answer: {{ question.answer_options }} </div>
                       </div>
                       <br><br>
                       <div class="col-md-12">
-                        <div> {{form.fields }} </div>
+                        <div> 
+                        	{{ catalog }}
+                        	{{ field }}
+                        	{{form.fields }}
+                        	<select>
+                        		{% for object in list_fields %}
+                        			<option>{{ object.name }}</option>
+                        		{% endfor %}
+                        	</select> 
+                        </div>
                       </div>
                     </div>
                     <br>

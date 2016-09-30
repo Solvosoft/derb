@@ -78,8 +78,6 @@ class UniqueSelectionResp(QuestionView.QuestionViewResp):
         field = answer_options['display_fields']
         
         list_fields = models[catalog][0]
-        for object in list_fields:
-            print("hola" + object.capital)
         
         parameters = {
             'name': self.name,
@@ -89,7 +87,8 @@ class UniqueSelectionResp(QuestionView.QuestionViewResp):
             'answer': self.answer,
             'form_number': str(self.form_number),
             'catalog': catalog,
-            'field': field
+            'field': field,
+            'list_fields': list_fields
         }
         return render(request, self.template_name, parameters)
     
