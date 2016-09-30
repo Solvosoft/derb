@@ -11,7 +11,13 @@ urlpatterns = [
 ]
 
 # Question types
+
+#Integer Question
 urlpatterns += [
-    url(r'^integer_question_admin', integer_question.IntegerQuestionAdmin.as_view(), name='integer_question_admin'),
-    url(r'^integer_question_responsable/(?P<question_pk>\d+)', integer_question.IntegerQuestionResp.as_view(), name='integer_question_resp'),
+    url(r'^integer_question_admin', integer_question.IntegerQuestionAdmin.as_view(), 
+        name='integer_question_admin'),
+    url(r'^integer_question_responsable/(?P<question_pk>\d+)', integer_question.IntegerQuestionResp.as_view(),
+        name='integer_question_resp'),
+    url(r'^integer_question/pdf/(?P<question_pk>\d+)', integer_question.IntegerQuestionViewPDF.as_view(),
+        name='integer_question_pdf')
 ]
