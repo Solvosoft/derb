@@ -5,9 +5,10 @@ from django.utils.translation import ugettext as _
 from report_builder.models import Question, Answer
 from report_builder.report_shortcuts import get_question_permission
 
-from report_builder.registry import models
+from report_builder.registry import models, get_value_field
 from report_builder.catalogs import register_test_catalogs
 
+import json
 
 class QuestionForm(forms.ModelForm):
     children = forms.CharField
@@ -87,6 +88,9 @@ class UniqueSelectionAdminForm(QuestionForm):
                 'class': 'form-control'
             })
         }
+        
+class UniqueSelectionAnswerForm(AnswerForm):
+    fields = forms.ChoiceField(widget=forms.Select, choices=objects)
 
         
     

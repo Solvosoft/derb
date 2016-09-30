@@ -10,10 +10,11 @@ from django.http import Http404
 from django.shortcuts import render
 from django.contrib import messages
 from report_builder.Question import QuestionView
-from report_builder.Question.forms import UniqueSelectionAdminForm
+from report_builder.Question.forms import UniqueSelectionAdminForm,\
+    UniqueSelectionAnswerForm
 from django_ajax.decorators import ajax
 
-from report_builder.models import Question, Report
+from report_builder.models import Question, Answer, Report, ReportByProject
 from report_builder.registry import models
 
 class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
@@ -61,7 +62,7 @@ class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
 class UniqueSelectionResp(QuestionView.QuestionViewResp):
     template_name = 'responsable/unique_selection_question.html'
     name = 'unique_selection_question'
-    #form_class = BooleanAnswerForm
+    form_class = UniqueSelectionAnswerForm
 
     def get(self, request, *args, **kwargs):
         """
@@ -81,6 +82,36 @@ class UniqueSelectionResp(QuestionView.QuestionViewResp):
             'form_number': str(self.form_number)
         }
         return render(request, self.template_name, parameters)
+    
+    def post(self, request, *args, **kwargs):
+        """
+            TODO: docstring
+        """
+        self.request = request
+        self.form_number = random.randint(self.start_number, self.end_number)
+        self.question = Question.objects.get(pk=kwargs['question_pk'])
+
+        if self.answer is None:
+            self.answer = Answer()
+        self.answer.question = self.question
+        self.answer.user = request.user
+        self.answer.text = ''
+        self.answer.display_text = '\n'
+
+        form = self.get_form(request.POST, instance=self.answer)
+        if form.is_valid():
+            answer = form.save(False)
+            answer.question = self.question
+            answer.user = request.user
+            answer.report = ReportByProject.objects.first()
+            self.answer = answer
+            self.save(answer)
+            messages.add_message(request, messages.SUCCESS, 'Question answered successfully')
+        else:
+            print(form.errors)
+            messages.add_message(request, messages.ERROR, 'An error ocurred while answering the question')
+
+        return self.get(request, *args, **kwargs)
         
 class UniqueSelectionPDF(QuestionView.QuestionViewPDF):
     def get(self, request, *args, **kwargs):
