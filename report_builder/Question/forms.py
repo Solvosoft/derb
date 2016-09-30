@@ -90,7 +90,7 @@ class UniqueSelectionAdminForm(QuestionForm):
         }
         
 class UniqueSelectionAnswerForm(AnswerForm):
-    fields = forms.ChoiceField(widget=forms.Select, choices=objects)
+    fields = forms.ChoiceField(widget=forms.Select)
 
         
     

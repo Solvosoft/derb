@@ -72,14 +72,24 @@ class UniqueSelectionResp(QuestionView.QuestionViewResp):
         self.form_number = random.randint(self.start_number, self.end_number)
         self.question = Question.objects.get(pk=kwargs['question_pk'])
         form = self.get_form(instance=self.answer)
-
+        json_field = self.question.answer_options
+        answer_options = json.loads(json_field)
+        catalog = answer_options['catalog']
+        field = answer_options['display_fields']
+        
+        list_fields = models[catalog][0]
+        for object in list_fields:
+            print("hola" + object.capital)
+        
         parameters = {
             'name': self.name,
             'form': form,
             'question': self.question,
             'question_number': self.question.order,
             'answer': self.answer,
-            'form_number': str(self.form_number)
+            'form_number': str(self.form_number),
+            'catalog': catalog,
+            'field': field
         }
         return render(request, self.template_name, parameters)
     
