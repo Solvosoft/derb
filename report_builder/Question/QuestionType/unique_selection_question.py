@@ -75,20 +75,28 @@ class UniqueSelectionResp(QuestionView.QuestionViewResp):
         json_field = self.question.answer_options
         answer_options = json.loads(json_field)
         catalog = answer_options['catalog']
-        field = answer_options['display_fields']
+        display_field = answer_options['display_fields']
         
         list_fields = models[catalog][0]
+        list_temp = []
         
+        for object in list_fields:
+            text = ""
+            value = object.pk
+            for field in display_field:
+                text += getattr(object, field)
+                list_temp.append((value,text))
+        
+        catalog_choices = tuple(list_temp)
+        form.fields['text'].choices=catalog_choices
+
         parameters = {
             'name': self.name,
             'form': form,
             'question': self.question,
             'question_number': self.question.order,
             'answer': self.answer,
-            'form_number': str(self.form_number),
-            'catalog': catalog,
-            'field': field,
-            'list_fields': list_fields
+            'form_number': str(self.form_number)
         }
         return render(request, self.template_name, parameters)
     
@@ -117,7 +125,6 @@ class UniqueSelectionResp(QuestionView.QuestionViewResp):
             self.save(answer)
             messages.add_message(request, messages.SUCCESS, 'Question answered successfully')
         else:
-            print(form.errors)
             messages.add_message(request, messages.ERROR, 'An error ocurred while answering the question')
 
         return self.get(request, *args, **kwargs)

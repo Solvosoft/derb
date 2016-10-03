@@ -69,7 +69,7 @@ class AnswerForm(forms.ModelForm):
 class UniqueSelectionAdminForm(QuestionForm):
     register_test_catalogs()
     CATALOGS = ((index, model[1]) for index, model in enumerate(models))
-    catalog = forms.ChoiceField(choices=CATALOGS)
+    catalog = forms.ChoiceField(choices=CATALOGS, widget=forms.Select(attrs={'class': 'form-control'}))
     display_fields = forms.MultipleChoiceField(choices=models[0][3], widget=forms.CheckboxSelectMultiple, required=False)
     
     class Meta:
@@ -86,11 +86,14 @@ class UniqueSelectionAdminForm(QuestionForm):
                 'rows': 5,
                 'placeholder': 'A little help never hurts',
                 'class': 'form-control'
+            }),
+            'required': forms.Select(attrs={
+                'class': 'form-control'
             })
         }
         
 class UniqueSelectionAnswerForm(AnswerForm):
-    text = forms.ChoiceField(widget=forms.Select)
+    text = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}))
 
         
     

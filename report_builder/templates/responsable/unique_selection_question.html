@@ -38,20 +38,9 @@
                       <span class="label label-danger pull-right">{{ question.get_required_display }}</span>
                     {% endif %}
                     <div class="row">
-                      <div class="col-md-12">
-                        <div> Answer: {{ question.answer_options }} </div>
-                      </div>
-                      <br><br>
-                      <div class="col-md-12">
+                      <div class="col-md-12" style="padding-top: 3%">
                         <div> 
-                        	{{ catalog }}
-                        	{{ field }}
                         	{{form.text }}
-                        	<select>
-                        		{% for object in list_fields %}
-                        			<option>{{ object }}</option>
-                        		{% endfor %}
-                        	</select> 
                         </div>
                       </div>
                     </div>
