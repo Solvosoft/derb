@@ -46,10 +46,10 @@
                         <div> 
                         	{{ catalog }}
                         	{{ field }}
-                        	{{form.fields }}
+                        	{{form.text }}
                         	<select>
                         		{% for object in list_fields %}
-                        			<option>{{ object.name }}</option>
+                        			<option>{{ object }}</option>
                         		{% endfor %}
                         	</select> 
                         </div>
