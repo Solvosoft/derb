@@ -37,7 +37,9 @@
                 <div id="display_fields">
                   <h4 align="center"><strong>Display fields</strong></h4>
                   <p><strong>Catalog: </strong><span id="catalog_name"></span></p>
-                  {{ form.display_fields }}
+                  <div id='asdx'>
+                    {{ form.display_fields }}
+                  </div>
                 </div>
               </div>
 
@@ -89,6 +91,33 @@
     }
 
     $(document).ready(function () {
+      $("#id_catalog option:selected").each(function () {
+        $('#catalog_name').html($(this).text());
+        var catalog_id = $(this).val();
+        $.ajax({
+          url: "/get_catalog_display_fields/",
+          type: 'GET',
+          data: {
+            catalog_id: catalog_id
+          },
+          success: function (data) {
+            $('#asdx').html('');
+
+            var display_fields = data.content;
+            var html = '';
+            var count = 0;
+            var id = '';
+            for (var i = 0; i < display_fields.length; i++) {
+              id = 'id_display_fields_' + count;
+              html += '<ul><li><label for="' + id + '"><input id="' + id + '" type="checkbox" value="' + display_fields[i][0] + '" name="display_fields"> ' + display_fields[i][1] + '</label></li></ul>';
+              count++;
+            }
+            console.log(html);
+            $('#asdx').html(html);
+          }
+        });
+      });
+
       $("#id_catalog").change(function () {
         $("#id_catalog option:selected").each(function () {
           $('#catalog_name').html($(this).text());
@@ -100,7 +129,7 @@
               catalog_id: catalog_id
             },
             success: function (data) {
-              $('#id_display_fields').html('');
+              $('#asdx').html('');
 
               var display_fields = data.content;
               var html = '';
@@ -108,11 +137,11 @@
               var id = '';
               for (var i = 0; i < display_fields.length; i++) {
                 id = 'id_display_fields_' + count;
-                html += '<li><label for="' + id + '"><input id="' + id + '" type="checkbox" value="' + display_fields[i][0] +'" name="display_fields"> ' + display_fields[i][1] + '</label></li>';
+                html += '<ul><li><label for="' + id + '"><input id="' + id + '" type="checkbox" value="' + display_fields[i][0] + '" name="display_fields"> ' + display_fields[i][1] + '</label></li></ul>';
                 count++;
               }
               console.log(html);
-              $('#id_display_fields').html(html);
+              $('#asdx').html(html);
             }
           });
         });
