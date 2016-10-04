@@ -2,46 +2,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {# METADATA #}
-    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <meta charset="UTF-8">
+  {# METADATA #}
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  <meta charset="UTF-8">
 
-    {# TITLE #}
-    <title>Derb | {% block title %}Django Enterprise Report Builder{% endblock %}</title>
+  {# TITLE #}
+  <title>Derb | {% block title %}Django Enterprise Report Builder{% endblock %}</title>
 
-    {# TODO: FAVICON #}
-    {% block favicon %}
-        <link rel="icon" href="{% static 'admin/img/icon-alert.svg' %}" type="image/svg"/>
-        <link rel="shorcut icon" href="{% static 'admin/img/icon-alert.svg' %}"/>
-    {% endblock %}
+  {# TODO: FAVICON #}
+  {% block favicon %}
+    <link rel="icon" href="{% static 'admin/img/icon-alert.svg' %}" type="image/svg"/>
+    <link rel="shorcut icon" href="{% static 'admin/img/icon-alert.svg' %}"/>
+  {% endblock %}
 
-    {# CSS #}
-    <link rel="stylesheet" href="{% static 'report_builder/css/bootstrap.min.css' %}"/>
-    <link rel="stylesheet" href="{% static 'report_builder/css/bootstrap-theme.min.css' %}"/>
-    <link rel="stylesheet" href="{% static 'report_builder/css/derb.css' %}"/>
-    <link rel="stylesheet" href="{% static 'report_builder/css/jquery-ui.css' %}"/>
-    {% block css %}
-    {% endblock %}
+  {# CSS #}
+  <link rel="stylesheet" href="{% static 'report_builder/css/bootstrap.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'report_builder/css/bootstrap-theme.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'report_builder/css/bootflat.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'report_builder/css/derb.css' %}"/>
+  <link rel="stylesheet" href="{% static 'report_builder/css/jquery-ui.css' %}"/>
+  {% block css %}
+  {% endblock %}
 
-    {# Javascript #}
-    <script src="{% static 'report_builder/js/jquery.min.js' %}"></script>
-    <script src="{% static 'report_builder/js/jquery-ui.min.js' %}"></script>
-    {% block header_js %}
-    {% endblock %}
+  {# Javascript #}
+  <script src="{% static 'report_builder/js/jquery.min.js' %}"></script>
+  <script src="{% static 'report_builder/js/jquery-ui.min.js' %}"></script>
+  {% block header_js %}
+  {% endblock %}
 </head>
 <body>
-{# Nav Bar #}
-{% include 'derb/components/navbar.html' %}
+{# Navigation bar #}
+<div id="site_header">
+  {% include 'derb/components/navbar.html' %}
+</div>
 
-<div class="container" id="id_contents">
+
+{# Site body #}
+<div id="site_body">
+  <div class="container" id="id_contents">
     <div id="messages" class="derb_alert">
-        <ul id="message_queue"></ul>
+      <ul id="message_queue"></ul>
     </div>
     {% block main_block %}{% endblock %}
+  </div>
 </div>
 
 {# Footer #}
+<div id="site_footer">
 {% include 'derb/components/footer.html' %}
+</div>
 
 <script src="{% static 'report_builder/js/bootstrap.min.js' %}"></script>
 <script src="{% static 'report_builder/js/derb.js' %}"></script>

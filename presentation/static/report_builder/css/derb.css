@@ -1,23 +1,31 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
 
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-    position: relative;
+#site_container {
     min-height: 100%;
+    position: relative;
+    background: white;
 }
 
-body {
-    /* Margin bottom by footer height */
-    margin-bottom: 60px;
+#site_header {
+    background: whitesmoke;
 }
 
-.footer {
+#site_body {
+    padding-bottom: 60px;
+    background: white;
+}
+
+#site_footer {
     position: absolute;
     bottom: 0;
     width: 100%;
-    /* Set the fixed height of the footer here */
     height: 60px;
-    background-color: #f5f5f5;
+    margin-top: 100px;
+    color: whitesmoke;
 }
 
 .question_option_panel {

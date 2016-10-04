@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-static-top">
+<nav class="navbar navbar-dark bg-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
@@ -8,7 +8,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{% url 'report_builder:index' %}">Derb</a>
+            <a class="navbar-brand" href="{% url 'report_builder:index' %}"><strong>DERB</strong></a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -28,16 +28,6 @@
                     <li class="active"><a href="#">Public reports<span class="sr-only">(current)</span></a></li>
                 </ul>
             {% endif %}
-            <form class="navbar-form navbar-left">
-                <div class="form-group">
-                    {% if request.user.is_authenticated %}
-                        <input type="text" class="form-control" placeholder="Search">
-                    {% else %}
-                        <input type="text" class="form-control" placeholder="Search in the public reports">
-                    {% endif %}
-                </div>
-                <button type="submit" class="btn btn-default">Search</button>
-            </form>
             {% if user.is_authenticated %}
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="#">Settings</a></li>
