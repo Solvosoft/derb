@@ -6,6 +6,8 @@ from django.utils.translation import ugettext as _
 
 from report_builder.models import Question, Answer
 from report_builder.report_shortcuts import get_question_permission
+from django.db.models.fields import DecimalField
+from lib2to3.fixer_util import Attr
 
 
 class QuestionForm(forms.ModelForm):
@@ -64,6 +66,7 @@ class AnswerForm(forms.ModelForm):
         return instance
 
 
+# Boolean answer form
 class BooleanAnswerForm(AnswerForm):
     option = forms.ChoiceField
     attrs = {
@@ -77,9 +80,33 @@ class BooleanAnswerForm(AnswerForm):
 
         self.fields['text'] = self.option(widget=forms.RadioSelect(self.attrs), choices=self.choices)
 
-
     def save(self, db_use):
         instance = super(BooleanAnswerForm, self).save(db_use)
         selected_option = dict(self.fields['text'].choices)
         instance.display_text = selected_option[instance.text]
         return instance
+
+
+# Integer question form
+class IntegerQuestionForm(QuestionForm):
+    minimum = forms.DecimalField(initial=0)
+    maximum = forms.DecimalField(initial=100)
+    steps = forms.DecimalField(initial=1)
+
+    class Meta:
+        model = Question
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'rows': 6,
+                'placeholder': 'Write your question here',
+                'class': 'form-control'
+            }),
+            'help': forms.Textarea(attrs={
+                'cols': 80,
+                'rows': 5,
+                'placeholder': 'A little help never hurts',
+                'class': 'form-control'
+            }),
+
+        }
+        fields = ('text', 'help', 'required', 'minimum', 'maximum', 'steps', 'id')

@@ -1,6 +1,4 @@
 #from report_builder.models import QuestionInfoRelation
-
-
 def get_question_with_permission(questions, parent):
     '''
     try:
