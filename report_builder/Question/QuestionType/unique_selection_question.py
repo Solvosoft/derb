@@ -21,6 +21,26 @@ from report_builder.Question.forms import UniqueSelectionAdminForm, \
 from report_builder.models import Question, Answer, Report, ReportByProject
 from report_builder.registry import models
 
+class GetCatalogChoices():
+    
+    def get_catalog_choices(self, json_field):
+        answer_options = json.loads(json_field)
+        catalog = answer_options['catalog']
+        display_field = answer_options['display_fields']
+
+        list_fields = models[catalog][0]
+        list_temp = []
+
+        for object in list_fields:
+            text = ""
+            value = object.pk
+            for i, field in enumerate(display_field):
+                text += getattr(object, field)
+                if (i + 1) != len(display_field):
+                    text += ' - '
+            list_temp.append((value, text))
+
+        return tuple(list_temp)
 
 class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
     form_class = UniqueSelectionAdminForm
@@ -68,7 +88,7 @@ class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
         return self.get(request, *args, **kwargs)
 
 
-class UniqueSelectionResp(QuestionView.QuestionViewResp):
+class UniqueSelectionResp(GetCatalogChoices, QuestionView.QuestionViewResp):
     template_name = 'responsable/unique_selection_question.html'
     name = 'unique_selection_question'
     form_class = UniqueSelectionAnswerForm
@@ -81,7 +101,7 @@ class UniqueSelectionResp(QuestionView.QuestionViewResp):
         self.form_number = random.randint(self.start_number, self.end_number)
         self.question = Question.objects.get(pk=kwargs['question_pk'])
         json_field = self.question.answer_options
-
+        
         catalog_choices = self.get_catalog_choices(json_field)
 
         form = self.get_form(instance=self.answer, extra=catalog_choices)
@@ -127,27 +147,7 @@ class UniqueSelectionResp(QuestionView.QuestionViewResp):
 
         return self.get(request, *args, **kwargs)
 
-    def get_catalog_choices(self, json_field):
-        answer_options = json.loads(json_field)
-        catalog = answer_options['catalog']
-        display_field = answer_options['display_fields']
-
-        list_fields = models[catalog][0]
-        list_temp = []
-
-        for object in list_fields:
-            text = ""
-            value = object.pk
-            for i, field in enumerate(display_field):
-                text += getattr(object, field)
-                if (i + 1) != len(display_field):
-                    text += ' - '
-            list_temp.append((value, text))
-
-        return tuple(list_temp)
-
-
-class UniqueSelectionPDF(QuestionView.QuestionViewPDF):
+class UniqueSelectionPDF(GetCatalogChoices, QuestionView.QuestionViewPDF):
     name = 'unique_selection_question'
     template_name = 'pdf/unique_selection_question.html'
 
@@ -155,7 +155,10 @@ class UniqueSelectionPDF(QuestionView.QuestionViewPDF):
         self.request = request
         self.question = Question.objects.get(pk=kwargs['question_pk'])
         self.answer = Answer.objects.filter(question=self.question).first()
-
+        json_field = self.question.answer_options
+        catalog_choices = self.get_catalog_choices(json_field)
+        userAnswer = catalog_choices[int(self.answer.text)][1]
+        
         parameters = {
             'name': self.name,
             'question': self.question,
@@ -164,6 +167,7 @@ class UniqueSelectionPDF(QuestionView.QuestionViewPDF):
             'request': self.request,
             'form_number': str(random.randint(self.start_number, self.end_number)),
             'datetime': timezone.now(),
+            'userAnswer': userAnswer
         }
 
         template = get_template(self.template_name)
