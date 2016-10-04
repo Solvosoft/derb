@@ -95,6 +95,10 @@ class UniqueSelectionAdminForm(QuestionForm):
 class UniqueSelectionAnswerForm(AnswerForm):
     text = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}))
 
-        
-    
-    
+    def __init__(self, *args, **kwargs):
+        if 'extra' in kwargs:
+            catalog = kwargs.pop('extra')
+            super(UniqueSelectionAnswerForm, self).__init__(*args, **kwargs)
+            self.fields['text'].choices = catalog
+        else:
+            super(UniqueSelectionAnswerForm, self).__init__(*args, **kwargs)
