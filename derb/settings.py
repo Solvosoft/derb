@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'report_builder',
     'presentation',
     'password_reset',
-    'async_notifications'
+    'async_notifications',
+    'django_wysiwyg',
+    'ckeditor'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -122,6 +124,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'auth.User'
 
@@ -150,4 +153,48 @@ CELERYBEAT_SCHEDULE = {
         'task': 'async_notifications.tasks.send_daily',
         'schedule': crontab(minute=30, hour=0),
     },
+}
+
+# If you wish to use CKEditor set the flavor in settings.py:
+DJANGO_WYSIWYG_FLAVOR = "ckeditor"
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'media/')
+
+CKEDITOR_UPLOAD_PATH = "media/"
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Full',
+        'height': 300,
+        'width': '100%',
+    },
+    'basic': {
+        'width': '100%',
+        'toolbar': 'Basic',
+        "toolbar_Basic": [['Source', '-', 'Save', 'NewPage', 'DocProps', 'Preview', 'Print', '-', 'Templates'],
+                          ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],
+                          ['Find', 'Replace', '-', 'SelectAll', '-', 'SpellChecker', 'Scayt'],
+                          ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
+                           'HiddenField'],
+                          ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
+                          ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv',
+                           '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr',
+                           'BidiRtl'],
+                          ['Link', 'Unlink', 'Anchor'],
+                          ['Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],
+                          ['Styles', 'Format', 'Font', 'FontSize'],
+                          ['TextColor', 'BGColor'],
+                          ['Maximize', 'ShowBlocks', '-', 'About']],
+        "language": "en",
+        "skin": "moono",
+    },
+    'empty': {
+        'toolbar': 'Basic',
+        'height': 200,
+        'width': 500,
+        "toolbar_Basic": [],
+        "language": "en",
+        "skin": "moono",
+    }
 }

@@ -1,4 +1,5 @@
 #from report_builder.models import QuestionInfoRelation
+
 def get_question_with_permission(questions, parent):
     '''
     try:
@@ -9,7 +10,6 @@ def get_question_with_permission(questions, parent):
     return question
     '''
     return
-
 
 def get_question_permission(question):
     """
@@ -29,4 +29,4 @@ def get_question_permission(question):
                 return_value = questions[parent]['required']
     return return_value
     '''
-    return
+    return 1

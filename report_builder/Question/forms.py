@@ -3,11 +3,8 @@ import random
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
-
 from report_builder.models import Question, Answer
-from report_builder.report_shortcuts import get_question_permission
-from django.db.models.fields import DecimalField
-from lib2to3.fixer_util import Attr
+from ckeditor.widgets import CKEditorWidget
 
 
 class QuestionForm(forms.ModelForm):
@@ -39,8 +36,8 @@ class AnswerForm(forms.ModelForm):
 
     def clean_text(self):
         text = self.cleaned_data['text']
-        required = get_question_permission(self.instance.question)
-        if required == 1 and not text:
+        # required = get_question_permission(self.instance.question)
+        if not text:
             raise ValidationError(_('This field is required'), code='required')
         return text
 
@@ -49,11 +46,13 @@ class AnswerForm(forms.ModelForm):
         fields = ('annotation', 'text')
         widgets = {
             'annotation': forms.Textarea(attrs={
+                'id': 'foo',
                 'rows': 9,
                 'placeholder': 'Annotations',
                 'class': 'form-control'
             }),
             'text': forms.Textarea(attrs={
+                'id': 'foo',
                 'rows': 6,
                 'placeholder': 'Write here your answer',
                 'class': 'form-control'
@@ -110,3 +109,34 @@ class IntegerQuestionForm(QuestionForm):
 
         }
         fields = ('text', 'help', 'required', 'minimum', 'maximum', 'steps', 'id')
+
+
+class SimpleTextAnswerForm(AnswerForm):
+    class Meta:
+        model = Answer
+        fields = ('text', 'annotation')
+        widgets = {
+            'text': CKEditorWidget(config_name='default'),
+            'annotation': CKEditorWidget(config_name='default')
+        }
+
+    def save(self, db_use):
+        instance = super(SimpleTextAnswerForm, self).save(db_use)
+        instance.display_text = instance.text
+        return instance
+
+
+# Simple_Text_Question
+class SimpleTextQuestionForm(QuestionForm):
+    class Meta:
+        model = Question
+        fields = ('text', 'help', 'id', 'required')
+        widgets = {
+            'text': CKEditorWidget(config_name='default'),
+            'help': CKEditorWidget(config_name='default')
+        }
+
+    def save(self, db_use):
+        instance = super(SimpleTextQuestionForm, self).save(db_use)
+        instance.display_text = instance.text
+        return instance
