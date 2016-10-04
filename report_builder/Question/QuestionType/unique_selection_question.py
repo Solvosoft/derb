@@ -41,13 +41,15 @@ class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
         return render(request, self.template_name, parameters)
     
     def post(self, request, *args, **kwargs):
+        data = dict(request.POST)
+        display_fields = data['display_fields']
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
         form = self.get_form(request.POST, instance=self.question)
         if form.is_valid():
             answer_options = {
                 'catalog': int(form.cleaned_data.get('catalog')),
-                'display_fields': form.cleaned_data.get('display_fields')
+                'display_fields': display_fields
             }
             question = form.save(False)
             question.class_to_load = self.name

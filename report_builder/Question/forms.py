@@ -70,7 +70,7 @@ class UniqueSelectionAdminForm(QuestionForm):
     register_test_catalogs()
     CATALOGS = ((index, model[1]) for index, model in enumerate(models))
     catalog = forms.ChoiceField(choices=CATALOGS)
-    display_fields = forms.MultipleChoiceField(choices=models[0][3], widget=forms.CheckboxSelectMultiple, required=False)
+    display_fields = forms.Field(required=False)
     
     class Meta:
         model = Question
