@@ -6,14 +6,18 @@ Created on 14/9/2016
 import json
 import random
 
-from django.http import Http404
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib import messages
+from django_ajax.decorators import ajax
+from django.template import Context
+from django.template.loader import get_template
+from django.utils import timezone
+from weasyprint import HTML
+
 from report_builder.Question import QuestionView
 from report_builder.Question.forms import UniqueSelectionAdminForm, \
     UniqueSelectionAnswerForm
-from django_ajax.decorators import ajax
-
 from report_builder.models import Question, Answer, Report, ReportByProject
 from report_builder.registry import models
 
@@ -144,8 +148,36 @@ class UniqueSelectionResp(QuestionView.QuestionViewResp):
 
 
 class UniqueSelectionPDF(QuestionView.QuestionViewPDF):
+    name = 'unique_selection_question'
+    template_name = 'pdf/unique_selection_question.html'
+
     def get(self, request, *args, **kwargs):
-        return render(request, 'pdf/unique_selection_question.html')
+        self.request = request
+        self.question = Question.objects.get(pk=kwargs['question_pk'])
+        self.answer = Answer.objects.filter(question=self.question).first()
+
+        parameters = {
+            'name': self.name,
+            'question': self.question,
+            'question_number': self.question.order,
+            'answer': self.answer,
+            'request': self.request,
+            'form_number': str(random.randint(self.start_number, self.end_number)),
+            'datetime': timezone.now(),
+        }
+
+        template = get_template(self.template_name)
+
+        html = template.render(Context(parameters)).encode('UTF-8')
+
+        page = HTML(string=html, encoding='utf-8').write_pdf()
+
+        response = HttpResponse(page, content_type='application/pdf')
+
+        response[
+            'Content-Disposition'] = 'attachment; filename="question_report.pdf"'
+
+        return response
 
 
 @ajax
