@@ -58,6 +58,7 @@ class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
             question.save()
             messages.add_message(request, messages.SUCCESS, 'Question created successfully')
         else:
+            print(form.errors)
             messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
         return self.get(request, *args, **kwargs)
        
