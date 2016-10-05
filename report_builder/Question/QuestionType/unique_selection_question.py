@@ -157,7 +157,9 @@ class UniqueSelectionPDF(GetCatalogChoices, QuestionView.QuestionViewPDF):
         self.answer = Answer.objects.filter(question=self.question).first()
         json_field = self.question.answer_options
         catalog_choices = self.get_catalog_choices(json_field)
-        userAnswer = catalog_choices[int(self.answer.text)][1]
+        userAnswer = ""
+        if self.answer:
+            userAnswer = catalog_choices[int(self.answer.text)][1]
         
         parameters = {
             'name': self.name,
