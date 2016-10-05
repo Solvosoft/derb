@@ -12,9 +12,11 @@ celery==3.1.23
 cffi==1.8.3
 cssselect==0.9.2
 Django==1.10
+django-ckeditor==5.1.1
 django-password-reset==0.9
 django-registration==2.1.2
 django-reversion==2.0.6
+djangoajax==2.3.6
 docutils==0.12
 html5lib==0.999999999
 imagesize==0.7.1
