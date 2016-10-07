@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'presentation',
     'password_reset',
     'async_notifications',
-    'django_wysiwyg',
     'ckeditor'
 ]
 
