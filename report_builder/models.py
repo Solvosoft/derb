@@ -223,7 +223,7 @@ class Question(models.Model):
         (1, _('Required')),
         (2, _('Required by hierarchy'))
     )
-    report = models.ForeignKey(Report)
+    report = models.ForeignKey(Report, null=True)
     class_to_load = models.CharField(max_length=30)
     text = models.TextField()
     help = models.TextField(blank=True)
@@ -246,7 +246,7 @@ class Question(models.Model):
 @python_2_unicode_compatible
 class Answer(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    report = models.ForeignKey(ReportByProject)
+    report = models.ForeignKey(ReportByProject, null=True)
     question = models.ForeignKey(Question)
     annotation = models.TextField(blank=True)
     text = models.TextField(blank=True)
