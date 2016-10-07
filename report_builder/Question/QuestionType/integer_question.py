@@ -58,28 +58,28 @@ class IntegerQuestionAdmin(QuestionViewAdmin):
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
         form = self.get_form(request.POST, instance=self.question)
-        
+
         if form.is_valid():
             answer_options = {
-                              
+
                 'minimum': int(form.cleaned_data.get('minimum', 0)),
                 'maximum': int(form.cleaned_data.get('maximum', 0)),
                 'steps': int(form.cleaned_data.get('steps', 0))
             }
             minimum = answer_options['minimum']
             maximum = answer_options['maximum']
-            minmax= maximum-minimum
+            minmax = maximum - minimum
             steps = answer_options['steps']
-            if minimum < maximum:   
-                if steps <= minmax:      
+            if minimum < maximum:
+                if steps <= minmax:
                     question = form.save(False)
                     question.class_to_load = self.name
-                    question.report = Report.objects.first()
                     question.answer_options = json.dumps(answer_options)
                     question.save()
                     messages.add_message(request, messages.SUCCESS, 'Question created successfully')
                 else:
-                    messages.add_message(request, messages.ERROR, 'The number of steps is bigger than the number of questions')
+                    messages.add_message(request, messages.ERROR,
+                                         'The number of steps is bigger than the number of questions')
             else:
                 messages.add_message(request, messages.ERROR, 'Minimum has to be smaller than maximum')
         else:
@@ -105,13 +105,12 @@ class IntegerQuestionResp(QuestionViewResp):
         minimum = answer_options['minimum']
         maximum = answer_options['maximum']
         steps = answer_options['steps']
-       # print(minimum)
-        answer= self.request.GET.get("integer_answer");
+        answer = self.request.GET.get("integer_answer")
         parameters = {
-            'integer_answer':answer,
-            'minimum':minimum,
-            'maximum':maximum,
-            'steps':steps,
+            'integer_answer': answer,
+            'minimum': minimum,
+            'maximum': maximum,
+            'steps': steps,
             'name': self.name,
             'form': form,
             'question': self.question,
@@ -119,8 +118,7 @@ class IntegerQuestionResp(QuestionViewResp):
             'answer': self.answer,
             'form_number': str(self.form_number)
         }
-        print('todo bien en get')
-        
+
         return render(request, self.template_name, parameters)
 
     def post(self, request, *args, **kwargs):
@@ -143,11 +141,10 @@ class IntegerQuestionResp(QuestionViewResp):
             answer = form.save(False)
             answer.question = self.question
             answer.user = request.user
-            answer.report = ReportByProject.objects.first()
             integer_answer = self.request.POST.get("integer_answer")
-            answer.text= str(integer_answer)
-            answer.annotation=str(integer_answer)
-            answer.display_text=str(integer_answer)
+            answer.text = str(integer_answer)
+            answer.annotation = str(integer_answer)
+            answer.display_text = str(integer_answer)
             self.answer = answer
             self.save(answer)
             messages.add_message(request, messages.SUCCESS, 'Question answered successfully')
@@ -155,7 +152,8 @@ class IntegerQuestionResp(QuestionViewResp):
             messages.add_message(request, messages.ERROR, 'An error ocurred while answering the question')
 
         return self.get(request, *args, **kwargs)
-    
+
+
 class IntegerQuestionViewPDF(QuestionViewPDF):
     name = 'integer_question'
     template_name = 'pdf/integer_question.html'
@@ -171,7 +169,7 @@ class IntegerQuestionViewPDF(QuestionViewPDF):
             'question_number': self.question.order,
             'answer': self.answer,
             'form_number': str(random.randint(self.start_number, self.end_number)),
-            #'datetime': timezone.now(),
+            # 'datetime': timezone.now(),
         }
 
         template = get_template(self.template_name)
