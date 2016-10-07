@@ -20,7 +20,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from django.db import models
 
-
 # Report states
 RS_SUBMIT_PENDING = 0
 RS_UNSUBMITTED = 1
@@ -56,7 +55,6 @@ REVIEWER_ORDERS = (
     (REV_SIXTH, _('Sixth')),
     (REV_SEVENTH, _('Seventh'))
 )
-
 
 @python_2_unicode_compatible
 class Project(models.Model):
@@ -306,3 +304,25 @@ class RevisionTree(models.Model):
         # TODO: permissions
         verbose_name = _('Revision Tree')
         verbose_name_plural = _('Revision Tree')
+
+
+# Testing catalogs
+
+@python_2_unicode_compatible
+class City(models.Model):
+    code = models.CharField(max_length=2)
+    name = models.CharField(max_length=255)
+    location = models.CharField(max_length=255)
+
+    def __str__(self):
+        return '%s' % self.name
+
+
+@python_2_unicode_compatible
+class Country(models.Model):
+    code = models.CharField(max_length=2)
+    name = models.CharField(max_length=255)
+    capital = models.CharField(max_length=255)
+
+    def __str__(self):
+        return '%s' % self.name

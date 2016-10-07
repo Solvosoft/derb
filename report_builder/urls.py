@@ -4,12 +4,14 @@ from report_builder import views
 from report_builder.Question.QuestionType import integer_question
 from report_builder import initial_views as init
 from report_builder.Question.QuestionType import simple_text_question
-
 from report_builder.Question.QuestionType import boolean_question
+from report_builder.Question.QuestionType import unique_selection_question
+from report_builder.Question.QuestionType.unique_selection_question import get_catalog_display_fields
 
 # Boolean question
 # Integer question
 # Simple text question
+# Unique selection question
 question_types_urls = [
     url(r'boolean/admin$', boolean_question.BooleanQuestionViewAdmin.as_view(),
         name='boolean_question_admin'),
@@ -28,12 +30,19 @@ question_types_urls = [
     url(r'simple/resp/(?P<question_pk>\d+)', simple_text_question.SimpleQuestionViewResp.as_view(),
         name='simple_text_question_resp'),
     url(r'simple/pdf/(?P<question_pk>\d+)', simple_text_question.SimpleTextQuestionPDF.as_view(),
-        name='simple_text_question_pdf')
+        name='simple_text_question_pdf'),
+    url(r"unique/admin$", unique_selection_question.UniqueSelectionAdmin.as_view(), name="unique_selection_admin"),
+    url(r"unique/resp/(?P<question_pk>\d+)", unique_selection_question.UniqueSelectionResp.as_view(),
+        name="unique_selection_resp"),
+    url(r"unique/pdf/(?P<question_pk>\d+)", unique_selection_question.UniqueSelectionPDF.as_view(),
+        name="unique_selection_pdf"),
 ]
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^init$', init.InitialIndexView.as_view(), name='init'),
     url(r'^report/new/$', init.NewReportView.as_view(), name='new_report_template'),
-    url(r'^question_types/', include(question_types_urls))
+    url(r'^question_types/', include(question_types_urls)),
+    url(r'^report/new/$', init.NewReportView.as_view(), name='new_report_template'),
+    url(r"^get_catalog_display_fields", get_catalog_display_fields, name='get_catalog_display_fields')
 ]

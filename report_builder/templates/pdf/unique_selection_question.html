@@ -1,0 +1,47 @@
+<html>
+	<head>
+		<style>
+			@page {
+				margin: 3cm 2cm;
+				padding-left: 1.5cm;
+			@top-left {
+				content: "Question Report";
+			}
+			@top-right {
+			content: "Date: {{ datetime }}";
+			}
+			@bottom-right {
+			content: "Page " counter(page) " of " counter(pages) ;
+			}
+			@bottom-left {
+			content: "User: {{ request.user.get_username }}";
+			}
+			}
+			body {
+				text-align: justify;
+				font-family: sans-serif;
+			}
+			.question_text {
+				background-color: lightblue;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="question_text">
+			{% if question %}
+			<h2>Question: {{ question.text|safe }}</h2>
+			{% endif %}
+		</div>
+		<div class="answer_text">
+			{% if answer %}
+			<p>
+				Answer: {{ userAnswer }}
+			</p>
+			{% else %}
+			<p>
+				The Question Don't Have Answer!!
+			</p>
+			{% endif %}
+		</div>
+	</body>
+</html>

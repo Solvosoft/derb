@@ -5,6 +5,8 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 from report_builder.models import Question, Answer
 from ckeditor.widgets import CKEditorWidget
+from report_builder.registry import models
+from report_builder.catalogs import register_test_catalogs
 
 
 class QuestionForm(forms.ModelForm):
@@ -140,3 +142,42 @@ class SimpleTextQuestionForm(QuestionForm):
         instance = super(SimpleTextQuestionForm, self).save(db_use)
         instance.display_text = instance.text
         return instance
+
+
+class UniqueSelectionAdminForm(QuestionForm):
+    register_test_catalogs()
+    CATALOGS = ((index, model[1]) for index, model in enumerate(models))
+    catalog = forms.ChoiceField(choices=CATALOGS)
+    display_fields = forms.Field(required=False)
+
+    class Meta:
+        model = Question
+        fields = ('text', 'help', 'required', 'id')
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'rows': 6,
+                'placeholder': 'Write your question here',
+                'class': 'form-control'
+            }),
+            'help': forms.Textarea(attrs={
+                'cols': 80,
+                'rows': 5,
+                'placeholder': 'A little help never hurts',
+                'class': 'form-control'
+            }),
+            'required': forms.Select(attrs={
+                'class': 'form-control'
+            })
+        }
+
+
+class UniqueSelectionAnswerForm(AnswerForm):
+    text = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}))
+
+    def __init__(self, *args, **kwargs):
+        if 'extra' in kwargs:
+            catalog = kwargs.pop('extra')
+            super(UniqueSelectionAnswerForm, self).__init__(*args, **kwargs)
+            self.fields['text'].choices = catalog
+        else:
+            super(UniqueSelectionAnswerForm, self).__init__(*args, **kwargs)
