@@ -50,7 +50,6 @@ class SimpleTextQuestionAdmin(QuestionViewAdmin):
         if form.is_valid():
             question = form.save(False)
             question.class_to_load = self.name
-            question.report = Report.objects.first()
             question.answer_options = json.dumps({})
             question.save()
             messages.add_message(request, messages.SUCCESS, 'Question created successfully')
@@ -104,7 +103,6 @@ class SimpleQuestionViewResp(QuestionViewResp):
             answer = form.save(False)
             answer.question = self.question
             answer.user = request.user
-            answer.report = ReportByProject.objects.first()
             self.answer = answer
             self.save(answer)
             messages.add_message(request, messages.SUCCESS, 'Question answered successfully')
