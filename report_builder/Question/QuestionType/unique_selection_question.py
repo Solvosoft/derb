@@ -22,25 +22,24 @@ from report_builder.models import Question, Answer, Report, ReportByProject
 from report_builder.registry import models
 
 
-class GetCatalogChoices():
-    def get_catalog_choices(self, json_field):
-        answer_options = json.loads(json_field)
-        catalog = answer_options['catalog']
-        display_field = answer_options['display_fields']
+def get_catalog_values(queryset, display_fields):
+    for object in queryset:
+        text = ""
+        value = object.pk
+        for i, field in enumerate(display_fields):
+            text += getattr(object, field)
+            if (i + 1) != len(display_fields):
+                text += ' - '
+        yield (value, text)
 
-        list_fields = models[catalog][0]
-        list_temp = []
+def get_catalog_choices(json_field):
+    answer_options = json.loads(json_field)
+    catalog = answer_options['catalog']
+    display_fields = answer_options['display_fields']
+    queryset = models[catalog][0]
 
-        for object in list_fields:
-            text = ""
-            value = object.pk
-            for i, field in enumerate(display_field):
-                text += getattr(object, field)
-                if (i + 1) != len(display_field):
-                    text += ' - '
-            list_temp.append((value, text))
+    return (value_text for value_text in get_catalog_values(queryset, display_fields))
 
-        return tuple(list_temp)
 
 
 class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
@@ -89,7 +88,7 @@ class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
         return self.get(request, *args, **kwargs)
 
 
-class UniqueSelectionResp(GetCatalogChoices, QuestionView.QuestionViewResp):
+class UniqueSelectionResp(QuestionView.QuestionViewResp):
     template_name = 'responsable/unique_selection_question.html'
     name = 'unique_selection_question'
     form_class = UniqueSelectionAnswerForm
@@ -103,7 +102,7 @@ class UniqueSelectionResp(GetCatalogChoices, QuestionView.QuestionViewResp):
         self.question = get_object_or_404(Question, pk=kwargs['question_pk'])
         json_field = self.question.answer_options
 
-        catalog_choices = self.get_catalog_choices(json_field)
+        catalog_choices = get_catalog_choices(json_field)
 
         form = self.get_form(instance=self.answer, extra=catalog_choices)
 
@@ -124,7 +123,7 @@ class UniqueSelectionResp(GetCatalogChoices, QuestionView.QuestionViewResp):
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
         self.question = get_object_or_404(Question, pk=kwargs['question_pk'])
-        catalog_choices = self.get_catalog_choices(self.question.answer_options)
+        catalog_choices = get_catalog_choices(self.question.answer_options)
 
         if self.answer is None:
             self.answer = Answer()
@@ -149,7 +148,7 @@ class UniqueSelectionResp(GetCatalogChoices, QuestionView.QuestionViewResp):
         return self.get(request, *args, **kwargs)
 
 
-class UniqueSelectionPDF(GetCatalogChoices, QuestionView.QuestionViewPDF):
+class UniqueSelectionPDF(QuestionView.QuestionViewPDF):
     name = 'unique_selection_question'
     template_name = 'pdf/unique_selection_question.html'
 
@@ -158,7 +157,7 @@ class UniqueSelectionPDF(GetCatalogChoices, QuestionView.QuestionViewPDF):
         self.question = Question.objects.get(pk=kwargs['question_pk'])
         self.answer = Answer.objects.filter(question=self.question).first()
         json_field = self.question.answer_options
-        catalog_choices = self.get_catalog_choices(json_field)
+        catalog_choices = get_catalog_choices(json_field)
         userAnswer = ""
         if self.answer:
             userAnswer = catalog_choices[int(self.answer.text)][1]
