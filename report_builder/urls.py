@@ -13,9 +13,9 @@ from report_builder.Question.QuestionType.unique_selection_question import get_c
 # Simple text question
 # Unique selection question
 question_types_urls = [
-    url(r'boolean/admin/(?P<question_pk>\d*)$$', boolean_question.BooleanQuestionViewAdmin.as_view(),
+    url(r'boolean/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$$', boolean_question.BooleanQuestionViewAdmin.as_view(),
         name='boolean_question_admin'),
-    url(r'boolean/resp/(?P<question_pk>\d+)$', boolean_question.BooleanQuestionViewResp.as_view(),
+    url(r'boolean/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', boolean_question.BooleanQuestionViewResp.as_view(),
         name='boolean_question_resp'),
     url(r'boolean/pdf/(?P<question_pk>\d+)$', boolean_question.BooleanQuestionViewPDF.as_view(),
         name='boolean_question_pdf'),

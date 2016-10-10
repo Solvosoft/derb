@@ -22,7 +22,7 @@
           Boolean question (admin)
         </div>
         <div class="panel-body">
-          <form action="{% url 'report_builder:boolean_question_admin' '' %}" method="post">
+          <form action="{% url 'report_builder:boolean_question_admin' report.pk question_pk %}" method="post">
             {% csrf_token %}
             <div class="row">
               <div class="col-md-8">
