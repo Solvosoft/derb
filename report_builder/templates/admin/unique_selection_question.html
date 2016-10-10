@@ -1,5 +1,7 @@
 {% extends 'derb/base.html' %}
 
+{% load static %}
+
 {% block main_block %}
   <div class="row">
     <div class="col-md-offset-2 col-md-8">
@@ -85,65 +87,9 @@
 {% endblock %}
 
 {% block body_js %}
-  <script type="application/javascript">
-    function toggle_help_input() {
-      $("#id_help").toggle();
-    }
-
-    $(document).ready(function () {
-      $("#id_catalog option:selected").each(function () {
-        $('#catalog_name').html($(this).text());
-        var catalog_id = $(this).val();
-        $.ajax({
-          url: "{% url 'report_builder:get_catalog_display_fields' %}",
-          type: 'GET',
-          data: {
-            catalog_id: catalog_id
-          },
-          success: function (data) {
-            $('#display_fields').html('');
-
-            var display_fields = data.content;
-            var html = '';
-            var count = 0;
-            var id = '';
-            for (var i = 0; i < display_fields.length; i++) {
-              id = 'id_display_fields_' + count;
-              html += '<ul><li><label for="' + id + '"><input id="' + id + '" type="checkbox" value="' + display_fields[i][0] + '" name="display_fields"> ' + display_fields[i][1] + '</label></li></ul>';
-              count++;
-            }
-            $('#display_fields').html(html);
-          }
-        });
-      });
-
-      $("#id_catalog").change(function () {
-        $("#id_catalog option:selected").each(function () {
-          $('#catalog_name').html($(this).text());
-          var catalog_id = $(this).val();
-          $.ajax({
-            url: "{% url 'report_builder:get_catalog_display_fields' %}",
-            type: 'GET',
-            data: {
-              catalog_id: catalog_id
-            },
-            success: function (data) {
-              $('#display_fields').html('');
-
-              var display_fields = data.content;
-              var html = '';
-              var count = 0;
-              var id = '';
-              for (var i = 0; i < display_fields.length; i++) {
-                id = 'id_display_fields_' + count;
-                html += '<ul><li><label for="' + id + '"><input id="' + id + '" type="checkbox" value="' + display_fields[i][0] + '" name="display_fields"> ' + display_fields[i][1] + '</label></li></ul>';
-                count++;
-              }
-              $('#display_fields').html(html);
-            }
-          });
-        });
-      });
-    });
+  <script>
+    var catalog_url = "{% url 'report_builder:get_catalog_display_fields' %}";
   </script>
+  <script src="{% static 'report_builder/js/derb_helpers.js' %}"></script>
+  <script src="{% static 'report_builder/js/derb_subcomponents/question_types/unique_selection_question.js' %}"></script>
 {% endblock %}
