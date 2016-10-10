@@ -21,8 +21,8 @@ from report_builder.Question.forms import UniqueSelectionAdminForm, \
 from report_builder.models import Question, Answer, Report, ReportByProject
 from report_builder.registry import models
 
+
 class GetCatalogChoices():
-    
     def get_catalog_choices(self, json_field):
         answer_options = json.loads(json_field)
         catalog = answer_options['catalog']
@@ -41,6 +41,7 @@ class GetCatalogChoices():
             list_temp.append((value, text))
 
         return tuple(list_temp)
+
 
 class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
     form_class = UniqueSelectionAdminForm
@@ -101,7 +102,7 @@ class UniqueSelectionResp(GetCatalogChoices, QuestionView.QuestionViewResp):
         self.form_number = random.randint(self.start_number, self.end_number)
         self.question = get_object_or_404(Question, pk=kwargs['question_pk'])
         json_field = self.question.answer_options
-        
+
         catalog_choices = self.get_catalog_choices(json_field)
 
         form = self.get_form(instance=self.answer, extra=catalog_choices)
@@ -147,6 +148,7 @@ class UniqueSelectionResp(GetCatalogChoices, QuestionView.QuestionViewResp):
 
         return self.get(request, *args, **kwargs)
 
+
 class UniqueSelectionPDF(GetCatalogChoices, QuestionView.QuestionViewPDF):
     name = 'unique_selection_question'
     template_name = 'pdf/unique_selection_question.html'
@@ -160,7 +162,7 @@ class UniqueSelectionPDF(GetCatalogChoices, QuestionView.QuestionViewPDF):
         userAnswer = ""
         if self.answer:
             userAnswer = catalog_choices[int(self.answer.text)][1]
-        
+
         parameters = {
             'name': self.name,
             'question': self.question,
@@ -190,8 +192,10 @@ class UniqueSelectionPDF(GetCatalogChoices, QuestionView.QuestionViewPDF):
 def get_catalog_display_fields(request):
     if request.method == 'GET':
         if request.is_ajax():
-            catalog_id = int(request.GET.get('catalog_id', False))
-            if catalog_id >= 0:
-                catalog = models[catalog_id]
-                return catalog[3]
-    return 0
+            catalog_id = request.GET.get('catalog_id', False)
+            if catalog_id.isdigit():
+                catalog_id = int(catalog_id)
+                if catalog_id >= 0 and catalog_id < len(models):
+                    catalog = models[catalog_id]
+                    return catalog[3]
+    return ()
