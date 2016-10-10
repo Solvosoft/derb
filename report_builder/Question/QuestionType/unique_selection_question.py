@@ -13,6 +13,7 @@ from django_ajax.decorators import ajax
 from django.template import Context
 from django.template.loader import get_template
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 from weasyprint import HTML
 
 from report_builder.Question import QuestionView
