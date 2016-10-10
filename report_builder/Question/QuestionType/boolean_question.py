@@ -3,9 +3,10 @@ import random
 
 from django.contrib import messages
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.template import Context
 from django.template.loader import get_template
+from django.urls import reverse
 from django.utils import timezone
 from weasyprint import HTML
 
@@ -26,6 +27,10 @@ class BooleanQuestionViewAdmin(QuestionViewAdmin):
     }
 
     def get(self, request, *args, **kwargs):
+        question_pk = kwargs.get('question_pk', False)
+        if question_pk and question_pk != '':
+            self.question = get_object_or_404(Question, pk=question_pk)
+
         self.form_number = random.randint(self.start_number, self.end_number)
         self.request = request
         form = self.get_form(instance=self.question)
@@ -34,23 +39,28 @@ class BooleanQuestionViewAdmin(QuestionViewAdmin):
             'question': self.question,
             'name': self.name,
             'form_number': str(self.form_number),
-            'minimal_representation': self.minimal_representation
+            'minimal_representation': self.minimal_representation,
+            'question_pk': question_pk
         }
         return render(request, self.template_name, parameters)
 
     def post(self, request, *args, **kwargs):
+        question_pk = kwargs.get('question_pk', False)
+        if question_pk and question_pk != '':
+            self.question = get_object_or_404(Question, pk=question_pk)
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
         form = self.get_form(request.POST, instance=self.question)
         if form.is_valid():
             question = form.save(False)
             question.class_to_load = self.name
-            question.report = Report.objects.first()
             question.save()
+            question_pk = question.pk
             messages.add_message(request, messages.SUCCESS, 'Question created successfully')
         else:
             messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
-        return self.get(request, *args, **kwargs)
+        print(reverse('report_builder:boolean_question_admin', args=[question_pk]))
+        return redirect(reverse('report_builder:boolean_question_admin', args=[question_pk]))
 
 
 class BooleanQuestionViewResp(QuestionViewResp):
