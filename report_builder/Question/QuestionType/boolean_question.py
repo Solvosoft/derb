@@ -20,8 +20,8 @@ class BooleanQuestionViewAdmin(QuestionViewAdmin):
     template_name = 'admin/boolean_question.html'
     name = 'boolean_question'
     minimal_representation = {
-        'human_readable_name': 'Yes/No question',
-        'help': 'Allows you to make yes/no questions',
+        'human_readable_name': _('Yes/No question'),
+        'help': _('Allows you to make yes/no questions'),
         'color': '#330065'
     }
 

@@ -24,8 +24,8 @@ class IntegerQuestionAdmin(QuestionViewAdmin):
     template_name = 'admin/integer_question.html'
     name = 'integer_question'
     minimal_representation = {
-        'human_readable_name': 'Numerical question',
-        'help': 'Allows you to make numerical questions',
+        'human_readable_name': _('Numerical question'),
+        'help': _('Allows you to make numerical questions'),
         'color': '#330065'
     }
 
@@ -76,14 +76,14 @@ class IntegerQuestionAdmin(QuestionViewAdmin):
                     question.class_to_load = self.name
                     question.answer_options = json.dumps(answer_options)
                     question.save()
-                    messages.add_message(request, messages.SUCCESS, 'Question created successfully')
+                    messages.add_message(request, messages.SUCCESS, _('Question created successfully'))
                 else:
                     messages.add_message(request, messages.ERROR,
-                                         'The number of steps is bigger than the number of questions')
+                                         _('The number of steps is bigger than the number of questions'))
             else:
-                messages.add_message(request, messages.ERROR, 'Minimum has to be smaller than maximum')
+                messages.add_message(request, messages.ERROR, _('Minimum has to be smaller than maximum'))
         else:
-            messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
+            messages.add_message(request, messages.ERROR, _('An error ocurred while creating the question'))
         return self.get(request, *args, **kwargs)
 
 
@@ -147,9 +147,9 @@ class IntegerQuestionResp(QuestionViewResp):
             answer.display_text = str(integer_answer)
             self.answer = answer
             self.save(answer)
-            messages.add_message(request, messages.SUCCESS, 'Question answered successfully')
+            messages.add_message(request, messages.SUCCESS, _('Question answered successfully'))
         else:
-            messages.add_message(request, messages.ERROR, 'An error ocurred while answering the question')
+            messages.add_message(request, messages.ERROR, _('An error ocurred while answering the question'))
 
         return self.get(request, *args, **kwargs)
 

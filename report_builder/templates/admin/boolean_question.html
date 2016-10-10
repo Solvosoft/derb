@@ -1,6 +1,6 @@
 {% include 'derb/base.html' %}
 
-{% load static %}
+{% load static i18n %}
 
 {% block main_block %}
   <div class="row">
@@ -8,18 +8,18 @@
       {% for message in messages %}
         {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
           <div class="alert alert-success">
-            <strong>Success:</strong> {{ message }}
+            <strong>{% trans 'Success:' %}</strong> {{ message }}
           </div>
         {% endif %}
         {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
           <div class="alert alert-danger">
-            <strong>Error:</strong> {{ message }}
+            <strong>{% trans 'Error:' %}</strong> {{ message }}
           </div>
         {% endif %}
       {% endfor %}
       <div class="panel panel-info">
         <div class="panel-heading">
-          Boolean question (admin)
+          {% trans 'Boolean question (admin)' %}
         </div>
         <div class="panel-body">
           <form action="{% url 'report_builder:boolean_question_admin' report.pk question_pk %}" method="post">
@@ -33,8 +33,8 @@
               <div class="col-md-4 question_option_panel text-center">
                 <br>
                 <div class="btn-group">
-                  <a class="btn btn-primary" onclick="toggle_help_input();">See/Hide</a>
-                  <a class="btn btn-danger" onclick="alert('To do');">Delete</a>
+                  <a class="btn btn-primary" onclick="toggle_help_input();">{% trans 'See/Hide' %}</a>
+                  <a class="btn btn-danger" onclick="alert('To do');">{% trans 'Delete' %}</a>
                   <a class="btn btn-success" onclick="alert('To do');">#</a>
                 </div>
                 <br><br>

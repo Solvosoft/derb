@@ -1,3 +1,4 @@
+{% load i18n %} 
 <html>
 <head>
   <style>
@@ -6,16 +7,16 @@
       padding-left: 1.5cm;
 
       @top-left {
-        content: "Question Report";
+        content: "{% trans 'Question Report' %}";
       }
       @top-right {
-        content: "Date: {{ datetime }}";
+        content: "{% trans 'Date:' %} {{ datetime }}";
       }
       @bottom-right {
-        content: "Page " counter(page) " of " counter(pages) ;
+        content: "{% trans 'Page' %} " counter(page) " {% trans 'of' %} " counter(pages) ;
       }
       @bottom-left {
-        content: "User: {{ request.user.get_username }}";
+        content: "{% trans 'User:' %} {{ request.user.get_username }}";
       }
     }
 
@@ -32,12 +33,12 @@
 <body>
 <div class="question_text">
   {% if question %}
-    <h2>Question: {{ question.text }}</h2>
+    <h2>{% trans 'Question:' %} {{ question.text }}</h2>
   {% endif %}
 </div>
 <div class="answer_text">
   {% if answer %}
-    <p>Answer: {{ answer }}</p>
+    <p>{% trans 'Answer:' %} {{ answer }}</p>
   {% endif %}
 </div>
 </body>

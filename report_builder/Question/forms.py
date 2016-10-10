@@ -18,13 +18,13 @@ class QuestionForm(forms.ModelForm):
         widgets = {
             'text': forms.Textarea(attrs={
                 'rows': 6,
-                'placeholder': 'Write your question here',
+                'placeholder': _('Write your question here'),
                 'class': 'form-control'
             }),
             'help': forms.Textarea(attrs={
                 'cols': 80,
                 'rows': 5,
-                'placeholder': 'A little help never hurts',
+                'placeholder': _('A little help never hurts'),
                 'class': 'form-control'
             })
         }
@@ -50,13 +50,13 @@ class AnswerForm(forms.ModelForm):
             'annotation': forms.Textarea(attrs={
                 'id': 'foo',
                 'rows': 9,
-                'placeholder': 'Annotations',
+                'placeholder': _('Annotations'),
                 'class': 'form-control'
             }),
             'text': forms.Textarea(attrs={
                 'id': 'foo',
                 'rows': 6,
-                'placeholder': 'Write here your answer',
+                'placeholder': _('Write here your answer'),
                 'class': 'form-control'
             })
         }
@@ -99,13 +99,13 @@ class IntegerQuestionForm(QuestionForm):
         widgets = {
             'text': forms.Textarea(attrs={
                 'rows': 6,
-                'placeholder': 'Write your question here',
+                'placeholder': _('Write your question here'),
                 'class': 'form-control'
             }),
             'help': forms.Textarea(attrs={
                 'cols': 80,
                 'rows': 5,
-                'placeholder': 'A little help never hurts',
+                'placeholder': _('A little help never hurts'),
                 'class': 'form-control'
             }),
 
@@ -156,13 +156,13 @@ class UniqueSelectionAdminForm(QuestionForm):
         widgets = {
             'text': forms.Textarea(attrs={
                 'rows': 6,
-                'placeholder': 'Write your question here',
+                'placeholder': _('Write your question here'),
                 'class': 'form-control'
             }),
             'help': forms.Textarea(attrs={
                 'cols': 80,
                 'rows': 5,
-                'placeholder': 'A little help never hurts',
+                'placeholder': _('A little help never hurts'),
                 'class': 'form-control'
             }),
             'required': forms.Select(attrs={

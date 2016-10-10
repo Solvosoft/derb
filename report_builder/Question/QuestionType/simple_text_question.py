@@ -25,8 +25,8 @@ class SimpleTextQuestionAdmin(QuestionViewAdmin):
     template_name = 'admin/simple_text_question.html'
     name = 'simple_text_question'
     minimal_representation = {
-        'human_readable_name': 'Simple text question',
-        'help': 'Allows you to make simple text questions',
+        'human_readable_name': _('Simple text question'),
+        'help': _('Allows you to make simple text questions'),
         'color': '#330065'
     }
 
@@ -52,9 +52,9 @@ class SimpleTextQuestionAdmin(QuestionViewAdmin):
             question.class_to_load = self.name
             question.answer_options = json.dumps({})
             question.save()
-            messages.add_message(request, messages.SUCCESS, 'Question created successfully')
+            messages.add_message(request, messages.SUCCESS, _('Question created successfully'))
         else:
-            messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
+            messages.add_message(request, messages.ERROR, _('An error ocurred while creating the question'))
         return self.get(request, *args, **kwargs)
     
 
@@ -105,10 +105,9 @@ class SimpleQuestionViewResp(QuestionViewResp):
             answer.user = request.user
             self.answer = answer
             self.save(answer)
-            messages.add_message(request, messages.SUCCESS, 'Question answered successfully')
+            messages.add_message(request, messages.SUCCESS, _('Question answered successfully'))
         else:
-            print(form.errors)
-            messages.add_message(request, messages.ERROR, 'An error ocurred while answering the question')
+            messages.add_message(request, messages.ERROR, _('An error ocurred while answering the question'))
 
         return self.get(request, *args, **kwargs)
 

@@ -47,8 +47,8 @@ class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
     template_name = 'admin/unique_selection_question.html'
     name = 'unique_selection_question'
     minimal_representation = {
-        'human_readable_name': 'Unique Selection Question',
-        'help': 'Allows you to make unique selection questions',
+        'human_readable_name': _('Unique Selection Question'),
+        'help': _('Allows you to make unique selection questions'),
         'color': '#330065'
     }
 
@@ -81,10 +81,9 @@ class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
             question.report = Report.objects.first()
             question.answer_options = json.dumps(answer_options)
             question.save()
-            messages.add_message(request, messages.SUCCESS, 'Question created successfully')
+            messages.add_message(request, messages.SUCCESS, _('Question created successfully'))
         else:
-            print(form.errors)
-            messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
+            messages.add_message(request, messages.ERROR, _('An error ocurred while creating the question'))
         return self.get(request, *args, **kwargs)
 
 
@@ -141,9 +140,9 @@ class UniqueSelectionResp(QuestionView.QuestionViewResp):
             answer.report = ReportByProject.objects.first()
             self.answer = answer
             self.save(answer)
-            messages.add_message(request, messages.SUCCESS, 'Question answered successfully')
+            messages.add_message(request, messages.SUCCESS, _('Question answered successfully'))
         else:
-            messages.add_message(request, messages.ERROR, 'An error ocurred while answering the question')
+            messages.add_message(request, messages.ERROR, _('An error ocurred while answering the question'))
 
         return self.get(request, *args, **kwargs)
 
