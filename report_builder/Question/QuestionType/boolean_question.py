@@ -3,7 +3,7 @@ import random
 
 from django.contrib import messages
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.template import Context
 from django.template.loader import get_template
 from django.utils import timezone
@@ -64,7 +64,7 @@ class BooleanQuestionViewResp(QuestionViewResp):
         """
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        self.question = Question.objects.get(pk=kwargs['question_pk'])
+        self.question = get_object_or_404(Question, pk=kwargs['question_pk'])
         form = self.get_form(instance=self.answer)
 
         parameters = {
@@ -83,7 +83,7 @@ class BooleanQuestionViewResp(QuestionViewResp):
         """
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        self.question = Question.objects.get(pk=kwargs['question_pk'])
+        self.question = get_object_or_404(Question, pk=kwargs['question_pk'])
 
         if self.answer is None:
             self.answer = Answer()

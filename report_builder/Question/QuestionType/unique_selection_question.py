@@ -7,7 +7,7 @@ import json
 import random
 
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django_ajax.decorators import ajax
 from django.template import Context
@@ -99,7 +99,7 @@ class UniqueSelectionResp(GetCatalogChoices, QuestionView.QuestionViewResp):
         """
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        self.question = Question.objects.get(pk=kwargs['question_pk'])
+        self.question = get_object_or_404(Question, pk=kwargs['question_pk'])
         json_field = self.question.answer_options
         
         catalog_choices = self.get_catalog_choices(json_field)
@@ -122,7 +122,7 @@ class UniqueSelectionResp(GetCatalogChoices, QuestionView.QuestionViewResp):
         """
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        self.question = Question.objects.get(pk=kwargs['question_pk'])
+        self.question = get_object_or_404(Question, pk=kwargs['question_pk'])
         catalog_choices = self.get_catalog_choices(self.question.answer_options)
 
         if self.answer is None:

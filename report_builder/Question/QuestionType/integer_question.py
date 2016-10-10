@@ -5,7 +5,7 @@ Created on 14/9/2016
 '''
 import json
 from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from report_builder.Question.forms import IntegerQuestionForm, AnswerForm
 from report_builder.models import Report, Question, Answer, ReportByProject
 from report_builder.shortcuts import get_children
@@ -98,7 +98,7 @@ class IntegerQuestionResp(QuestionViewResp):
         """
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        self.question = Question.objects.get(pk=kwargs['question_pk'])
+        self.question = get_object_or_404(Question, pk=kwargs['question_pk'])
         form = self.get_form(instance=self.answer)
         answer_options_json = self.question.answer_options
         answer_options = json.loads(answer_options_json)
@@ -127,7 +127,7 @@ class IntegerQuestionResp(QuestionViewResp):
         """
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        self.question = Question.objects.get(pk=kwargs['question_pk'])
+        self.question = get_object_or_404(Question, pk=kwargs['question_pk'])
 
         if self.answer is None:
             self.answer = Answer()
