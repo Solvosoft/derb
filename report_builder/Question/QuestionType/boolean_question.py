@@ -59,7 +59,6 @@ class BooleanQuestionViewAdmin(QuestionViewAdmin):
             messages.add_message(request, messages.SUCCESS, 'Question created successfully')
         else:
             messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
-        print(reverse('report_builder:boolean_question_admin', args=[question_pk]))
         return redirect(reverse('report_builder:boolean_question_admin', args=[question_pk]))
 
 
