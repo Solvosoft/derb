@@ -12,7 +12,7 @@ from django.shortcuts import render, get_object_or_404
 from django.template import Context
 from django.template.loader import get_template
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from weasyprint import HTML
 
 from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF

@@ -13,7 +13,7 @@ import random
 from django.contrib import messages
 from _datetime import timezone
 from django.template.loader import get_template
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 
 from django.http import HttpResponse
 from django.template import Context
