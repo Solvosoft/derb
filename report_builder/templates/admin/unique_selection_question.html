@@ -37,7 +37,7 @@
                 <div id="display_fields">
                   <h4 align="center"><strong>Display fields</strong></h4>
                   <p><strong>Catalog: </strong><span id="catalog_name"></span></p>
-                  <div id='asdx'>
+                  <div id='display_fields'>
                     {{ form.display_fields }}
                   </div>
                 </div>
@@ -95,13 +95,13 @@
         $('#catalog_name').html($(this).text());
         var catalog_id = $(this).val();
         $.ajax({
-          url: "/get_catalog_display_fields/",
+          url: "{% url 'report_builder:get_catalog_display_fields' %}",
           type: 'GET',
           data: {
             catalog_id: catalog_id
           },
           success: function (data) {
-            $('#asdx').html('');
+            $('#display_fields').html('');
 
             var display_fields = data.content;
             var html = '';
@@ -112,8 +112,7 @@
               html += '<ul><li><label for="' + id + '"><input id="' + id + '" type="checkbox" value="' + display_fields[i][0] + '" name="display_fields"> ' + display_fields[i][1] + '</label></li></ul>';
               count++;
             }
-            console.log(html);
-            $('#asdx').html(html);
+            $('#display_fields').html(html);
           }
         });
       });
@@ -123,13 +122,13 @@
           $('#catalog_name').html($(this).text());
           var catalog_id = $(this).val();
           $.ajax({
-            url: "/get_catalog_display_fields/",
+            url: "{% url 'report_builder:get_catalog_display_fields' %}",
             type: 'GET',
             data: {
               catalog_id: catalog_id
             },
             success: function (data) {
-              $('#asdx').html('');
+              $('#display_fields').html('');
 
               var display_fields = data.content;
               var html = '';
@@ -140,8 +139,7 @@
                 html += '<ul><li><label for="' + id + '"><input id="' + id + '" type="checkbox" value="' + display_fields[i][0] + '" name="display_fields"> ' + display_fields[i][1] + '</label></li></ul>';
                 count++;
               }
-              console.log(html);
-              $('#asdx').html(html);
+              $('#display_fields').html(html);
             }
           });
         });
