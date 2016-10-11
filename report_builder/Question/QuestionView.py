@@ -4,9 +4,8 @@ import reversion
 
 from django.contrib import messages
 from django.db import transaction
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
 from django.views.defaults import bad_request
 from django.views.generic.base import View
 from django.utils.datastructures import OrderedDict
@@ -125,9 +124,13 @@ class QuestionViewAdmin(Question):
 
         if question_pk and question_pk != '':
             self.question = get_object_or_404(QuestionModel, pk=question_pk)
+        else:
+            raise Http404()
 
         if report_pk and report_pk != '':
             self.report = get_object_or_404(Report, pk=report_pk)
+        else:
+            raise Http404
 
         self.form_number = random.randint(self.start_number, self.end_number)
         self.request = request
@@ -152,13 +155,19 @@ class QuestionViewAdmin(Question):
 
         if question_pk and question_pk != '':
             self.question = get_object_or_404(QuestionModel, pk=question_pk)
+        else:
+            raise Http404()
 
         if report_pk and report_pk != '':
             self.report = get_object_or_404(Report, pk=report_pk)
+        else:
+            raise Http404()
 
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
         form = self.get_form(request.POST, instance=self.question)
+        question_pk = ''
+
         if form.is_valid():
             question = form.save(False)
             question.class_to_load = self.name
@@ -168,7 +177,7 @@ class QuestionViewAdmin(Question):
             messages.add_message(request, messages.SUCCESS, 'Question created successfully')
         else:
             messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
-        return redirect(reverse('report_builder:boolean_question_admin', args=[self.report.pk, question_pk]))
+        return redirect(request.path + str(question_pk))
 
     def process_children(self, request, parameters, arguments, include=[]):
         """
@@ -205,7 +214,8 @@ class QuestionViewResp(Question):
         self.form_number = random.randint(self.start_number, self.end_number)
         self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
         reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
-        self.answer = get_object_or_404(Answer, report=reportbyproj, question=self.question)
+        if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
+            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
 
         form = self.get_form(instance=self.answer)
 
@@ -228,7 +238,8 @@ class QuestionViewResp(Question):
         self.form_number = random.randint(self.start_number, self.end_number)
         self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
         reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
-        self.answer = get_object_or_404(Answer, report=reportbyproj, question=self.question)
+        if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
+            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
 
         if self.answer is None:
             self.answer = Answer()
