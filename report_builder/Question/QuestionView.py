@@ -4,7 +4,7 @@ import reversion
 
 from django.contrib import messages
 from django.db import transaction
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.defaults import bad_request
 from django.views.generic.base import View
@@ -124,9 +124,13 @@ class QuestionViewAdmin(Question):
 
         if question_pk and question_pk != '':
             self.question = get_object_or_404(QuestionModel, pk=question_pk)
+        else:
+            raise Http404()
 
         if report_pk and report_pk != '':
             self.report = get_object_or_404(Report, pk=report_pk)
+        else:
+            raise Http404
 
         self.form_number = random.randint(self.start_number, self.end_number)
         self.request = request
@@ -151,9 +155,13 @@ class QuestionViewAdmin(Question):
 
         if question_pk and question_pk != '':
             self.question = get_object_or_404(QuestionModel, pk=question_pk)
+        else:
+            raise Http404()
 
         if report_pk and report_pk != '':
             self.report = get_object_or_404(Report, pk=report_pk)
+        else:
+            raise Http404()
 
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
