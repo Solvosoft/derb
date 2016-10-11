@@ -124,13 +124,9 @@ class QuestionViewAdmin(Question):
 
         if question_pk and question_pk != '':
             self.question = get_object_or_404(QuestionModel, pk=question_pk)
-        else:
-            raise Http404()
 
         if report_pk and report_pk != '':
             self.report = get_object_or_404(Report, pk=report_pk)
-        else:
-            raise Http404
 
         self.form_number = random.randint(self.start_number, self.end_number)
         self.request = request
@@ -155,13 +151,9 @@ class QuestionViewAdmin(Question):
 
         if question_pk and question_pk != '':
             self.question = get_object_or_404(QuestionModel, pk=question_pk)
-        else:
-            raise Http404()
 
         if report_pk and report_pk != '':
             self.report = get_object_or_404(Report, pk=report_pk)
-        else:
-            raise Http404()
 
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)

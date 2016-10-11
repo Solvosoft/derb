@@ -17,8 +17,8 @@ from django.utils.translation import ugettext as _
 from weasyprint import HTML
 
 from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF
-from report_builder.Question.forms import UniqueSelectionAdminForm, \
-    UniqueSelectionAnswerForm
+from report_builder.Question.forms import UniqueSelectionAdminForm, UniqueSelectionAnswerForm
+from report_builder.report_shortcuts import get_question_permission
 from report_builder.models import Question, Answer, Report, ReportByProject
 from report_builder.models import Question as QuestionModel
 from report_builder.registry import models
@@ -63,13 +63,9 @@ class UniqueSelectionAdmin(QuestionViewAdmin):
 
         if question_pk and question_pk != '':
             self.question = get_object_or_404(QuestionModel, pk=question_pk)
-        else:
-            raise Http404()
 
         if report_pk and report_pk != '':
             self.report = get_object_or_404(Report, pk=report_pk)
-        else:
-            raise Http404()
 
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
@@ -106,11 +102,13 @@ class UniqueSelectionResp(QuestionViewResp):
         """
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        self.question = get_object_or_404(Question, pk=kwargs['question_pk'])
+        self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
+        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
+            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
         json_field = self.question.answer_options
 
         catalog_choices = get_catalog_choices(json_field)
-
         form = self.get_form(instance=self.answer, extra=catalog_choices)
 
         parameters = {
@@ -119,6 +117,7 @@ class UniqueSelectionResp(QuestionViewResp):
             'question': self.question,
             'question_number': self.question.order,
             'answer': self.answer,
+            'reportbyproj': reportbyproj,
             'form_number': str(self.form_number)
         }
         return render(request, self.template_name, parameters)
@@ -129,31 +128,47 @@ class UniqueSelectionResp(QuestionViewResp):
         """
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        self.question = get_object_or_404(Question, pk=kwargs['question_pk'])
-        catalog_choices = get_catalog_choices(self.question.answer_options)
+        self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
+        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
+            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
 
         if self.answer is None:
             self.answer = Answer()
         self.answer.question = self.question
         self.answer.user = request.user
+
         self.answer.text = ''
         self.answer.display_text = '\n'
-
+        catalog_choices = get_catalog_choices(self.question.answer_options)
+        
         form = self.get_form(request.POST, instance=self.answer, extra=catalog_choices)
 
         if form.is_valid():
             answer = form.save(False)
+            answer.report = reportbyproj
             answer.question = self.question
             answer.user = request.user
-            answer.report = ReportByProject.objects.first()
             self.answer = answer
             self.save(answer)
-            messages.add_message(request, messages.SUCCESS, _('Question answered successfully'))
-        else:
-            messages.add_message(request, messages.ERROR, _('An error ocurred while answering the question'))
+            return HttpResponse(str(answer.pk))
 
-        return self.get(request, *args, **kwargs)
-
+        parameters = {
+            'name': self.name,
+            'form': form,
+            'question': self.question,
+            'report': reportbyproj,
+            'question_number': self.question.order,
+            'answer': self.answer,
+            'form_number': str(self.form_number),
+            'observations': self.get_observations(request, args, kwargs),
+            'required': get_question_permission(self.question)
+        }
+        additional = self.additional_template_parameters(**parameters)
+        if additional:
+            parameters.update(additional)
+        return render(request, self.template_name, parameters)
+    
 
 class UniqueSelectionPDF(QuestionViewPDF):
     name = 'unique_selection_question'
