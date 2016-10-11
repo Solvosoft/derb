@@ -6,8 +6,8 @@ Created on 14/9/2016
 import json
 import random
 
-from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse, Http404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django_ajax.decorators import ajax
 from django.template import Context
@@ -16,10 +16,11 @@ from django.utils import timezone
 from django.utils.translation import ugettext as _
 from weasyprint import HTML
 
-from report_builder.Question import QuestionView
+from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF
 from report_builder.Question.forms import UniqueSelectionAdminForm, \
     UniqueSelectionAnswerForm
 from report_builder.models import Question, Answer, Report, ReportByProject
+from report_builder.models import Question as QuestionModel
 from report_builder.registry import models
 
 
@@ -43,7 +44,7 @@ def get_catalog_choices(json_field):
 
 
 
-class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
+class UniqueSelectionAdmin(QuestionViewAdmin):
     form_class = UniqueSelectionAdminForm
     template_name = 'admin/unique_selection_question.html'
     name = 'unique_selection_question'
@@ -53,25 +54,30 @@ class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
         'color': '#330065'
     }
 
-    def get(self, request, *args, **kwargs):
-        self.form_number = random.randint(self.start_number, self.end_number)
-        self.request = request
-        form = self.get_form(instance=self.question)
-        parameters = {
-            'form': form,
-            'question': self.question,
-            'name': self.name,
-            'form_number': str(self.form_number),
-            'minimal_representation': self.minimal_representation
-        }
-        return render(request, self.template_name, parameters)
-
     def post(self, request, *args, **kwargs):
-        data = dict(request.POST)
-        display_fields = data['display_fields']
+        """
+            TODO: docstring
+        """
+        question_pk = kwargs.get('question_pk', False)
+        report_pk = kwargs.get('report_pk', False)
+
+        if question_pk and question_pk != '':
+            self.question = get_object_or_404(QuestionModel, pk=question_pk)
+        else:
+            raise Http404()
+
+        if report_pk and report_pk != '':
+            self.report = get_object_or_404(Report, pk=report_pk)
+        else:
+            raise Http404()
+
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
         form = self.get_form(request.POST, instance=self.question)
+        data = dict(request.POST)
+        display_fields = data['display_fields']
+        question_pk = ''
+
         if form.is_valid():
             answer_options = {
                 'catalog': int(form.cleaned_data.get('catalog')),
@@ -79,16 +85,17 @@ class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
             }
             question = form.save(False)
             question.class_to_load = self.name
-            question.report = Report.objects.first()
+            question.report = self.report
             question.answer_options = json.dumps(answer_options)
             question.save()
-            messages.add_message(request, messages.SUCCESS, _('Question created successfully'))
+            question_pk = question.pk
+            messages.add_message(request, messages.SUCCESS, 'Question created successfully')
         else:
-            messages.add_message(request, messages.ERROR, _('An error ocurred while creating the question'))
-        return self.get(request, *args, **kwargs)
+            messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
+        return redirect(request.path + str(question_pk))   
 
 
-class UniqueSelectionResp(QuestionView.QuestionViewResp):
+class UniqueSelectionResp(QuestionViewResp):
     template_name = 'responsable/unique_selection_question.html'
     name = 'unique_selection_question'
     form_class = UniqueSelectionAnswerForm
@@ -148,7 +155,7 @@ class UniqueSelectionResp(QuestionView.QuestionViewResp):
         return self.get(request, *args, **kwargs)
 
 
-class UniqueSelectionPDF(QuestionView.QuestionViewPDF):
+class UniqueSelectionPDF(QuestionViewPDF):
     name = 'unique_selection_question'
     template_name = 'pdf/unique_selection_question.html'
 
