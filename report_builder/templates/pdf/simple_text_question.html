@@ -38,6 +38,10 @@
 			<p>
 				{% trans 'Answer:' %} {{ answer|safe }}
 			</p>
+			{% else %}
+			<p>
+				{% trans "The Question Don't Have Answer!" %}
+			</p>
 			{% endif %}
 		</div>
 	</body>

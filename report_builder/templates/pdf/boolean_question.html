@@ -39,6 +39,8 @@
 <div class="answer_text">
   {% if answer %}
     <p>{% trans 'Answer:' %} {{ answer }}</p>
+  {% else %}
+	<p>{% trans "The Question Don't Have Answer!" %}</p>
   {% endif %}
 </div>
 </body>

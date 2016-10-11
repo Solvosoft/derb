@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-11 19:22+0000\n"
+"POT-Creation-Date: 2016-10-11 21:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,7 +32,9 @@ msgstr "Desconectarse"
 
 #: presentation/templates/registration/registration_complete.html:5
 msgid "You are now registered. Activation email sent."
-msgstr "Ahora se encuentra registrado. La activación de correo electrónico ha sido enviada "
+msgstr ""
+"Ahora se encuentra registrado. La activación de correo electrónico ha sido "
+"enviada "
 
 #: report_builder/Question/QuestionType/boolean_question.py:24
 msgid "Yes/No question"
@@ -419,15 +421,18 @@ msgstr "Pregunta:"
 msgid "Answer:"
 msgstr "Respuesta:"
 
-#: report_builder/templates/pdf/simple_text_question.html:9
-msgid "Simple Text Question Report"
-msgstr "Informe de pregunta de texto simple"
-
+#: report_builder/templates/pdf/boolean_question.html:43
+#: report_builder/templates/pdf/integer_question.html:43
+#: report_builder/templates/pdf/simple_text_question.html:43
 #: report_builder/templates/pdf/unique_selection_question.html:43
 #, fuzzy
 #| msgid "The Question Don't Have Answer!!"
 msgid "The Question Don't Have Answer!"
 msgstr "La pregunta no posee respuesta!"
+
+#: report_builder/templates/pdf/simple_text_question.html:9
+msgid "Simple Text Question Report"
+msgstr "Informe de pregunta de texto simple"
 
 #: report_builder/templates/responsable/boolean_question.html:22
 msgid "Boolean question (responsable)"
