@@ -17,7 +17,7 @@ question_types_urls = [
         name='boolean_question_admin'),
     url(r'boolean/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', boolean_question.BooleanQuestionViewResp.as_view(),
         name='boolean_question_resp'),
-    url(r'boolean/pdf/(?P<question_pk>\d+)$', boolean_question.BooleanQuestionViewPDF.as_view(),
+    url(r'boolean/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', boolean_question.BooleanQuestionViewPDF.as_view(),
         name='boolean_question_pdf'),
     url(r'integer/admin$', integer_question.IntegerQuestionAdmin.as_view(),
         name='integer_question_admin'),
