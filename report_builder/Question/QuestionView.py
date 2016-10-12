@@ -1,4 +1,5 @@
 import ast
+import json
 import random
 import reversion
 
@@ -44,7 +45,7 @@ class Question(View):
         """
         results = None
         if self.question is not None and self.question.answer_options:
-            results = ast.literal_eval(self.question.answer_options)
+            results = json.loads(self.question.answer_options)
         return results
 
     def additional_template_parameters(self, **kwargs):

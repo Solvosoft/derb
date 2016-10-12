@@ -52,40 +52,14 @@ class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
         'color': '#330065'
     }
 
-    def get(self, request, *args, **kwargs):
-        self.form_number = random.randint(self.start_number, self.end_number)
-        self.request = request
-        form = self.get_form(instance=self.question)
-        parameters = {
-            'form': form,
-            'question': self.question,
-            'name': self.name,
-            'form_number': str(self.form_number),
-            'minimal_representation': self.minimal_representation
+    def pre_save(self, object, request, form):
+        form_data = dict(form.data)
+        answer_options = {
+            'catalog': form_data.get('catalog'),
+            'display_fields': form_data.get('display_fields')
         }
-        return render(request, self.template_name, parameters)
-
-    def post(self, request, *args, **kwargs):
-        data = dict(request.POST)
-        display_fields = data['display_fields']
-        self.request = request
-        self.form_number = random.randint(self.start_number, self.end_number)
-        form = self.get_form(request.POST, instance=self.question)
-        if form.is_valid():
-            answer_options = {
-                'catalog': int(form.cleaned_data.get('catalog')),
-                'display_fields': display_fields
-            }
-            question = form.save(False)
-            question.class_to_load = self.name
-            question.report = Report.objects.first()
-            question.answer_options = json.dumps(answer_options)
-            question.save()
-            messages.add_message(request, messages.SUCCESS, 'Question created successfully')
-        else:
-            print(form.errors)
-            messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
-        return self.get(request, *args, **kwargs)
+        object.answer_options = json.dumps(answer_options)
+        return object
 
 
 class UniqueSelectionResp(QuestionView.QuestionViewResp):

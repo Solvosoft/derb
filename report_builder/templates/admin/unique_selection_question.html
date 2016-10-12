@@ -26,7 +26,7 @@
         </div>
 
         <div class="panel-body">
-          <form action="{% url 'report_builder:unique_selection_admin' %}" method="post">
+          <form action="{% url 'report_builder:unique_selection_admin' report.pk  question_pk %}" method="post">
             {% csrf_token %}
             <div class="row">
               <!-- Question Area -->
