@@ -1,9 +1,6 @@
 import random
 
-
-from django.contrib import messages
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
 from django.template import Context
 from django.template.loader import get_template
 from django.utils import timezone
@@ -25,6 +22,7 @@ class BooleanQuestionViewAdmin(QuestionViewAdmin):
         'help': _('Allows you to make yes/no questions'),
         'color': '#330065'
     }
+
 
 class BooleanQuestionViewResp(QuestionViewResp):
     template_name = 'responsable/boolean_question.html'

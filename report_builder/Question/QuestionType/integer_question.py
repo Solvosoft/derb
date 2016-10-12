@@ -4,18 +4,7 @@ Created on 14/9/2016
 '''
 import json
 from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF
-from django.shortcuts import render, get_object_or_404
 from report_builder.Question.forms import IntegerQuestionForm, AnswerForm, IntegerAnswerForm
-from report_builder.models import Report, Question, Answer, ReportByProject
-from report_builder.shortcuts import get_children
-import random
-from django.contrib import messages
-from _datetime import timezone
-from django.template.loader import get_template
-
-from django.http import HttpResponse
-from django.template import Context
-from weasyprint import HTML
 
 
 class IntegerQuestionAdmin(QuestionViewAdmin):

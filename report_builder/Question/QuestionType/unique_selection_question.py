@@ -3,21 +3,11 @@ Created on 14/9/2016
 @author: adolfo
 '''
 import json
-import random
-
-from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
-from django.contrib import messages
 from django_ajax.decorators import ajax
-from django.template import Context
-from django.template.loader import get_template
-from django.utils import timezone
-from weasyprint import HTML
 
 from report_builder.Question import QuestionView
 from report_builder.Question.forms import UniqueSelectionAdminForm, \
     UniqueSelectionAnswerForm
-from report_builder.models import Question, Answer, Report, ReportByProject
 from report_builder.registry import models
 
 
