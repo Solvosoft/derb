@@ -27,7 +27,7 @@ question_types_urls = [
         name='integer_question_pdf'),
     url(r'simple/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$', simple_text_question.SimpleTextQuestionAdmin.as_view(),
         name='simple_text_question_admin'),
-    url(r'simple/resp/(?P<question_pk>\d+)', simple_text_question.SimpleQuestionViewResp.as_view(),
+    url(r'simple/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', simple_text_question.SimpleQuestionViewResp.as_view(),
         name='simple_text_question_resp'),
     url(r'simple/pdf/(?P<question_pk>\d+)', simple_text_question.SimpleTextQuestionPDF.as_view(),
         name='simple_text_question_pdf'),
