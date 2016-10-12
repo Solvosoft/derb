@@ -173,6 +173,7 @@ class QuestionViewAdmin(Question):
             question = form.save(False)
             question.class_to_load = self.name
             question.report = self.report
+            question = self.pre_save(question, request, form)
             question.save()
             question_pk = question.pk
             messages.add_message(request, messages.SUCCESS, 'Question saved successfully')
