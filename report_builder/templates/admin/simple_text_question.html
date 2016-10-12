@@ -20,7 +20,7 @@
           Simple text question (Admin)
         </div>
         <div class="panel-body">
-          <form action="{% url 'report_builder:simple_text_question_admin' %}" method="post">
+          <form action="{% url 'report_builder:simple_text_question_admin' report.pk question_pk %}" method="post">
             {% csrf_token %}
             <div class="row">
               <div class="col-md-8">
