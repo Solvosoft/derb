@@ -80,40 +80,6 @@ class UniqueSelectionPDF(QuestionView.QuestionViewPDF):
     name = 'unique_selection_question'
     template_name = 'pdf/unique_selection_question.html'
 
-    def get(self, request, *args, **kwargs):
-        self.request = request
-        self.question = Question.objects.get(pk=kwargs['question_pk'])
-        self.answer = Answer.objects.filter(question=self.question).first()
-        json_field = self.question.answer_options
-        catalog_choices = get_catalog_choices(json_field)
-        userAnswer = ""
-        if self.answer:
-            userAnswer = catalog_choices[int(self.answer.text)][1]
-
-        parameters = {
-            'name': self.name,
-            'question': self.question,
-            'question_number': self.question.order,
-            'answer': self.answer,
-            'request': self.request,
-            'form_number': str(random.randint(self.start_number, self.end_number)),
-            'datetime': timezone.now(),
-            'userAnswer': userAnswer
-        }
-
-        template = get_template(self.template_name)
-
-        html = template.render(Context(parameters)).encode('UTF-8')
-
-        page = HTML(string=html, encoding='utf-8').write_pdf()
-
-        response = HttpResponse(page, content_type='application/pdf')
-
-        response[
-            'Content-Disposition'] = 'attachment; filename="question_report.pdf"'
-
-        return response
-
 
 @ajax
 def get_catalog_display_fields(request):
