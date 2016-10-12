@@ -3,6 +3,7 @@ import random
 
 from django import forms
 from django.core.exceptions import ValidationError
+from django.forms import NumberInput
 from django.utils.translation import ugettext as _
 from report_builder.models import Question, Answer
 from ckeditor.widgets import CKEditorWidget
@@ -115,6 +116,24 @@ class IntegerQuestionForm(QuestionForm):
         fields = ('text', 'help', 'required', 'minimum', 'maximum', 'steps', 'id')
 
 
+# Integer answer form
+class IntegerAnswerForm(AnswerForm):
+    text = forms.IntegerField()
+
+    def __init__(self, *args, **kwargs):
+        if 'extra' in kwargs:
+            answer_options = kwargs.pop('extra')
+            super(IntegerAnswerForm, self).__init__(*args, **kwargs)
+            self.fields['text'].initial = answer_options['minimum']
+            self.fields['text'].min_value = answer_options['minimum']
+            self.fields['text'].max_value = answer_options['maximum']
+            self.fields['text'].widget.attrs = {
+                'step': answer_options['steps'],
+            }
+        else:
+            super(IntegerAnswerForm, self).__init__(*args, **kwargs)
+
+
 class SimpleTextAnswerForm(AnswerForm):
     class Meta:
         model = Answer
@@ -179,7 +198,6 @@ class UniqueSelectionAnswerForm(AnswerForm):
     def __init__(self, *args, **kwargs):
         if 'extra' in kwargs:
             catalog = kwargs.pop('extra')
-            print(catalog)
             super(UniqueSelectionAnswerForm, self).__init__(*args, **kwargs)
             self.fields['text'].choices = catalog
         else:

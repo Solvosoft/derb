@@ -75,39 +75,6 @@ class UniqueSelectionResp(QuestionView.QuestionViewResp):
             form = self.form_class(instance=instance, extra=catalog_choices)
         return form
 
-    '''
-    def post(self, request, *args, **kwargs):
-        """
-            TODO: docstring
-        """
-        self.request = request
-        self.form_number = random.randint(self.start_number, self.end_number)
-        self.question = get_object_or_404(Question, pk=kwargs['question_pk'])
-        catalog_choices = get_catalog_choices(self.question.answer_options)
-
-        if self.answer is None:
-            self.answer = Answer()
-        self.answer.question = self.question
-        self.answer.user = request.user
-        self.answer.text = ''
-        self.answer.display_text = '\n'
-
-        form = self.get_form(request.POST, instance=self.answer, extra=catalog_choices)
-
-        if form.is_valid():
-            answer = form.save(False)
-            answer.question = self.question
-            answer.user = request.user
-            answer.report = ReportByProject.objects.first()
-            self.answer = answer
-            self.save(answer)
-            messages.add_message(request, messages.SUCCESS, 'Question answered successfully')
-        else:
-            messages.add_message(request, messages.ERROR, 'An error ocurred while answering the question')
-
-        return self.get(request, *args, **kwargs)
-    '''
-
 
 class UniqueSelectionPDF(QuestionView.QuestionViewPDF):
     name = 'unique_selection_question'
