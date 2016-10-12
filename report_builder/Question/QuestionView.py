@@ -272,7 +272,7 @@ class QuestionViewResp(Question):
         self.answer.text = ''
         self.answer.display_text = '\n'
 
-        form = self.get_form(request.POST, instance=self.answer)
+        form = self.get_form(post=request.POST, instance=self.answer)
 
         if form.is_valid():
             answer = form.save(False)
@@ -291,7 +291,7 @@ class QuestionViewResp(Question):
             'question_number': self.question.order,
             'answer': self.answer,
             'form_number': str(self.form_number),
-            'observations': self.get_observations(request, args, kwargs),
+            #'observations': self.get_observations(request, args, kwargs),
             'required': get_question_permission(self.question)
         }
         extra = self.additional_template_parameters(**parameters)

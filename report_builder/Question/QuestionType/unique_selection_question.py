@@ -32,6 +32,7 @@ def get_catalog_values(queryset, display_fields):
                 text += ' - '
         yield (value, text)
 
+
 def get_catalog_choices(json_field):
     answer_options = json.loads(json_field)
     catalog = int(answer_options['catalog'][0])
@@ -39,7 +40,6 @@ def get_catalog_choices(json_field):
     queryset = models[catalog][0]
 
     return (value_text for value_text in get_catalog_values(queryset, display_fields))
-
 
 
 class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
@@ -69,8 +69,10 @@ class UniqueSelectionResp(QuestionView.QuestionViewResp):
 
     def get_form(self, post=None, instance=None, extra=None):
         catalog_choices = get_catalog_choices(self.question.answer_options)
-        print(catalog_choices)
-        form = self.form_class(instance=instance, extra=catalog_choices)
+        if post is not None:
+            form = self.form_class(post, instance=instance, extra=catalog_choices)
+        else:
+            form = self.form_class(instance=instance, extra=catalog_choices)
         return form
 
     '''

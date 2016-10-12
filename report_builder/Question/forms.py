@@ -1,3 +1,4 @@
+import json
 import random
 
 from django import forms
@@ -7,6 +8,7 @@ from report_builder.models import Question, Answer
 from ckeditor.widgets import CKEditorWidget
 from report_builder.registry import models
 from report_builder.catalogs import register_test_catalogs
+from report_builder.registry import models
 
 
 class QuestionForm(forms.ModelForm):
@@ -182,3 +184,24 @@ class UniqueSelectionAnswerForm(AnswerForm):
             self.fields['text'].choices = catalog
         else:
             super(UniqueSelectionAnswerForm, self).__init__(*args, **kwargs)
+
+    def save(self, db_use):
+        instance = super(AnswerForm, self).save(db_use)
+        object_pk = instance.text
+        answer_options_json = instance.question.answer_options
+        answer_options = json.loads(answer_options_json)
+        catalog = int(answer_options['catalog'][0])
+        display_fields = answer_options['display_fields']
+
+        queryset = models[catalog][0]
+        object = queryset.get(pk=object_pk)
+
+        display_text = ''
+        for i, field in enumerate(display_fields):
+            display_text += getattr(object, field)
+            if (i + 1) != len(display_fields):
+                display_text += ' - '
+
+
+        instance.display_text = display_text
+        return instance
