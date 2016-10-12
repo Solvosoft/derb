@@ -32,7 +32,7 @@ question_types_urls = [
     url(r'simple/pdf/(?P<question_pk>\d+)', simple_text_question.SimpleTextQuestionPDF.as_view(),
         name='simple_text_question_pdf'),
     url(r"unique/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$", unique_selection_question.UniqueSelectionAdmin.as_view(), name="unique_selection_admin"),
-    url(r"unique/resp/(?P<question_pk>\d+)", unique_selection_question.UniqueSelectionResp.as_view(),
+    url(r"unique/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$", unique_selection_question.UniqueSelectionResp.as_view(),
         name="unique_selection_resp"),
     url(r"unique/pdf/(?P<question_pk>\d+)", unique_selection_question.UniqueSelectionPDF.as_view(),
         name="unique_selection_pdf"),

@@ -177,6 +177,7 @@ class UniqueSelectionAnswerForm(AnswerForm):
     def __init__(self, *args, **kwargs):
         if 'extra' in kwargs:
             catalog = kwargs.pop('extra')
+            print(catalog)
             super(UniqueSelectionAnswerForm, self).__init__(*args, **kwargs)
             self.fields['text'].choices = catalog
         else:

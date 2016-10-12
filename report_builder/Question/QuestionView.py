@@ -247,6 +247,10 @@ class QuestionViewResp(Question):
             'reportbyproj': reportbyproj,
             'form_number': str(self.form_number)
         }
+        extra = self.additional_template_parameters(**parameters)
+        if extra:
+            parameters.update(extra)
+
         return render(request, self.template_name, parameters)
 
     def post(self, request, *args, **kwargs):
@@ -283,16 +287,16 @@ class QuestionViewResp(Question):
             'name': self.name,
             'form': form,
             'question': self.question,
-            'report': reportbyproj,
+            'reportbyproj': reportbyproj,
             'question_number': self.question.order,
             'answer': self.answer,
             'form_number': str(self.form_number),
             'observations': self.get_observations(request, args, kwargs),
             'required': get_question_permission(self.question)
         }
-        additional = self.additional_template_parameters(**parameters)
-        if additional:
-            parameters.update(additional)
+        extra = self.additional_template_parameters(**parameters)
+        if extra:
+            parameters.update(extra)
         return render(request, self.template_name, parameters)
 
     def save(self, klass):

@@ -34,7 +34,7 @@ def get_catalog_values(queryset, display_fields):
 
 def get_catalog_choices(json_field):
     answer_options = json.loads(json_field)
-    catalog = answer_options['catalog']
+    catalog = int(answer_options['catalog'][0])
     display_fields = answer_options['display_fields']
     queryset = models[catalog][0]
 
@@ -67,29 +67,13 @@ class UniqueSelectionResp(QuestionView.QuestionViewResp):
     name = 'unique_selection_question'
     form_class = UniqueSelectionAnswerForm
 
-    def get(self, request, *args, **kwargs):
-        """
-            TODO: docstring
-        """
-        self.request = request
-        self.form_number = random.randint(self.start_number, self.end_number)
-        self.question = get_object_or_404(Question, pk=kwargs['question_pk'])
-        json_field = self.question.answer_options
+    def get_form(self, post=None, instance=None, extra=None):
+        catalog_choices = get_catalog_choices(self.question.answer_options)
+        print(catalog_choices)
+        form = self.form_class(instance=instance, extra=catalog_choices)
+        return form
 
-        catalog_choices = get_catalog_choices(json_field)
-
-        form = self.get_form(instance=self.answer, extra=catalog_choices)
-
-        parameters = {
-            'name': self.name,
-            'form': form,
-            'question': self.question,
-            'question_number': self.question.order,
-            'answer': self.answer,
-            'form_number': str(self.form_number)
-        }
-        return render(request, self.template_name, parameters)
-
+    '''
     def post(self, request, *args, **kwargs):
         """
             TODO: docstring
@@ -120,6 +104,7 @@ class UniqueSelectionResp(QuestionView.QuestionViewResp):
             messages.add_message(request, messages.ERROR, 'An error ocurred while answering the question')
 
         return self.get(request, *args, **kwargs)
+    '''
 
 
 class UniqueSelectionPDF(QuestionView.QuestionViewPDF):
