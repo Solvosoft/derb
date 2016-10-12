@@ -124,13 +124,10 @@ class QuestionViewAdmin(Question):
 
         if question_pk and question_pk != '':
             self.question = get_object_or_404(QuestionModel, pk=question_pk)
-        else:
-            raise Http404()
+            question_pk = self.question.pk
 
         if report_pk and report_pk != '':
             self.report = get_object_or_404(Report, pk=report_pk)
-        else:
-            raise Http404
 
         self.form_number = random.randint(self.start_number, self.end_number)
         self.request = request
@@ -150,23 +147,20 @@ class QuestionViewAdmin(Question):
         """
             TODO: docstring
         """
+        redirection_needed = True
         question_pk = kwargs.get('question_pk', False)
         report_pk = kwargs.get('report_pk', False)
 
         if question_pk and question_pk != '':
             self.question = get_object_or_404(QuestionModel, pk=question_pk)
-        else:
-            raise Http404()
+            redirection_needed = False
 
         if report_pk and report_pk != '':
             self.report = get_object_or_404(Report, pk=report_pk)
-        else:
-            raise Http404()
 
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
         form = self.get_form(request.POST, instance=self.question)
-        question_pk = ''
 
         if form.is_valid():
             question = form.save(False)
@@ -174,10 +168,25 @@ class QuestionViewAdmin(Question):
             question.report = self.report
             question.save()
             question_pk = question.pk
-            messages.add_message(request, messages.SUCCESS, 'Question created successfully')
+            messages.add_message(request, messages.SUCCESS, 'Question saved successfully')
+
+            if redirection_needed == True:
+                return redirect(request.path + str(question_pk))
         else:
             messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
-        return redirect(request.path + str(question_pk))
+
+        parameters = {
+            'form': form,
+            'report': self.report,
+            'question': self.question,
+            'name': self.name,
+            'form_number': str(self.form_number),
+            'minimal_representation': self.minimal_representation
+        }
+        extra = self.additional_template_parameters(**parameters)
+        if extra:
+            parameters.update(extra)
+        return render(request, template_name=self.template_name, context=parameters)
 
     def process_children(self, request, parameters, arguments, include=[]):
         """
