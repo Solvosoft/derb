@@ -6,8 +6,8 @@ Created on 14/9/2016
 import json
 import random
 
-from django.http import HttpResponse, Http404
-from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django_ajax.decorators import ajax
 from django.template import Context
@@ -54,41 +54,14 @@ class UniqueSelectionAdmin(QuestionViewAdmin):
         'color': '#330065'
     }
 
-    def post(self, request, *args, **kwargs):
-        """
-            TODO: docstring
-        """
-        question_pk = kwargs.get('question_pk', False)
-        report_pk = kwargs.get('report_pk', False)
-
-        if question_pk and question_pk != '':
-            self.question = get_object_or_404(QuestionModel, pk=question_pk)
-
-        if report_pk and report_pk != '':
-            self.report = get_object_or_404(Report, pk=report_pk)
-
-        self.request = request
-        self.form_number = random.randint(self.start_number, self.end_number)
-        form = self.get_form(request.POST, instance=self.question)
-        data = dict(request.POST)
-        display_fields = data['display_fields']
-        question_pk = ''
-
-        if form.is_valid():
-            answer_options = {
-                'catalog': int(form.cleaned_data.get('catalog')),
-                'display_fields': display_fields
-            }
-            question = form.save(False)
-            question.class_to_load = self.name
-            question.report = self.report
-            question.answer_options = json.dumps(answer_options)
-            question.save()
-            question_pk = question.pk
-            messages.add_message(request, messages.SUCCESS, 'Question created successfully')
-        else:
-            messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
-        return redirect(request.path + str(question_pk))   
+    def pre_save(self, object, request, form):
+        form_data = dict(form.data)
+        answer_options = {
+            'catalog': form_data.get('catalog'),
+            'display_fields': form_data.get('display_fields')
+        }
+        object.answer_options = json.dumps(answer_options)
+        return object
 
 
 class UniqueSelectionResp(QuestionViewResp):

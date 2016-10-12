@@ -14,7 +14,7 @@ from report_builder.Question.QuestionView import QuestionViewAdmin
 from report_builder.Question.QuestionView import QuestionViewResp
 from report_builder.Question.QuestionView import QuestionViewPDF
 from report_builder.Question.forms import BooleanAnswerForm
-from report_builder.models import Question, Answer, Report, ReportByProject
+from report_builder.models import Question, Answer
 
 
 class BooleanQuestionViewAdmin(QuestionViewAdmin):
