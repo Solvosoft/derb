@@ -181,7 +181,8 @@ class QuestionViewAdmin(Question):
             'question': self.question,
             'name': self.name,
             'form_number': str(self.form_number),
-            'minimal_representation': self.minimal_representation
+            'minimal_representation': self.minimal_representation,
+            'question_pk': question_pk
         }
         extra = self.additional_template_parameters(**parameters)
         if extra:
