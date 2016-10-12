@@ -1,0 +1,451 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-10-11 21:50+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: presentation/templates/registration/activate.html:6
+msgid "Account activation failed"
+msgstr "La activación de la cuenta ha fallado"
+
+#: presentation/templates/registration/activation_complete.html:5
+msgid "Your account is now activated."
+msgstr "La cuenta ha sido activada"
+
+#: presentation/templates/registration/logout.html:5
+msgid "Logged out"
+msgstr "Desconectarse"
+
+#: presentation/templates/registration/registration_complete.html:5
+msgid "You are now registered. Activation email sent."
+msgstr ""
+"Ahora se encuentra registrado. La activación de correo electrónico ha sido "
+"enviada "
+
+#: report_builder/Question/QuestionType/boolean_question.py:24
+msgid "Yes/No question"
+msgstr "Preguntas de Sí/No"
+
+#: report_builder/Question/QuestionType/boolean_question.py:25
+msgid "Allows you to make yes/no questions"
+msgstr "Le permite realizar preguntas de Sí/No"
+
+#: report_builder/Question/QuestionType/integer_question.py:28
+msgid "Numerical question"
+msgstr "Preguntas Numéricas"
+
+#: report_builder/Question/QuestionType/integer_question.py:29
+msgid "Allows you to make numerical questions"
+msgstr "Le permite realizar preguntas numéricas"
+
+#: report_builder/Question/QuestionType/integer_question.py:80
+#: report_builder/Question/QuestionType/simple_text_question.py:56
+#: report_builder/Question/QuestionType/unique_selection_question.py:85
+msgid "Question created successfully"
+msgstr "La pregunta ha sido creada con éxito"
+
+#: report_builder/Question/QuestionType/integer_question.py:83
+msgid "The number of steps is bigger than the number of questions"
+msgstr "El número de pasos es más grande que el número de preguntas"
+
+#: report_builder/Question/QuestionType/integer_question.py:85
+msgid "Minimum has to be smaller than maximum"
+msgstr "El mínimo tiene que ser menor al máximo"
+
+#: report_builder/Question/QuestionType/integer_question.py:87
+#: report_builder/Question/QuestionType/simple_text_question.py:58
+#: report_builder/Question/QuestionType/unique_selection_question.py:87
+msgid "An error ocurred while creating the question"
+msgstr "Ha ocurrido un error mientras se creaba la pregunta"
+
+#: report_builder/Question/QuestionType/integer_question.py:151
+#: report_builder/Question/QuestionType/simple_text_question.py:109
+#: report_builder/Question/QuestionType/unique_selection_question.py:144
+msgid "Question answered successfully"
+msgstr "Pregunta contestada correctamente"
+
+#: report_builder/Question/QuestionType/integer_question.py:153
+#: report_builder/Question/QuestionType/simple_text_question.py:111
+#: report_builder/Question/QuestionType/unique_selection_question.py:146
+msgid "An error ocurred while answering the question"
+msgstr "Ocurrió un error al responder la pregunta"
+
+#: report_builder/Question/QuestionType/simple_text_question.py:29
+msgid "Simple text question"
+msgstr "Preguntas de Texto Simple"
+
+#: report_builder/Question/QuestionType/simple_text_question.py:30
+msgid "Allows you to make simple text questions"
+msgstr "Le permite crear preguntas de texto simple"
+
+#: report_builder/Question/QuestionType/unique_selection_question.py:51
+msgid "Unique Selection Question"
+msgstr "Preguntas de Selección Única"
+
+#: report_builder/Question/QuestionType/unique_selection_question.py:52
+msgid "Allows you to make unique selection questions"
+msgstr "Le permite crear preguntas de selección única"
+
+#: report_builder/Question/forms.py:21 report_builder/Question/forms.py:102
+#: report_builder/Question/forms.py:159
+msgid "Write your question here"
+msgstr "Escriba aquí su pregunta"
+
+#: report_builder/Question/forms.py:27 report_builder/Question/forms.py:108
+#: report_builder/Question/forms.py:165
+msgid "A little help never hurts"
+msgstr "Un poco de ayuda no está mal"
+
+#: report_builder/Question/forms.py:43
+msgid "This field is required"
+msgstr "Este campo es requerido"
+
+#: report_builder/Question/forms.py:53
+msgid "Annotations"
+msgstr "Anotaciones"
+
+#: report_builder/Question/forms.py:59
+msgid "Write here your answer"
+msgstr "Escriba aquí su respuesta"
+
+#: report_builder/models.py:50
+msgid "First"
+msgstr "Primero"
+
+#: report_builder/models.py:51
+msgid "Second"
+msgstr "Segundo"
+
+#: report_builder/models.py:52
+msgid "Third"
+msgstr "Tercero"
+
+#: report_builder/models.py:53
+msgid "Fourth"
+msgstr "Cuarto"
+
+#: report_builder/models.py:54
+msgid "Fifth"
+msgstr "Quinto"
+
+#: report_builder/models.py:55
+msgid "Sixth"
+msgstr "Sexto"
+
+#: report_builder/models.py:56
+msgid "Seventh"
+msgstr "Séptimo"
+
+#: report_builder/models.py:71
+msgid "Project"
+msgstr "Proyecto"
+
+#: report_builder/models.py:72
+msgid "Projects"
+msgstr "Proyectos"
+
+#: report_builder/models.py:102
+msgid "Report type"
+msgstr "Tipo de Informe"
+
+#: report_builder/models.py:103
+msgid "Report types"
+msgstr "Tipos de Informe"
+
+#: report_builder/models.py:113 report_builder/models.py:117
+msgid "General information"
+msgstr "Información General"
+
+#: report_builder/models.py:138
+msgid "Report"
+msgstr "Informe"
+
+#: report_builder/models.py:139
+msgid "Reports"
+msgstr "Informes"
+
+#: report_builder/models.py:145
+msgid "Submit pending"
+msgstr "Pendiente de enviar"
+
+#: report_builder/models.py:146
+msgid "Unsubmitted"
+msgstr "Sin enviar"
+
+#: report_builder/models.py:147
+msgid "Aproved"
+msgstr "Aprovado"
+
+#: report_builder/models.py:148
+msgid "Editing"
+msgstr "Editando"
+
+#: report_builder/models.py:149
+msgid "Canceled"
+msgstr "Cancelado"
+
+#: report_builder/models.py:150
+msgid "Rejected"
+msgstr "Rechazado"
+
+#: report_builder/models.py:151 report_builder/models.py:188
+msgid "In review"
+msgstr "En revisión"
+
+#: report_builder/models.py:154
+msgid "Opening date"
+msgstr "Fecha de apertura"
+
+#: report_builder/models.py:155
+msgid "Submit date"
+msgstr "Fecha de cierre"
+
+#: report_builder/models.py:179
+msgid "Report by project"
+msgstr "Informe de proyecto"
+
+#: report_builder/models.py:180
+msgid "Reports by project"
+msgstr "Informes de proyecto"
+
+#: report_builder/models.py:186
+msgid "Unsupported"
+msgstr "No es soportado"
+
+#: report_builder/models.py:187
+msgid "Supported"
+msgstr "Soportado"
+
+#: report_builder/models.py:189
+msgid "Supported by the system"
+msgstr "Soportado por el sistema"
+
+#: report_builder/models.py:190
+msgid "Unsupported by the system"
+msgstr "No es soportado por el sistema"
+
+#: report_builder/models.py:213
+msgid "Reviewer"
+msgstr "Revisor"
+
+#: report_builder/models.py:214
+msgid "Reviewers"
+msgstr "Revisores"
+
+#: report_builder/models.py:220
+msgid "Optional"
+msgstr "Opcional"
+
+#: report_builder/models.py:221
+msgid "Required"
+msgstr "Requerido"
+
+#: report_builder/models.py:222
+msgid "Required by hierarchy"
+msgstr "Requerido por jerarquía"
+
+#: report_builder/models.py:240
+msgid "Question"
+msgstr "Pregunta"
+
+#: report_builder/models.py:241
+msgid "Questions"
+msgstr "Preguntas"
+
+#: report_builder/models.py:257
+msgid "Answer"
+msgstr "Respuesta"
+
+#: report_builder/models.py:258
+msgid "Answers"
+msgstr "Respuestas"
+
+#: report_builder/models.py:273
+msgid "Observation"
+msgstr "Observación"
+
+#: report_builder/models.py:274
+msgid "Observations"
+msgstr "Observaciones"
+
+#: report_builder/models.py:289
+msgid "Revision Tree User"
+msgstr "Árbol de Revisión de Usuario"
+
+#: report_builder/models.py:290
+msgid "Revision Tree Users"
+msgstr "Árbol de Revisión de Usuarios"
+
+#: report_builder/models.py:305 report_builder/models.py:306
+msgid "Revision Tree"
+msgstr "Árbol de Revisión"
+
+#: report_builder/templates/admin/boolean_question.html:11
+#: report_builder/templates/admin/integer_question.html:10
+#: report_builder/templates/admin/simple_text_question.html:9
+#: report_builder/templates/admin/unique_selection_question.html:12
+#: report_builder/templates/responsable/boolean_question.html:10
+#: report_builder/templates/responsable/integer_question.html:10
+#: report_builder/templates/responsable/simple_text_question.html:10
+#: report_builder/templates/responsable/unique_selection_question.html:10
+msgid "Success:"
+msgstr "Éxito:"
+
+#: report_builder/templates/admin/boolean_question.html:16
+#: report_builder/templates/admin/integer_question.html:15
+#: report_builder/templates/admin/simple_text_question.html:14
+#: report_builder/templates/admin/unique_selection_question.html:17
+#: report_builder/templates/responsable/boolean_question.html:15
+#: report_builder/templates/responsable/integer_question.html:15
+#: report_builder/templates/responsable/simple_text_question.html:15
+#: report_builder/templates/responsable/unique_selection_question.html:15
+msgid "Error:"
+msgstr "Error:"
+
+#: report_builder/templates/admin/boolean_question.html:22
+msgid "Boolean question (admin)"
+msgstr "Pregunta Booleana (administrador)"
+
+#: report_builder/templates/admin/boolean_question.html:36
+#: report_builder/templates/admin/integer_question.html:39
+#: report_builder/templates/admin/simple_text_question.html:38
+#: report_builder/templates/admin/unique_selection_question.html:52
+msgid "See/Hide"
+msgstr "Ver/Ocultar"
+
+#: report_builder/templates/admin/boolean_question.html:37
+#: report_builder/templates/admin/integer_question.html:42
+#: report_builder/templates/admin/simple_text_question.html:41
+#: report_builder/templates/admin/unique_selection_question.html:55
+msgid "Delete"
+msgstr "Eliminar"
+
+#: report_builder/templates/admin/integer_question.html:21
+msgid "Integer Question (admin)"
+msgstr "Pregunta Numérica (administrador)"
+
+#: report_builder/templates/admin/integer_question.html:49
+#: report_builder/templates/admin/simple_text_question.html:48
+#: report_builder/templates/admin/unique_selection_question.html:63
+msgid "Requirement:"
+msgstr "Requerimiento:"
+
+#: report_builder/templates/admin/integer_question.html:52
+msgid "Minimum:"
+msgstr "Mínimo:"
+
+#: report_builder/templates/admin/integer_question.html:55
+msgid "Maximum:"
+msgstr "Máximo:"
+
+#: report_builder/templates/admin/integer_question.html:58
+msgid "Steps:"
+msgstr "Pasos:"
+
+#: report_builder/templates/admin/simple_text_question.html:20
+msgid "Simple text question (Admin)"
+msgstr "Pregunta de Texto Simple (administrador)"
+
+#: report_builder/templates/admin/unique_selection_question.html:25
+msgid "Unique Selection Question (Admin)"
+msgstr "Pregunta de Selección Única (administrador)"
+
+#: report_builder/templates/admin/unique_selection_question.html:40
+msgid "Display fields"
+msgstr "Campos a seleccionar"
+
+#: report_builder/templates/admin/unique_selection_question.html:41
+#: report_builder/templates/admin/unique_selection_question.html:66
+msgid "Catalog:"
+msgstr "Catálogo:"
+
+#: report_builder/templates/pdf/boolean_question.html:10
+#: report_builder/templates/pdf/integer_question.html:9
+#: report_builder/templates/pdf/unique_selection_question.html:9
+msgid "Question Report"
+msgstr "Informe de pregunta"
+
+#: report_builder/templates/pdf/boolean_question.html:13
+#: report_builder/templates/pdf/integer_question.html:12
+#: report_builder/templates/pdf/simple_text_question.html:12
+#: report_builder/templates/pdf/unique_selection_question.html:12
+msgid "Date:"
+msgstr "Fecha:"
+
+#: report_builder/templates/pdf/boolean_question.html:16
+#: report_builder/templates/pdf/integer_question.html:15
+#: report_builder/templates/pdf/simple_text_question.html:15
+#: report_builder/templates/pdf/unique_selection_question.html:15
+msgid "Page"
+msgstr "Página"
+
+#: report_builder/templates/pdf/boolean_question.html:16
+#: report_builder/templates/pdf/integer_question.html:15
+#: report_builder/templates/pdf/simple_text_question.html:15
+#: report_builder/templates/pdf/unique_selection_question.html:15
+msgid "of"
+msgstr "de"
+
+#: report_builder/templates/pdf/boolean_question.html:19
+#: report_builder/templates/pdf/integer_question.html:18
+#: report_builder/templates/pdf/simple_text_question.html:18
+#: report_builder/templates/pdf/unique_selection_question.html:18
+msgid "User:"
+msgstr "Usuario:"
+
+#: report_builder/templates/pdf/boolean_question.html:36
+#: report_builder/templates/pdf/integer_question.html:33
+#: report_builder/templates/pdf/simple_text_question.html:33
+#: report_builder/templates/pdf/unique_selection_question.html:33
+msgid "Question:"
+msgstr "Pregunta:"
+
+#: report_builder/templates/pdf/boolean_question.html:41
+#: report_builder/templates/pdf/integer_question.html:39
+#: report_builder/templates/pdf/simple_text_question.html:39
+#: report_builder/templates/pdf/unique_selection_question.html:39
+msgid "Answer:"
+msgstr "Respuesta:"
+
+#: report_builder/templates/pdf/boolean_question.html:43
+#: report_builder/templates/pdf/integer_question.html:43
+#: report_builder/templates/pdf/simple_text_question.html:43
+#: report_builder/templates/pdf/unique_selection_question.html:43
+#, fuzzy
+#| msgid "The Question Don't Have Answer!!"
+msgid "The Question Don't Have Answer!"
+msgstr "La pregunta no posee respuesta!"
+
+#: report_builder/templates/pdf/simple_text_question.html:9
+msgid "Simple Text Question Report"
+msgstr "Informe de pregunta de texto simple"
+
+#: report_builder/templates/responsable/boolean_question.html:22
+msgid "Boolean question (responsable)"
+msgstr "Pregunta Booleana (responsable)"
+
+#: report_builder/templates/responsable/integer_question.html:22
+msgid "Integer question (responsable)"
+msgstr "Pregunta Numérica (responsable)"
+
+#: report_builder/templates/responsable/simple_text_question.html:22
+msgid "Simple text question (responsable)"
+msgstr "Pregunta de Texto Simple (responsable)"
+
+#: report_builder/templates/responsable/unique_selection_question.html:22
+msgid "Unique Selection Question (responsable)"
+msgstr "Pregunta de Selección Única (responsable)"

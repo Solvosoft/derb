@@ -1,3 +1,4 @@
+{% load i18n %} 
 <html>
 	<head>
 		<style>
@@ -5,16 +6,16 @@
 				margin: 3cm 2cm;
 				padding-left: 1.5cm;
 			@top-left {
-				content: "Simple Text Question Report";
+				content: "{% trans 'Simple Text Question Report' %}";
 			}
 			@top-right {
-			content: "Date: {{ datetime }}";
+			content: "{% trans 'Date:' %} {{ datetime }}";
 			}
 			@bottom-right {
-			content: "Page " counter(page) " of " counter(pages) ;
+			content: "{% trans 'Page' %} " counter(page) " {% trans 'of' %} " counter(pages) ;
 			}
 			@bottom-left {
-			content: "User: {{ request.user.get_username }}";
+			content: "{% trans 'User:' %} {{ request.user.get_username }}";
 			}
 			}
 			body {
@@ -29,13 +30,17 @@
 	<body>
 		<div class="question_text">
 			{% if question %}
-			<h2>Question: {{ question.text|safe }}</h2>
+			<h2>{% trans 'Question:' %} {{ question.text|safe }}</h2>
 			{% endif %}
 		</div>
 		<div class="answer_text">
 			{% if answer %}
 			<p>
-				Answer: {{ answer|safe }}
+				{% trans 'Answer:' %} {{ answer|safe }}
+			</p>
+			{% else %}
+			<p>
+				{% trans "The Question Don't Have Answer!" %}
 			</p>
 			{% endif %}
 		</div>

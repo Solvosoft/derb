@@ -1,6 +1,5 @@
 '''
 Created on 15/9/2016
-
 @author: nashyra
 '''
 import json
@@ -40,4 +39,4 @@ class SimpleQuestionViewResp(QuestionViewResp):
 #class SimpleTextQuestionPDF(QuestionViewPDF):
 class SimpleTextQuestionPDF(QuestionViewPDF):
     name = 'simple_text_question'
-    template_name = 'pdf/simple_text_question.html'
+template_name = 'pdf/simple_text_question.html'

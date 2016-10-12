@@ -1,6 +1,5 @@
 '''
 Created on 14/9/2016
-
 @author: natalia
 '''
 import json
@@ -54,6 +53,7 @@ class IntegerQuestionResp(QuestionViewResp):
         else:
             form = self.form_class(instance=instance, extra=answer_options)
         return form
+
 
 class IntegerQuestionViewPDF(QuestionViewPDF):
     name = 'integer_question'
