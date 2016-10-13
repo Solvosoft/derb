@@ -6,7 +6,7 @@ from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionView
 from report_builder.Question.forms import SimpleTextQuestionForm, SimpleTextAnswerForm
 
 
-class SimpleTextQuestionAdmin(QuestionViewAdmin):
+class SimpleTextQuestionViewAdmin(QuestionViewAdmin):
     form_class = SimpleTextQuestionForm
     template_name = 'admin/simple_text_question.html'
     name = 'simple_text_question'
@@ -25,6 +25,6 @@ class SimpleQuestionViewResp(QuestionViewResp):
 
 
 # class SimpleTextQuestionPDF(QuestionViewPDF):
-class SimpleTextQuestionPDF(QuestionViewPDF):
+class SimpleTextQuestionViewPDF(QuestionViewPDF):
     name = 'simple_text_question'
     template_name = 'pdf/simple_text_question.html'

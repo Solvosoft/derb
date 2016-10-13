@@ -7,7 +7,7 @@ from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionView
 from report_builder.Question.forms import IntegerQuestionForm, AnswerForm, IntegerAnswerForm
 
 
-class IntegerQuestionAdmin(QuestionViewAdmin):
+class IntegerQuestionViewAdmin(QuestionViewAdmin):
     form_class = IntegerQuestionForm
     template_name = 'admin/integer_question.html'
     name = 'integer_question'
@@ -30,7 +30,7 @@ class IntegerQuestionAdmin(QuestionViewAdmin):
         return object
 
 
-class IntegerQuestionResp(QuestionViewResp):
+class IntegerQuestionViewResp(QuestionViewResp):
     template_name = 'responsable/integer_question.html'
     name = 'integer_question'
     form_class = IntegerAnswerForm

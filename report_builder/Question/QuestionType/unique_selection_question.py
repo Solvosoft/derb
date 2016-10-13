@@ -6,8 +6,8 @@ import json
 from django_ajax.decorators import ajax
 
 from report_builder.Question import QuestionView
-from report_builder.Question.forms import UniqueSelectionAdminForm, \
-    UniqueSelectionAnswerForm
+from report_builder.Question.forms import UniqueSelectionAdminForm
+from report_builder.Question.forms import UniqueSelectionAnswerForm
 from report_builder.registry import models
 
 
@@ -31,7 +31,7 @@ def get_catalog_choices(json_field):
     return (value_text for value_text in get_catalog_values(queryset, display_fields))
 
 
-class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
+class UniqueSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
     form_class = UniqueSelectionAdminForm
     template_name = 'admin/unique_selection_question.html'
     name = 'unique_selection_question'
@@ -51,7 +51,7 @@ class UniqueSelectionAdmin(QuestionView.QuestionViewAdmin):
         return object
 
 
-class UniqueSelectionResp(QuestionView.QuestionViewResp):
+class UniqueSelectionQuestionViewResp(QuestionView.QuestionViewResp):
     template_name = 'responsable/unique_selection_question.html'
     name = 'unique_selection_question'
     form_class = UniqueSelectionAnswerForm
@@ -65,7 +65,7 @@ class UniqueSelectionResp(QuestionView.QuestionViewResp):
         return form
 
 
-class UniqueSelectionPDF(QuestionView.QuestionViewPDF):
+class UniqueSelectionQuestionViewPDF(QuestionView.QuestionViewPDF):
     name = 'unique_selection_question'
     template_name = 'pdf/unique_selection_question.html'
 
