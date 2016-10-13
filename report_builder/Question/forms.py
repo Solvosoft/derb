@@ -234,6 +234,5 @@ class UniqueSelectionAnswerForm(AnswerForm):
             if (i + 1) != len(display_fields):
                 display_text += ' - '
 
-
         instance.display_text = display_text
         return instance

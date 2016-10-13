@@ -12,6 +12,7 @@ class FloatQuestionAdmin(IntegerQuestionAdmin):
         'help': 'Allows you to make numerical questions',
         'color': '#330065'
     }
+    evaluator = float
 
 class FloatQuestionResp(IntegerQuestionResp):
     template_name = 'responsable/float_question.html'

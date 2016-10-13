@@ -16,14 +16,15 @@ class IntegerQuestionAdmin(QuestionViewAdmin):
         'help': 'Allows you to make numerical questions',
         'color': '#330065'
     }
+    evaluator = int
 
     def pre_save(self, object, request, form):
         form_data = dict(form.data)
 
         answer_options = {
-            "maximum": int(form_data.get('maximum')[0]),
-            "minimum": int(form_data.get('minimum')[0]),
-            "steps": int(form_data.get('steps')[0]),
+            "maximum": self.evaluator(form_data.get('maximum')[0]),
+            "minimum": self.evaluator(form_data.get('minimum')[0]),
+            "steps": self.evaluator(form_data.get('steps')[0]),
         }
         object.answer_options = json.dumps(answer_options)
         return object
