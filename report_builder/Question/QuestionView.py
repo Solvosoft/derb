@@ -1,4 +1,4 @@
-import ast
+import csv
 import json
 import random
 import reversion
@@ -14,6 +14,7 @@ from django.views.generic.base import View
 from django.utils.datastructures import OrderedDict
 from django.template import Context
 from weasyprint import HTML
+from io import StringIO
 from report_builder.Observation.ObservationView import ObservationView
 from report_builder.Question.question_loader import process_questions
 from report_builder.models import Question as QuestionModel, Answer, Report, ReportByProject
@@ -291,7 +292,7 @@ class QuestionViewResp(Question):
             'question_number': self.question.order,
             'answer': self.answer,
             'form_number': str(self.form_number),
-            #'observations': self.get_observations(request, args, kwargs),
+            # 'observations': self.get_observations(request, args, kwargs),
             'required': get_question_permission(self.question)
         }
         extra = self.additional_template_parameters(**parameters)
@@ -400,9 +401,141 @@ class QuestionViewPDF(Question):
 
         return response
 
-class QuestionViewReviewer(QuestionViewPDF):
+
+class QuestionViewReviewer(Question):
     """
         TODO: docstring
     """
     template_name = 'reviewer/simple_question.html'
     view_type = 'reviewer'
+    answer = None
+    name = 'simple_question'
+
+    def post(self, request, *args, **kwargs):
+        """
+            TODO: docstring
+        """
+        return bad_request(request)
+
+    def get(self, request, *args, **kwargs):
+        """
+            TODO: docstring
+        """
+        self.request = request
+        self.form_number = random.randint(self.start_number, self.end_number)
+        self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
+        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
+            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
+
+        parameters = {
+            'name': self.name,
+            'question': self.question,
+            'question_number': self.question.order,
+            'answer': self.answer,
+            'form_number': str(random.randint(self.start_number, self.end_number)),
+        }
+
+        return render(request, self.template_name, parameters)
+
+
+class QuestionViewCSV(Question):
+    name = 'simple_question'
+    view_type = 'csv'
+    answer = None
+
+    def get_question_data(self, question, report, answer=None):
+        data = {}
+
+        data['pk'] = question.pk
+        data['report'] = report.pk
+        data['text'] = question.text
+        data['help'] = question.help
+        data['required'] = question.required
+        data['order'] = question.order
+
+        if answer is not None:
+            data['answer'] = {
+                'pk': answer.pk,
+                'text': answer.text,
+                'annotation': answer.annotation,
+                'display_text': answer.display_text
+            }
+        else:
+            data['answer'] = ''
+
+    def get(self, request, *args, **kwargs):
+        self.request = request
+        self.form_number = random.randint(self.start_number, self.end_number)
+        self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
+        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
+            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
+
+        data = self.get_question_data(self.question, reportbyproj, self.answer)
+
+        csv_output = StringIO()
+
+        csv_writer = csv.writer(csv_output)
+        csv_writer.writerow(data.keys())
+        csv_writer.writerow(data.values())
+
+        response = HttpResponse(csv_output.getvalue(), content_type='text/csv')
+
+        response[
+            'Content-Disposition'] = 'attachment; filename="question.csv"'
+        return response
+
+    def post(self, request, *args, **kwargs):
+        return bad_request(request)
+
+
+class QuestionViewJSON(Question):
+    name = 'simple_question'
+    view_type = 'json'
+    answer = None
+
+    def get_question_data(self, question, report, answer=None):
+        data = {}
+
+        data['pk'] = question.pk
+        data['report'] = report.pk
+        data['text'] = question.text
+        data['help'] = question.help
+        data['required'] = question.required
+        data['order'] = question.order
+
+        if answer is not None:
+            data['answer'] = {
+                'pk': answer.pk,
+                'text': answer.text,
+                'annotation': answer.annotation,
+                'display_text': answer.display_text
+            }
+        else:
+            data['answer'] = ''
+
+    def get(self, request, *args, **kwargs):
+        self.request = request
+        self.form_number = random.randint(self.start_number, self.end_number)
+        self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
+        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
+            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
+
+        data = self.get_question_data(self.question, reportbyproj, self.answer)
+
+        json_data = json.dumps(data)
+
+        response = HttpResponse(json_data, content_type='application/json')
+
+        response[
+            'Content-Disposition'] = 'attachment; filename="question.json"'
+        return response
+
+    def post(self, request, *args, **kwargs):
+        return bad_request(request)
+
+
+class QuestionViewSPSS(Question):
+    pass
