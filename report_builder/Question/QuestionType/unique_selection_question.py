@@ -6,7 +6,7 @@ import json
 from django_ajax.decorators import ajax
 
 from report_builder.Question import QuestionView
-from report_builder.Question.forms import UniqueSelectionAdminForm
+from report_builder.Question.forms import UniqueSelectionQuestionForm
 from report_builder.Question.forms import UniqueSelectionAnswerForm
 from report_builder.registry import models
 
@@ -32,7 +32,7 @@ def get_catalog_choices(json_field):
 
 
 class UniqueSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
-    form_class = UniqueSelectionAdminForm
+    form_class = UniqueSelectionQuestionForm
     template_name = 'admin/unique_selection_question.html'
     name = 'unique_selection_question'
     minimal_representation = {

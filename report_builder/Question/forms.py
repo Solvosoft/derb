@@ -69,6 +69,34 @@ class AnswerForm(forms.ModelForm):
         instance.display_text = instance.text
         return instance
 
+class SimpleTextAnswerForm(AnswerForm):
+    class Meta:
+        model = Answer
+        fields = ('text', 'annotation')
+        widgets = {
+            'text': CKEditorWidget(config_name='default'),
+            'annotation': CKEditorWidget(config_name='default')
+        }
+
+    def save(self, db_use):
+        instance = super(SimpleTextAnswerForm, self).save(db_use)
+        instance.display_text = instance.text
+        return instance
+
+# Simple_Text_Question
+class SimpleTextQuestionForm(QuestionForm):
+    class Meta:
+        model = Question
+        fields = ('text', 'help', 'id', 'required')
+        widgets = {
+            'text': CKEditorWidget(config_name='default'),
+            'help': CKEditorWidget(config_name='default')
+        }
+
+    def save(self, db_use):
+        instance = super(SimpleTextQuestionForm, self).save(db_use)
+        instance.display_text = instance.text
+        return instance
 
 # Boolean answer form
 class BooleanAnswerForm(AnswerForm):
@@ -143,43 +171,12 @@ class IntegerAnswerForm(AnswerForm):
         else:
             super(IntegerAnswerForm, self).__init__(*args, **kwargs)
 
-
+# Float answer form
 class FloatAnswerForm(IntegerAnswerForm):
     text = forms.DecimalField()
 
 
-class SimpleTextAnswerForm(AnswerForm):
-    class Meta:
-        model = Answer
-        fields = ('text', 'annotation')
-        widgets = {
-            'text': CKEditorWidget(config_name='default'),
-            'annotation': CKEditorWidget(config_name='default')
-        }
-
-    def save(self, db_use):
-        instance = super(SimpleTextAnswerForm, self).save(db_use)
-        instance.display_text = instance.text
-        return instance
-
-
-# Simple_Text_Question
-class SimpleTextQuestionForm(QuestionForm):
-    class Meta:
-        model = Question
-        fields = ('text', 'help', 'id', 'required')
-        widgets = {
-            'text': CKEditorWidget(config_name='default'),
-            'help': CKEditorWidget(config_name='default')
-        }
-
-    def save(self, db_use):
-        instance = super(SimpleTextQuestionForm, self).save(db_use)
-        instance.display_text = instance.text
-        return instance
-
-
-class UniqueSelectionAdminForm(QuestionForm):
+class UniqueSelectionQuestionForm(QuestionForm):
     register_test_catalogs()
     CATALOGS = ((index, model[1]) for index, model in enumerate(models))
     catalog = forms.ChoiceField(choices=CATALOGS)
