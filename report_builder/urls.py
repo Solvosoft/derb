@@ -31,6 +31,8 @@ question_types_urls = [
         name='float_question_admin'),
     url(r'float/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', float_question.FloatQuestionResp.as_view(),
         name='float_question_resp'),
+    url(r'float/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)', float_question.FloatQuestionPDF.as_view(),
+        name='float_question_pdf'),
     url(r'simple/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$', simple_text_question.SimpleTextQuestionAdmin.as_view(),
         name='simple_text_question_admin'),
     url(r'simple/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', simple_text_question.SimpleQuestionViewResp.as_view(),
