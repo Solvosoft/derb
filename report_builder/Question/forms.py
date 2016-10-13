@@ -97,6 +97,17 @@ class IntegerQuestionForm(QuestionForm):
     maximum = forms.DecimalField(initial=100)
     steps = forms.DecimalField(initial=1)
 
+    def __init__(self, *args, **kwargs):
+        if 'instance' in kwargs:
+            instance = kwargs.get('instance')
+            answer_options = json.loads(instance.answer_options)
+            super(IntegerQuestionForm, self).__init__(*args, **kwargs)
+            self.fields['minimum'].initial = answer_options['minimum']
+            self.fields['maximum'].initial = answer_options['maximum']
+            self.fields['steps'].initial = answer_options['steps']
+        else:
+            super(IntegerQuestionForm, self).__init__(*args, **kwargs)
+
     class Meta:
         model = Question
         widgets = {
