@@ -1,4 +1,6 @@
 from report_builder.Question.QuestionType.integer_question import IntegerQuestionAdmin
+from report_builder.Question.QuestionType.integer_question import IntegerQuestionResp
+from report_builder.Question.forms import FloatAnswerForm
 
 
 class FloatQuestionAdmin(IntegerQuestionAdmin):
@@ -9,3 +11,8 @@ class FloatQuestionAdmin(IntegerQuestionAdmin):
         'help': 'Allows you to make numerical questions',
         'color': '#330065'
     }
+
+class FloatQuestionResp(IntegerQuestionResp):
+    template_name = 'responsable/float_question.html'
+    name = 'float_question'
+    form_class = FloatAnswerForm

@@ -123,7 +123,7 @@ class IntegerQuestionForm(QuestionForm):
             }),
 
         }
-        fields = ('text', 'help', 'required', 'minimum', 'maximum', 'steps', 'id')
+        fields = ('text', 'help', 'required', 'minimum', 'maximum', 'steps')
 
 
 # Integer answer form
@@ -142,6 +142,10 @@ class IntegerAnswerForm(AnswerForm):
             }
         else:
             super(IntegerAnswerForm, self).__init__(*args, **kwargs)
+
+
+class FloatAnswerForm(IntegerAnswerForm):
+    text = forms.DecimalField()
 
 
 class SimpleTextAnswerForm(AnswerForm):
