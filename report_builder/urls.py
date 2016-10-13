@@ -1,15 +1,17 @@
 from django.conf.urls import url
 from django.conf.urls import include
 from report_builder import views
-from report_builder.Question.QuestionType import integer_question
 from report_builder import initial_views as init
 from report_builder.Question.QuestionType import simple_text_question
 from report_builder.Question.QuestionType import boolean_question
+from report_builder.Question.QuestionType import integer_question
+from report_builder.Question.QuestionType import float_question
 from report_builder.Question.QuestionType import unique_selection_question
 from report_builder.Question.QuestionType.unique_selection_question import get_catalog_display_fields
 
 # Boolean question
 # Integer question
+# Float question
 # Simple text question
 # Unique selection question
 question_types_urls = [
@@ -25,6 +27,8 @@ question_types_urls = [
         name='integer_question_resp'),
     url(r'integer/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)', integer_question.IntegerQuestionViewPDF.as_view(),
         name='integer_question_pdf'),
+    url(r'float/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$', float_question.FloatQuestionAdmin.as_view(),
+        name='float_question_admin'),
     url(r'simple/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$', simple_text_question.SimpleTextQuestionAdmin.as_view(),
         name='simple_text_question_admin'),
     url(r'simple/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', simple_text_question.SimpleQuestionViewResp.as_view(),
