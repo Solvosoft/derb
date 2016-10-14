@@ -18,7 +18,7 @@ from io import StringIO
 from report_builder.Observation.ObservationView import ObservationView
 from report_builder.Question.question_loader import process_questions
 from report_builder.models import Question as QuestionModel, Answer, Report, ReportByProject
-from report_builder.Question.forms import QuestionForm, AnswerForm
+from report_builder.Question.forms import QuestionForm, AnswerForm, ObservationForm
 from report_builder.report_shortcuts import get_question_permission
 from report_builder.shortcuts import transform_request_to_get, get_children, get_reportbyproj_question_answer
 from report_builder.Question import question_loader
@@ -410,6 +410,7 @@ class QuestionViewReviewer(Question):
     view_type = 'reviewer'
     answer = None
     name = 'simple_question'
+    form_class = ObservationForm
 
     def post(self, request, *args, **kwargs):
         """
@@ -428,11 +429,14 @@ class QuestionViewReviewer(Question):
         if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
             self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
 
+        form = self.get_form()
+
         parameters = {
             'name': self.name,
             'question': self.question,
             'question_number': self.question.order,
             'answer': self.answer,
+            'form': form,
             'form_number': str(random.randint(self.start_number, self.end_number)),
         }
 
