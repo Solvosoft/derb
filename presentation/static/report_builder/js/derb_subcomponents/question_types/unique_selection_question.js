@@ -2,8 +2,6 @@
  * Created by jaquer on 10/10/16.
  */
 $(document).ready(function () {
-    update_combo();
-
     $("#id_catalog").change(function () {
         update_combo();
     });
@@ -41,7 +39,21 @@ function update_combo() {
 }
 
 function initial_values() {
-    var answer_options = JSON.parse(answer_options_json);
+    if (answer_options_json != '') {
+        window.setTimeout(function () {
+            var answer_options = JSON.parse(answer_options_json);
+            var catalog = answer_options.catalog;
+            var display_fields = answer_options.display_fields;
+            var checkbox = $('[id^=id_display_fields_]');
 
-    /* TODO */
+            $('#id_catalog').val(catalog);
+            update_combo();
+
+            for (var i = 0; i < checkbox.length; i++) {
+                if (display_fields.indexOf($(checkbox[i]).attr('value')) != -1) {
+                    $(checkbox[i]).prop('checked', true);
+                }
+            }
+        }, 100);
+    }
 }
