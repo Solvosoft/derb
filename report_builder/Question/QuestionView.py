@@ -15,6 +15,9 @@ from django.utils.datastructures import OrderedDict
 from django.template import Context
 from weasyprint import HTML
 from io import StringIO
+from savReaderWriter import SavWriter
+from tempfile import NamedTemporaryFile
+from django.conf import settings
 from report_builder.Observation.ObservationView import ObservationView
 from report_builder.Question.question_loader import process_questions
 from report_builder.models import Question as QuestionModel, Answer, Report, ReportByProject
@@ -547,4 +550,64 @@ class QuestionViewJSON(Question):
 
 
 class QuestionViewSPSS(Question):
-    pass
+    name = 'simple_question'
+    view_type = 'spss'
+    answer = None
+
+    def get_question_data(self, question, report, answer=None):
+        varNames = [
+            'pk',
+            'report_pk',
+            'text',
+            'help',
+            'required',
+            'order',
+            'answer_pk',
+            'answer_text',
+            'answer_annotation',
+            'answer_display_text'
+        ]
+
+        varTypes = {
+            'pk': 0,
+            'report_pk': 0,
+            'text': 255,
+            'help': 255,
+            'required': 0,
+            'order': 0,
+            'answer_pk': 0,
+            'answer_text': 255,
+            'answer_annotation': 255,
+            'answer_display_text': 255
+        }
+
+        record = []
+
+        record = record + [question.pk, report.pk, question.text, question.help, question.required,
+                           question.order]
+        if answer:
+            record = record + [answer.pk, answer.text, answer.annotation, answer.display_text]
+        else:
+            record = record + ['', '', '', '']
+
+        return varNames, varTypes, record
+
+    def get(self, request, *args, **kwargs):
+        self.request = request
+        self.form_number = random.randint(self.start_number, self.end_number)
+        self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
+        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
+            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
+
+        varNames, varTypes, record = self.get_question_data(self.question, reportbyproj, self.answer)
+
+        spss_output = settings.MEDIA_ROOT + 'question.sav'
+
+        with SavWriter(spss_output, varNames, varTypes) as writer:
+            writer.writerow(record)
+
+        return HttpResponse(0)
+
+    def post(self, request, *args, **kwargs):
+        return bad_request(request)

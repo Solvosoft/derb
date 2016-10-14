@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 from weasyprint import HTML
 
 from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewReviewer, QuestionViewCSV, \
-    QuestionViewJSON
+    QuestionViewJSON, QuestionViewSPSS
 from report_builder.Question.QuestionView import QuestionViewResp
 from report_builder.Question.QuestionView import QuestionViewPDF
 from report_builder.Question.forms import BooleanAnswerForm
@@ -73,4 +73,8 @@ class BooleanQuestionViewCSV(QuestionViewCSV):
 
 
 class BooleanQuestionViewJSON(QuestionViewJSON):
+    name = 'boolean_question'
+
+
+class BooleanQuestionViewSPSS(QuestionViewSPSS):
     name = 'boolean_question'
