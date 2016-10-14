@@ -521,6 +521,8 @@ class QuestionViewJSON(Question):
         else:
             data['answer'] = ''
 
+        return data
+
     def get(self, request, *args, **kwargs):
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
@@ -537,6 +539,7 @@ class QuestionViewJSON(Question):
 
         response[
             'Content-Disposition'] = 'attachment; filename="question.json"'
+
         return response
 
     def post(self, request, *args, **kwargs):

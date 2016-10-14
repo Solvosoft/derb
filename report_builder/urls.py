@@ -25,6 +25,8 @@ question_types_urls = [
         name='boolean_question_revisor'),
     url(r'boolean/csv/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', boolean_question.BooleanQuestionViewCSV.as_view(),
         name='boolean_question_csv'),
+    url(r'boolean/json/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', boolean_question.BooleanQuestionViewJSON.as_view(),
+        name='boolean_question_json'),
     url(r'integer/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$', integer_question.IntegerQuestionViewAdmin.as_view(),
         name='integer_question_admin'),
     url(r'integer/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', integer_question.IntegerQuestionViewResp.as_view(),
