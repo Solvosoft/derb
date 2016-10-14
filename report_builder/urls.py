@@ -57,18 +57,19 @@ question_types_urls = [
         name="unique_selection_pdf"),
 ]
 
+# Report views
+report_views_urls = [
+    url(r'^new/$', init.NewReportView.as_view(), name='new_report'),
+    url(r'^new/(?P<pk>\d+)$', init.NewReportTemplate, name='new_report_from_template'),
+    url(r'^admin/template/(?P<pk>\d+)$', Report.admin, name='admin_report'),
+    url(r'^admin/template/(?P<pk>\d+)/save$', Report.save_admin, name='admin_save_report'),
+]
+
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^js/ckeditor_config.js', views.get_js_editor, name='js_ckeditor_config'),
     url(r'^init$', init.InitialIndexView.as_view(), name='init'),
-    url(r'^report/new/$', init.NewReportView.as_view(), name='new_report'),
-    url(r'^report/new/(?P<pk>\d+)$', init.NewReportTemplate, name='new_report_from_template'),
     url(r'^question_types/', include(question_types_urls)),
+    url(r'^report/', include(report_views_urls)),
     url(r"^get_catalog_display_fields", get_catalog_display_fields, name='get_catalog_display_fields')
-]
-
-# Report views
-urlpatterns += [
-    url(r'^admin/template/(?P<pk>\d+)$', Report.admin, name='admin_report'),
-    url(r'^admin/template/(?P<pk>\d+)/save$', Report.save_admin, name='admin_save_report')
 ]
