@@ -1,22 +1,27 @@
-import ast
-
+import csv
+import json
 import random
 import reversion
+
+from django.contrib import messages
 from django.db import transaction
+from django.utils import timezone
 from django.http import HttpResponse
-from django.shortcuts import render
-from django.utils.datastructures import OrderedDict
+from django.template.loader import get_template
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.defaults import bad_request
 from django.views.generic.base import View
-
+from django.utils.datastructures import OrderedDict
+from django.template import Context
+from weasyprint import HTML
+from io import StringIO
 from report_builder.Observation.ObservationView import ObservationView
-from report_builder.Question import question_loader
 from report_builder.Question.question_loader import process_questions
-from report_builder.forms import QuestionForm, AnswerForm
-from report_builder.models import Question as QuestionModel, Answer
+from report_builder.models import Question as QuestionModel, Answer, Report, ReportByProject
+from report_builder.Question.forms import QuestionForm, AnswerForm, ObservationForm
 from report_builder.report_shortcuts import get_question_permission
-from report_builder.shortcuts import get_report_question
 from report_builder.shortcuts import transform_request_to_get, get_children, get_reportbyproj_question_answer
+from report_builder.Question import question_loader
 
 
 class Question(View):
@@ -41,7 +46,7 @@ class Question(View):
         """
         results = None
         if self.question is not None and self.question.answer_options:
-            results = ast.literal_eval(self.question.answer_options)
+            results = json.loads(self.question.answer_options)
         return results
 
     def additional_template_parameters(self, **kwargs):
@@ -120,40 +125,65 @@ class QuestionViewAdmin(Question):
         """
             TODO: docstring
         """
+        question_pk = kwargs.get('question_pk', False)
+        report_pk = kwargs.get('report_pk', False)
+
+        if question_pk and question_pk != '':
+            self.question = get_object_or_404(QuestionModel, pk=question_pk)
+            question_pk = self.question.pk
+
+        if report_pk and report_pk != '':
+            self.report = get_object_or_404(Report, pk=report_pk)
+
         self.form_number = random.randint(self.start_number, self.end_number)
         self.request = request
-        self.report, self.question = get_report_question(kwargs['report_pk'], kwargs['question_pk'])
         form = self.get_form(instance=self.question)
         parameters = {
             'form': form,
-            'report': self.report,
             'question': self.question,
+            'report': self.report,
             'name': self.name,
             'form_number': str(self.form_number),
-            'minimal_representation': self.minimal_representation
+            'minimal_representation': self.minimal_representation,
+            'question_pk': question_pk
         }
-        additional = self.additional_template_parameters(**parameters)
-        if additional:
-            parameters.update(additional)
-
+        extra = self.additional_template_parameters(**parameters)
+        if extra:
+            parameters.update(extra)
         return render(request, self.template_name, parameters)
 
     def post(self, request, *args, **kwargs):
         """
             TODO: docstring
         """
+        redirection_needed = True
+        question_pk = kwargs.get('question_pk', False)
+        report_pk = kwargs.get('report_pk', False)
+
+        if question_pk and question_pk != '':
+            self.question = get_object_or_404(QuestionModel, pk=question_pk)
+            redirection_needed = False
+
+        if report_pk and report_pk != '':
+            self.report = get_object_or_404(Report, pk=report_pk)
+
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        self.report, self.question = get_report_question(kwargs['report_pk'], kwargs['question_pk'])
         form = self.get_form(request.POST, instance=self.question)
+
         if form.is_valid():
             question = form.save(False)
-            question.report = self.report
             question.class_to_load = self.name
+            question.report = self.report
             question = self.pre_save(question, request, form)
             question.save()
+            question_pk = question.pk
+            messages.add_message(request, messages.SUCCESS, 'Question saved successfully')
 
-            return HttpResponse(str(question.pk))
+            if redirection_needed == True:
+                return redirect(request.path + str(question_pk))
+        else:
+            messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
 
         parameters = {
             'form': form,
@@ -161,12 +191,13 @@ class QuestionViewAdmin(Question):
             'question': self.question,
             'name': self.name,
             'form_number': str(self.form_number),
-            'minimal_representation': self.minimal_representation
+            'minimal_representation': self.minimal_representation,
+            'question_pk': question_pk
         }
-        additional = self.additional_template_parameters(**parameters)
-        if additional:
-            parameters.update(additional)
-        return render(request, self.template_name, parameters)
+        extra = self.additional_template_parameters(**parameters)
+        if extra:
+            parameters.update(extra)
+        return render(request, template_name=self.template_name, context=parameters)
 
     def process_children(self, request, parameters, arguments, include=[]):
         """
@@ -201,24 +232,25 @@ class QuestionViewResp(Question):
         """
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        reportbyproj, self.question, self.answer = get_reportbyproj_question_answer(kwargs['report_pk'],
-                                                                                    kwargs['question_pk'],
-                                                                                    kwargs['answer_pk'])
+        self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
+        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
+            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
+
         form = self.get_form(instance=self.answer)
+
         parameters = {
             'name': self.name,
             'form': form,
             'question': self.question,
-            'report': reportbyproj,
             'question_number': self.question.order,
             'answer': self.answer,
-            'form_number': str(self.form_number),
-            'observations': self.get_observations(request, args, kwargs),
-            'required': get_question_permission(self.question)
+            'reportbyproj': reportbyproj,
+            'form_number': str(self.form_number)
         }
-        additional = self.additional_template_parameters(**parameters)
-        if additional:
-            parameters.update(additional)
+        extra = self.additional_template_parameters(**parameters)
+        if extra:
+            parameters.update(extra)
 
         return render(request, self.template_name, parameters)
 
@@ -228,18 +260,21 @@ class QuestionViewResp(Question):
         """
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        reportbyproj, self.question, self.answer = get_reportbyproj_question_answer(kwargs['report_pk'],
-                                                                                    kwargs['question_pk'],
-                                                                                    kwargs['answer_pk'])
+        self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
+        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
+            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
+
         if self.answer is None:
             self.answer = Answer()
         self.answer.question = self.question
-        self.answer.report = reportbyproj
         self.answer.user = request.user
+
         self.answer.text = ''
         self.answer.display_text = '\n'
 
-        form = self.get_form(request.POST, instance=self.answer)
+        form = self.get_form(post=request.POST, instance=self.answer)
+
         if form.is_valid():
             answer = form.save(False)
             answer.report = reportbyproj
@@ -253,16 +288,16 @@ class QuestionViewResp(Question):
             'name': self.name,
             'form': form,
             'question': self.question,
-            'report': reportbyproj,
+            'reportbyproj': reportbyproj,
             'question_number': self.question.order,
             'answer': self.answer,
             'form_number': str(self.form_number),
-            'observations': self.get_observations(request, args, kwargs),
+            # 'observations': self.get_observations(request, args, kwargs),
             'required': get_question_permission(self.question)
         }
-        additional = self.additional_template_parameters(**parameters)
-        if additional:
-            parameters.update(additional)
+        extra = self.additional_template_parameters(**parameters)
+        if extra:
+            parameters.update(extra)
         return render(request, self.template_name, parameters)
 
     def save(self, klass):
@@ -336,27 +371,175 @@ class QuestionViewPDF(Question):
             TODO: docstring
         """
         self.request = request
-        reportbyproj, self.question, self.answer = get_reportbyproj_question_answer(kwargs['report_pk'],
-                                                                                    kwargs['question_pk'],
-                                                                                    kwargs['answer_pk'])
+        self.form_number = random.randint(self.start_number, self.end_number)
+        self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
+        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
+            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
+
         parameters = {
             'name': self.name,
             'question': self.question,
-            'report': reportbyproj,
             'question_number': self.question.order,
             'answer': self.answer,
             'form_number': str(random.randint(self.start_number, self.end_number)),
-            'observations': self.get_observations(request, args, kwargs),
-            'required': get_question_permission(self.question)
+            'datetime': timezone.now(),
         }
         additional = self.additional_template_parameters(**parameters)
         if additional:
             parameters.update(additional)
-        return render(request, self.template_name, parameters)
+        template = get_template(self.template_name)
 
-class QuestionViewReviewer(QuestionViewPDF):
+        html = template.render(Context(parameters)).encode('UTF-8')
+
+        page = HTML(string=html, encoding='utf-8').write_pdf()
+
+        response = HttpResponse(page, content_type='application/pdf')
+
+        response[
+            'Content-Disposition'] = 'attachment; filename="question_report.pdf"'
+
+        return response
+
+
+class QuestionViewReviewer(Question):
     """
         TODO: docstring
     """
     template_name = 'reviewer/simple_question.html'
     view_type = 'reviewer'
+    answer = None
+    name = 'simple_question'
+    form_class = ObservationForm
+
+    def post(self, request, *args, **kwargs):
+        """
+            TODO: docstring
+        """
+        return bad_request(request)
+
+    def get(self, request, *args, **kwargs):
+        """
+            TODO: docstring
+        """
+        self.request = request
+        self.form_number = random.randint(self.start_number, self.end_number)
+        self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
+        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
+            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
+
+        form = self.get_form()
+
+        parameters = {
+            'name': self.name,
+            'question': self.question,
+            'question_number': self.question.order,
+            'answer': self.answer,
+            'form': form,
+            'form_number': str(random.randint(self.start_number, self.end_number)),
+        }
+
+        return render(request, self.template_name, parameters)
+
+
+class QuestionViewCSV(Question):
+    name = 'simple_question'
+    view_type = 'csv'
+    answer = None
+
+    def get_question_data(self, question, report, answer=None):
+        data = {}
+
+        data['pk'] = question.pk
+        data['report'] = report.pk
+        data['text'] = question.text
+        data['help'] = question.help
+        data['required'] = question.required
+        data['order'] = question.order
+
+        if answer is not None:
+            data['answer'] = {
+                'pk': answer.pk,
+                'text': answer.text,
+                'annotation': answer.annotation,
+                'display_text': answer.display_text
+            }
+        else:
+            data['answer'] = ''
+
+    def get(self, request, *args, **kwargs):
+        self.request = request
+        self.form_number = random.randint(self.start_number, self.end_number)
+        self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
+        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
+            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
+
+        data = self.get_question_data(self.question, reportbyproj, self.answer)
+
+        csv_output = StringIO()
+
+        csv_writer = csv.writer(csv_output)
+        csv_writer.writerow(data.keys())
+        csv_writer.writerow(data.values())
+
+        response = HttpResponse(csv_output.getvalue(), content_type='text/csv')
+
+        response[
+            'Content-Disposition'] = 'attachment; filename="question.csv"'
+        return response
+
+    def post(self, request, *args, **kwargs):
+        return bad_request(request)
+
+
+class QuestionViewJSON(Question):
+    name = 'simple_question'
+    view_type = 'json'
+    answer = None
+
+    def get_question_data(self, question, report, answer=None):
+        data = {}
+
+        data['pk'] = question.pk
+        data['report'] = report.pk
+        data['text'] = question.text
+        data['help'] = question.help
+        data['required'] = question.required
+        data['order'] = question.order
+
+        if answer is not None:
+            data['answer'] = {
+                'pk': answer.pk,
+                'text': answer.text,
+                'annotation': answer.annotation,
+                'display_text': answer.display_text
+            }
+        else:
+            data['answer'] = ''
+
+    def get(self, request, *args, **kwargs):
+        self.request = request
+        self.form_number = random.randint(self.start_number, self.end_number)
+        self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
+        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
+            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
+
+        data = self.get_question_data(self.question, reportbyproj, self.answer)
+
+        json_data = json.dumps(data)
+
+        response = HttpResponse(json_data, content_type='application/json')
+
+        response[
+            'Content-Disposition'] = 'attachment; filename="question.json"'
+        return response
+
+    def post(self, request, *args, **kwargs):
+        return bad_request(request)
+
+
+class QuestionViewSPSS(Question):
+    pass

@@ -123,6 +123,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'auth.User'
 
@@ -152,16 +153,22 @@ CELERYBEAT_SCHEDULE = {
 }
 
 # CKEDITOR CONFIGS
+DJANGO_WYSIWYG_FLAVOR = "ckeditor"
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+CKEDITOR_UPLOAD_PATH = "media/"
+
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'Full',
         'height': 300,
-        'width': 600,
+        'width': '100%',
     },
-    'basico': {
+    'basic': {
+        'width': '100%',
         'toolbar': 'Basic',
-        'height': 200,
-        'width': 600,
         "toolbar_Basic": [['Source', '-', 'Save', 'NewPage', 'DocProps', 'Preview', 'Print', '-', 'Templates'],
                           ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],
                           ['Find', 'Replace', '-', 'SelectAll', '-', 'SpellChecker', 'Scayt'],
@@ -179,7 +186,7 @@ CKEDITOR_CONFIGS = {
         "language": "en",
         "skin": "moono",
     },
-    'vacio': {
+    'empty': {
         'toolbar': 'Basic',
         'height': 200,
         'width': 500,
@@ -188,5 +195,3 @@ CKEDITOR_CONFIGS = {
         "skin": "moono",
     }
 }
-
-CKEDITOR_UPLOAD_PATH = 'uploads/'

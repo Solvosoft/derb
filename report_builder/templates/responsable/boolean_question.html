@@ -1,0 +1,65 @@
+{% include 'derb/base.html' %}
+
+{% load i18n %}
+{% block main_block %}
+  <div class="row">
+    <div class="col-md-offset-2 col-md-8">
+      {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+          <div class="alert alert-success">
+            <strong>{% trans 'Success:' %}</strong> {{ message }}
+          </div>
+        {% endif %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+          <div class="alert alert-danger">
+            <strong>{% trans 'Error:' %}</strong> {{ message }}
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          {% trans 'Boolean question (responsable)' %}
+        </div>
+        <div class="panel-body">
+          <form action="{% url 'report_builder:boolean_question_resp' reportbyproj.pk question.pk %}" method="post">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-offset-1 col-md-10">
+                <div class="panel panel-info">
+                  <div class="panel-heading">
+                    <div class="panel-title">{{ question }}</div>
+                  </div>
+                  <div class="panel-body">
+                    {% if question.required == 0 %}
+                      <span class="label label-success pull-right">{{ question.get_required_display }}</span>
+                    {% elif question.required == 1 %}
+                      <span class="label label-warning pull-right">{{ question.get_required_display }}</span>
+                    {% elif question.required == 2 %}
+                      <span class="label label-danger pull-right">{{ question.get_required_display }}</span>
+                    {% endif %}
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div>{{ form.text }}</div>
+                      </div>
+                      <br><br>
+                      <div class="col-md-12">
+                        <div>{{ form.annotation }}</div>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row text-right">
+                      <div class="col-md-12">
+                        <input class="btn btn-primary" type="submit" value="Save">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% load i18n %} 
+<html>
+	<head>
+		<style>
+			@page {
+				margin: 3cm 2cm;
+				padding-left: 1.5cm;
+			@top-left {
+				content: "{% trans 'Question Report' %}";
+			}
+			@top-right {
+			content: "{% trans 'Date:' %} {{ datetime }}";
+			}
+			@bottom-right {
+			content: "{% trans 'Page' %} " counter(page) " {% trans 'of' %} " counter(pages) ;
+			}
+			@bottom-left {
+			content: "{% trans 'User:' %} {{ request.user.get_username }}";
+			}
+			}
+			body {
+				text-align: justify;
+				font-family: sans-serif;
+			}
+			.question_text {
+				background-color: lightblue;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="question_text">
+			{% if question %}
+			<h2>{% trans 'Question:' %} {{ question.text|safe }}</h2>
+			{% endif %}
+		</div>
+		<div class="answer_text">
+			{% if answer %}
+			<p>
+				Answer: {{ answer }}
+				{% trans 'Answer:' %} {{ answer }}
+			</p>
+			{% else %}
+			<p>
+				{% trans "The Question Don't Have Answer!" %}
+			</p>
+			{% endif %}
+		</div>
+	</body>
+</html>

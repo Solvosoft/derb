@@ -57,9 +57,9 @@ You need to put ``{% load i18n %}`` in the begining of the template, always afte
 
 .. code-block:: bash
 
-    {% load i18n %} 
+    {% load i18n %}
     <html>
-        <head> 
+        <head>
             <title> {% trans "This is the title." %} </title>
         </head>
         <body>
@@ -71,6 +71,7 @@ You need to put ``{% load i18n %}`` in the begining of the template, always afte
 
 .. code-block:: bash
 
+	{% load i18n %}
     <html>
         <head>
             <title> {% trans "This is the title." %} </title>
@@ -101,8 +102,8 @@ You need to put ``{% load i18n %}`` in the begining of the template, always afte
             <h1> {% trans "Hello World!!" %} </h1>
         </body>
     </html>
-    
-Then, create a folder with the name of ``locale`` in your project (laboratory/locale), and execute the next command:
+
+Then, create a folder with the name of ``locale`` in your project (report_builder/locale), and execute the next command:
 
 .. code-block:: bash
 
@@ -110,4 +111,4 @@ Then, create a folder with the name of ``locale`` in your project (laboratory/lo
 
 ``-l es`` : indicates the translation language.
 
-Edit the .po file. 
+Edit the .po file.

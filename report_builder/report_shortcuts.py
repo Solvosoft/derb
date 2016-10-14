@@ -122,29 +122,33 @@ def build_report_object_with_thread(report):
 
 
 def get_question_with_permission(questions, parent):
-    question = None
-    try:
-        question = questions[parent]
-    except:
-        # relation? # TODO
-        pass
-
-    return question
+    '''
+        try:
+            question = questions[parent]
+        except:
+            relation = QuestionInfoRelation.objects.filter(question__pk=parent)
+            question = get_question_with_permission(questions, relation[0].parent_question.pk)
+        return question
+        '''
+    return
 
 
 def get_question_permission(question):
-    '''
+    """
         TODO: docstring
+    """
     '''
     questions = question.report.questions
-    required = question.required
+    return_value = question.required
     parent = question.pk
-    if required == 2:
-        while required == 2:
+    if return_value == 2:
+        while (return_value == 2):
             question = get_question_with_permission(questions, parent)
             parent = question['parent']
             if parent == -1:
-                required = 0
+                return_value = 0
             else:
-                required = questions[parent]['required']
-    return required
+                return_value = questions[parent]['required']
+    return return_value
+    '''
+    return 1

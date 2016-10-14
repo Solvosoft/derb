@@ -20,7 +20,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from django.db import models
 
-
 # Report states
 RS_SUBMIT_PENDING = 0
 RS_UNSUBMITTED = 1
@@ -56,7 +55,6 @@ REVIEWER_ORDERS = (
     (REV_SIXTH, _('Sixth')),
     (REV_SEVENTH, _('Seventh'))
 )
-
 
 @python_2_unicode_compatible
 class Project(models.Model):
@@ -223,11 +221,11 @@ class Question(models.Model):
         (1, _('Required')),
         (2, _('Required by hierarchy'))
     )
-    report = models.ForeignKey(Report)
+    report = models.ForeignKey(Report, null=True)
     class_to_load = models.CharField(max_length=30)
     text = models.TextField()
     help = models.TextField(blank=True)
-    answer_options = JSONField()
+    answer_options = JSONField(blank=True, null=True)
     required = models.IntegerField(choices=REQUIREMENT_TYPE, default=0)
     order = models.CharField(max_length=10, blank=True)
     auto = models.BooleanField(default=False)
@@ -246,7 +244,7 @@ class Question(models.Model):
 @python_2_unicode_compatible
 class Answer(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    report = models.ForeignKey(ReportByProject)
+    report = models.ForeignKey(ReportByProject, null=True)
     question = models.ForeignKey(Question)
     annotation = models.TextField(blank=True)
     text = models.TextField(blank=True)
@@ -306,3 +304,25 @@ class RevisionTree(models.Model):
         # TODO: permissions
         verbose_name = _('Revision Tree')
         verbose_name_plural = _('Revision Tree')
+
+
+# Testing catalogs
+
+@python_2_unicode_compatible
+class City(models.Model):
+    code = models.CharField(max_length=2)
+    name = models.CharField(max_length=255)
+    location = models.CharField(max_length=255)
+
+    def __str__(self):
+        return '%s' % self.name
+
+
+@python_2_unicode_compatible
+class Country(models.Model):
+    code = models.CharField(max_length=2)
+    name = models.CharField(max_length=255)
+    capital = models.CharField(max_length=255)
+
+    def __str__(self):
+        return '%s' % self.name

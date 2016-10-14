@@ -1,12 +1,9 @@
-/* Sticky footer styles */
-
 html {
     position: relative;
     min-height: 100%;
 }
 
 body {
-    /* Margin bottom by footer height */
     margin-bottom: 60px;
 }
 
@@ -14,31 +11,38 @@ body {
     position: absolute;
     bottom: 0;
     width: 100%;
-    /* Set the fixed height of the footer here */
     height: 60px;
     background-color: #f5f5f5;
 }
 
+.question_option_panel {
+    background-color: rgba(224, 223, 202, 0.39);
+    height: 290px;
+}
+
 .informe_form {
-	color: #3366CC;
-	border-color: #666666;
+    color: #3366CC;
+    border-color: #666666;
 }
 
 .informe_form input, select {
-	color: #000;
+    color: #000;
 }
 
 .informe_form #id_type {
-	margin-left: 80px;
+    margin-left: 80px;
 }
+
 .informe_form #id_name {
-	margin-left: 58px;
-	width: 80%;
+    margin-left: 58px;
+    width: 80%;
 }
+
 .informe_form #id_opening_date {
-	margin-left: 8px;
+    margin-left: 8px;
 }
+
 .informe_form .btn {
-	position: relative;
-	top: -40px;
+    position: relative;
+    top: -40px;
 }

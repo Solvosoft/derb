@@ -1,0 +1,89 @@
+{% extends 'derb/base.html' %}
+
+{% load i18n %} 
+{% block main_block %}
+  <div class="row">
+    <div class="col-md-12">
+      {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+          <div class="alert alert-success">
+            <strong>{% trans 'Success:' %}</strong> {{ message }}
+          </div>
+        {% endif %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+          <div class="alert alert-danger">
+            <strong>{% trans 'Error:' %}</strong> {{ message }}
+          </div>
+        {% endif %}
+      {% endfor %}
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          {% trans 'Integer Question (admin)' %}
+        </div>
+        <div class="panel-body">
+          <form action="{% url 'report_builder:integer_question_admin' report.pk question_pk %}" method="post">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-7">
+                <div>
+                  {{ form.text }}
+                </div>
+                <br/>
+                <div id="help">
+                  {{ form.help }}
+                </div>
+              </div>
+              <div class="col-md-4 question_option_panel text-center"
+                   style="background-color: #DFDCDC; padding:2%; padding-bottom: 5%;">
+                <button id="SeeHide" name="SeeHide" type="button" class="btn btn-primary">
+                  {% trans 'See/Hide' %}
+                </button>
+                <button type="button" class="btn btn-danger">
+                  {% trans 'Delete' %}
+                </button>
+                <button type="button" class="btn btn-success">
+                  #
+                </button>
+                <br/>
+                <br/>
+                {% trans 'Requirement:' %} {{ form.required }}
+                <br/>
+                <br/>
+                {% trans 'Minimum:' %} {{ form.minimum }}
+                <br/>
+                <br/>
+                {% trans 'Maximum:' %} {{ form.maximum }}
+                <br/>
+                <br/>
+                {% trans 'Steps:' %} {{ form.steps }}
+              </div>
+            </div>
+            <div class="row text-right">
+              <div class="col-md-12">
+                <br/>
+                <br/>
+                <br/>
+                <input class="btn btn-primary" type="submit" value="Save">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block body_js %}
+  <script>
+    $(document).ready(function () {
+      $("#SeeHide").click(function () {
+        var e = document.getElementById('help');
+        if (e.style.display == 'block')
+          e.style.display = 'none';
+        else
+          e.style.display = 'block';
+      });
+    });
+  </script>
+{% endblock %}
