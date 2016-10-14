@@ -74,6 +74,13 @@ class ObservationForm(forms.ModelForm):
     class Meta:
         model = Observation
         fields = ('text',)
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'rows': 6,
+                'placeholder': _('Write here your observation'),
+                'class': 'form-control'
+            })
+        }
 
 
 class SimpleTextAnswerForm(AnswerForm):
