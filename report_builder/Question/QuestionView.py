@@ -468,6 +468,8 @@ class QuestionViewCSV(Question):
         else:
             data['answer'] = ''
 
+        return data
+
     def get(self, request, *args, **kwargs):
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
@@ -481,8 +483,8 @@ class QuestionViewCSV(Question):
         csv_output = StringIO()
 
         csv_writer = csv.writer(csv_output)
-        csv_writer.writerow(data.keys())
-        csv_writer.writerow(data.values())
+        csv_writer.writerow(list(data.keys()))
+        csv_writer.writerow(list(data.values()))
 
         response = HttpResponse(csv_output.getvalue(), content_type='text/csv')
 
