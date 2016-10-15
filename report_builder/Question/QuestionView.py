@@ -462,14 +462,15 @@ class QuestionViewCSV(Question):
         data['order'] = question.order
 
         if answer is not None:
-            data['answer'] = {
-                'pk': answer.pk,
-                'text': answer.text,
-                'annotation': answer.annotation,
-                'display_text': answer.display_text
-            }
+            data['answer_pk'] = answer.pk
+            data['answer_text'] = answer.text
+            data['answer_annotation'] = answer.annotation
+            data['answer_display_text'] = answer.display_text
         else:
-            data['answer'] = ''
+            data['answer_pk'] = ''
+            data['answer_text'] = ''
+            data['answer_annotation'] = ''
+            data['answer_display_text'] = ''
 
         return data
 
@@ -486,14 +487,9 @@ class QuestionViewCSV(Question):
         csv_output = StringIO()
 
         csv_writer = csv.writer(csv_output)
-        csv_writer.writerow(list(data.keys()))
         csv_writer.writerow(list(data.values()))
 
-        response = HttpResponse(csv_output.getvalue(), content_type='text/csv')
-
-        response[
-            'Content-Disposition'] = 'attachment; filename="question.csv"'
-        return response
+        return HttpResponse(csv_output.getvalue())
 
     def post(self, request, *args, **kwargs):
         return bad_request(request)
@@ -521,8 +517,6 @@ class QuestionViewJSON(Question):
                 'annotation': answer.annotation,
                 'display_text': answer.display_text
             }
-        else:
-            data['answer'] = ''
 
         return data
 
@@ -538,12 +532,7 @@ class QuestionViewJSON(Question):
 
         json_data = json.dumps(data)
 
-        response = HttpResponse(json_data, content_type='application/json')
-
-        response[
-            'Content-Disposition'] = 'attachment; filename="question.json"'
-
-        return response
+        return HttpResponse(json_data)
 
     def post(self, request, *args, **kwargs):
         return bad_request(request)
