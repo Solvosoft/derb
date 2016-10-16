@@ -2,8 +2,8 @@
 Created on 15/9/2016
 @author: nashyra
 '''
-from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF
-from report_builder.Question.forms import SimpleTextQuestionForm, SimpleTextAnswerForm
+from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF, QuestionViewReviewer
+from report_builder.Question.forms import SimpleTextQuestionForm, SimpleTextAnswerForm, ObservationForm
 
 
 class SimpleTextQuestionViewAdmin(QuestionViewAdmin):
@@ -19,8 +19,8 @@ class SimpleTextQuestionViewAdmin(QuestionViewAdmin):
 
 # class SimpleTextQuestionResp(QuestionViewResp):
 class SimpleQuestionViewResp(QuestionViewResp):
-    template_name = 'responsable/simple_text_question.html'
     name = 'simple_text_question'
+    template_name = 'responsable/simple_text_question.html'
     form_class = SimpleTextAnswerForm
 
 
@@ -28,3 +28,10 @@ class SimpleQuestionViewResp(QuestionViewResp):
 class SimpleTextQuestionViewPDF(QuestionViewPDF):
     name = 'simple_text_question'
     template_name = 'pdf/simple_text_question.html'
+    
+
+class SimpleTextQuestionViewReviewer(QuestionViewReviewer):
+    name = 'simple_text_question'
+    template_name = 'revisor/simple_text_question.html'
+    form_class = ObservationForm
+    

@@ -5,11 +5,10 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import NumberInput
 from django.utils.translation import ugettext as _
-from report_builder.models import Question, Answer
+from report_builder.models import Question, Answer, Observation
 from ckeditor.widgets import CKEditorWidget
 from report_builder.registry import models
 from report_builder.catalogs import register_test_catalogs
-from report_builder.registry import models
 
 
 class QuestionForm(forms.ModelForm):
@@ -68,6 +67,20 @@ class AnswerForm(forms.ModelForm):
         instance = super(AnswerForm, self).save(db_use)
         instance.display_text = instance.text
         return instance
+    
+
+class ObservationForm(forms.ModelForm):
+    class Meta:
+        model = Observation
+        fields = ('text',)
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'rows': 6,
+                'placeholder': _('Write here your observation'),
+                'class': 'form-control'
+            })
+        }
+
 
 class SimpleTextAnswerForm(AnswerForm):
     class Meta:

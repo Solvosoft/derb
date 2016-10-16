@@ -40,6 +40,8 @@ question_types_urls = [
         name='simple_text_question_resp'),
     url(r'simple/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)', simple_text_question.SimpleTextQuestionViewPDF.as_view(),
         name='simple_text_question_pdf'),
+    url(r'simple/revisor/(?P<report_pk>\d+)/(?P<question_pk>\d+)', simple_text_question.SimpleTextQuestionViewReviewer.as_view(),
+        name='simple_text_question_revisor'),
     url(r"unique/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$",
         unique_selection_question.UniqueSelectionQuestionViewAdmin.as_view(),
         name="unique_selection_admin"),
