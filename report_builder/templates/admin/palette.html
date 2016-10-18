@@ -17,9 +17,9 @@
                     <ul class="list-group sorteable_palette">
                         {% for name, value in palette.items %}
                             <li orden="{{ forloop.counter0 }}" class="list-group-item palette_item"
-                                id="palette_{{ name }}" url="."
+                                id="palette_{{ name }}" url="{% url 'report_builder:process_admin' 'admin' name report.pk %}"
                                 style="background-color: {{ value.color }}">
-                                <span title="{{ valor.help }}" class="question_admin_palette">{{ value.human_name }}</span>
+                                <span title="{{ value.help }}" class="question_admin_palette">{{ value.human_readable_name }}</span>
                             </li>
                         {% endfor %}
                     </ul>
