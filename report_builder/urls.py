@@ -27,6 +27,8 @@ question_types_urls = [
         name='integer_question_resp'),
     url(r'integer/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)', integer_question.IntegerQuestionViewPDF.as_view(),
         name='integer_question_pdf'),
+    url(r'integer/revisor/(?P<report_pk>\d+)/(?P<question_pk>\d+)', integer_question.IntegerQuestionViewReviewer.as_view(),
+        name='integer_question_revisor'),
     url(r'float/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$', float_question.FloatQuestionViewAdmin.as_view(),
         name='float_question_admin'),
     url(r'float/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', float_question.FloatQuestionViewResp.as_view(),
@@ -51,6 +53,9 @@ question_types_urls = [
     url(r"unique/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)",
         unique_selection_question.UniqueSelectionQuestionViewPDF.as_view(),
         name="unique_selection_pdf"),
+    url(r'unique/revisor/(?P<report_pk>\d+)/(?P<question_pk>\d+)', 
+        unique_selection_question.UniqueSelectionQuestionViewReviewer.as_view(),
+        name='unique_selection_question_revisor'),
 ]
 
 urlpatterns = [

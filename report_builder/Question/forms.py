@@ -80,6 +80,11 @@ class ObservationForm(forms.ModelForm):
                 'class': 'form-control'
             })
         }
+    
+    def save(self, db_use):
+        instance = super(ObservationForm, self).save(db_use)
+        instance.display_text = instance.text
+        return instance
 
 
 class SimpleTextAnswerForm(AnswerForm):

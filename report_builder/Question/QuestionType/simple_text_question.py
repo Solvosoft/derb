@@ -2,8 +2,10 @@
 Created on 15/9/2016
 @author: nashyra
 '''
+from django_ajax.decorators import ajax
+
 from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF, QuestionViewReviewer
-from report_builder.Question.forms import SimpleTextQuestionForm, SimpleTextAnswerForm, ObservationForm
+from report_builder.Question.forms import SimpleTextQuestionForm, SimpleTextAnswerForm
 
 
 class SimpleTextQuestionViewAdmin(QuestionViewAdmin):
@@ -33,5 +35,4 @@ class SimpleTextQuestionViewPDF(QuestionViewPDF):
 class SimpleTextQuestionViewReviewer(QuestionViewReviewer):
     name = 'simple_text_question'
     template_name = 'revisor/simple_text_question.html'
-    form_class = ObservationForm
     

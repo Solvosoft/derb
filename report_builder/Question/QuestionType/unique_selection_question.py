@@ -81,3 +81,8 @@ def get_catalog_display_fields(request):
                     catalog = models[catalog_id]
                     return catalog[3]
     return ()
+
+
+class UniqueSelectionQuestionViewReviewer(QuestionView.QuestionViewReviewer):
+    name = 'unique_selection_question'
+    template_name = 'revisor/unique_selection_question.html'

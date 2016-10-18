@@ -3,7 +3,7 @@ Created on 14/9/2016
 @author: natalia
 '''
 import json
-from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF
+from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF, QuestionViewReviewer
 from report_builder.Question.forms import IntegerQuestionForm, AnswerForm, IntegerAnswerForm
 
 
@@ -48,3 +48,8 @@ class IntegerQuestionViewResp(QuestionViewResp):
 class IntegerQuestionViewPDF(QuestionViewPDF):
     name = 'integer_question'
     template_name = 'pdf/integer_question.html'
+    
+    
+class IntegerQuestionViewReviewer(QuestionViewReviewer):
+    name = 'integer_question'
+    template_name = 'revisor/integer_question.html'
