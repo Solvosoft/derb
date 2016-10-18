@@ -14,7 +14,7 @@ class IntegerQuestionViewAdmin(QuestionViewAdmin):
     minimal_representation = {
         'human_readable_name': 'Numerical question',
         'help': 'Allows you to make numerical questions',
-        'color': '#330065'
+        'color': '#e86252'
     }
     evaluator = int
 

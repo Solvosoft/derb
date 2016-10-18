@@ -38,7 +38,7 @@ class UniqueSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
     minimal_representation = {
         'human_readable_name': 'Unique Selection Question',
         'help': 'Allows you to make unique selection questions',
-        'color': '#330065'
+        'color': '#fde95c'
     }
 
     def pre_save(self, object, request, form):

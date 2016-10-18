@@ -20,7 +20,7 @@ class BooleanQuestionViewAdmin(QuestionViewAdmin):
     minimal_representation = {
         'human_readable_name': _('Yes/No question'),
         'help': _('Allows you to make yes/no questions'),
-        'color': '#330065'
+        'color': '#5b4e77'
     }
 
 

@@ -10,7 +10,7 @@ class FloatQuestionViewAdmin(IntegerQuestionViewAdmin):
     minimal_representation = {
         'human_readable_name': 'Decimal number question',
         'help': 'Allows you to make numerical questions',
-        'color': '#330065'
+        'color': '#2e5eaa'
     }
     evaluator = float
 

@@ -13,7 +13,7 @@ class SimpleTextQuestionViewAdmin(QuestionViewAdmin):
     minimal_representation = {
         'human_readable_name': 'Simple text question',
         'help': 'Allows you to make simple text questions',
-        'color': '#330065'
+        'color': '#88a05b'
     }
 
 
