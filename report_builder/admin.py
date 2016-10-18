@@ -8,6 +8,8 @@ from report_builder.models import Question
 from report_builder.models import Answer
 from report_builder.models import Observation
 
+from report_builder.view_registration import register_admin_views
+
 class ProjectAdmin(admin.ModelAdmin):
     search_fields = ('description', 'object_id')
     list_display = ('description',)
@@ -45,3 +47,7 @@ admin.site.register(Reviewer, ReviewerAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Answer, AnswerAdmin)
 admin.site.register(Observation, ObservationAdmin)
+
+# Views registration
+# [admin views]
+register_admin_views()

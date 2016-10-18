@@ -2,9 +2,7 @@ from django.http import Http404
 from report_builder.models import Question, Answer
 from report_builder.shortcuts import transform_request_to_get
 
-registered_views = {
-    'admin': {}
-}
+registered_views = {}
 has_answer = ['responsable', 'pdf', 'reviewer']
 
 

@@ -20,7 +20,7 @@ def process_template(request, report, view_type, reportbyproj=None):
     i = 0
     for category in categories:
         ii = 0
-        for subcategory in categories['subcategories']:
+        for subcategory in category['subcategories']:
             if subcategory['questions']:
                 questions = process_questions(request, report.pk, subcategory['questions'], view_type=view_type,
                                               reportbyproj=reportbyproj)
@@ -45,6 +45,7 @@ def admin(request, pk=None):
 
         if report.opening_date <= datetime.now().date():
             return render(request, 'admin/out_of_date.html')
+
         admin_views = get_view_type('admin')
 
         palette = {}
@@ -60,7 +61,6 @@ def admin(request, pk=None):
             'categories': categories,
             'form': form
         }
-
         return render(request, 'admin/report.html', context=context)
     else:
         return render(request, 'global/permission_denied.html')
