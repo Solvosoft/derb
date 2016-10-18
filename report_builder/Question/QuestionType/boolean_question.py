@@ -7,7 +7,8 @@ from django.utils import timezone
 from django.utils.translation import ugettext as _
 from weasyprint import HTML
 
-from report_builder.Question.QuestionView import QuestionViewAdmin
+from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewReviewer, QuestionViewCSV, \
+    QuestionViewJSON, QuestionViewSPSS
 from report_builder.Question.QuestionView import QuestionViewResp
 from report_builder.Question.QuestionView import QuestionViewPDF
 from report_builder.Question.forms import BooleanAnswerForm
@@ -60,3 +61,20 @@ class BooleanQuestionViewPDF(QuestionViewPDF):
             'Content-Disposition'] = 'attachment; filename="question_report.pdf"'
 
         return response
+
+
+class BooleanQuestionViewReviewer(QuestionViewReviewer):
+    name = 'boolean_question'
+    template_name = 'reviewer/boolean_question.html'
+
+
+class BooleanQuestionViewCSV(QuestionViewCSV):
+    name = 'boolean_question'
+
+
+class BooleanQuestionViewJSON(QuestionViewJSON):
+    name = 'boolean_question'
+
+
+class BooleanQuestionViewSPSS(QuestionViewSPSS):
+    name = 'boolean_question'
