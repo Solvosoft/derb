@@ -1,0 +1,91 @@
+{% include 'derb/base.html' %}
+
+{% load static i18n %}
+{% block main_block %}
+<div class="row">
+	<div class="col-md-offset-2 col-md-8">
+		{% for message in messages %}
+		{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+		<div class="alert alert-success">
+			<strong>{% trans 'Success:' %}</strong> {{ message }}
+		</div>
+		{% endif %}
+		{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+		<div class="alert alert-danger">
+			<strong>{% trans 'Error:' %}</strong> {{ message }}
+		</div>
+		{% endif %}
+		{% endfor %}
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				{% trans 'Simple text question (revisor)' %}
+			</div>
+			<div class="panel-body">
+				{% csrf_token %}
+				<div class="row">
+					<div class="col-md-offset-1 col-md-10">
+						<div class="panel panel-info">
+							<div class="panel-heading">
+								<div class="panel-title">
+									{{ question.text|safe }}
+								</div>
+							</div>
+							<div class="panel-body">
+								<p>
+									<strong>Answer:</strong>
+								</p>
+								{% if answer %}
+								<div class="text-center">
+									{{ answer.display_text|safe }}
+								</div>
+								<p>
+									<strong>Annotation:</strong>
+								</p>
+								<div class="text-center">
+									{{ answer.annotation|safe }}
+								</div>
+								<br>
+								<br>
+								{% else %}
+								<div class="text-center text-muted">
+									Unanswered
+								</div>
+								{% endif %}
+							</div>
+
+						</div>
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<strong>Observations</strong>
+							</div>
+							<div class="panel-body">
+								<div>
+									{% for observation in answer.observation_set.all %}
+									<div class="well well-sm">
+										<strong>{{ observation.text }}</strong> ({{ observation.reviewer.user }}
+									</div>
+									{% empty %}
+									<i>No observations yet</i>
+									{% endfor %}
+									<br>
+									<br>
+									<form action="." method="post">
+										{% csrf_token %}
+										{{ form.text }}
+										<br>
+										<div class="text-right">
+											<input class="btn btn-primary" onclick="submit_observation();" value="Submit">
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
