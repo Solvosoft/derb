@@ -127,7 +127,7 @@ class NewReportView(CreateView):
             Redirects to the report's edit view, when the report is correctly created and
              saved in the database with the data retrieved by the user
         '''
-        return reverse('report_admin', args=[self.object.id])
+        return reverse('report_builder:admin_report', args=[self.object.id])
 
 
 def NewReportTemplate(request, pk):

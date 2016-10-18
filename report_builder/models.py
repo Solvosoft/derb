@@ -108,20 +108,20 @@ class Report(models.Model):
     # TODO: documentation
     DEFAULT_TEMPLATE = [
         {
-            'name': 'categ0',
-            'order': 0,
-            'human_name': _('General information'),
-            'subcategories': [
+            "name": "categ0",
+            "order": 0,
+            "human_name": "General information",
+            "subcategories": [
                 {
-                    'name': 'categ0_categ0',
-                    'human_name': _('General information'),
-                    'questions': [],
-                    'order': 0,
-                    'question': []
+                    "name": "categ0_categ0",
+                    "human_name": "General information",
+                    "questions": [],
+                    "order": 0,
+                    "question": []
                 }
             ],
-            'subcategories_count': 1
-        },
+            "subcategories_count": 1
+        }
     ]
 
     type = models.ForeignKey(ReportType)
