@@ -3,6 +3,7 @@ from django.conf.urls import include
 
 from report_builder import views
 from report_builder import initial_views as init
+from report_builder.Question.question_loader import process_question
 from report_builder.Question.QuestionType import simple_text_question
 from report_builder.Question.QuestionType import boolean_question
 from report_builder.Question.QuestionType import integer_question
@@ -10,7 +11,6 @@ from report_builder.Question.QuestionType import float_question
 from report_builder.Question.QuestionType import unique_selection_question
 from report_builder.Question.QuestionType.unique_selection_question import get_catalog_display_fields
 from report_builder.views import Report
-
 
 # Boolean question
 # Integer question
@@ -65,11 +65,22 @@ report_views_urls = [
     url(r'^admin/template/(?P<pk>\d+)/save$', Report.save_admin, name='admin_save_report'),
 ]
 
+# Question processing
+question_process_urls = [
+    url(r'(?P<type>admin)/(?P<view_type>\w+)/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', process_question,
+        name='process_admin'),
+    url(r'(?P<type>responsable)/(?P<view_type>\w+)/(?P<report_pk>\d+)/(?P<question_pk>\d+)/(?P<answer_pk>\d+)?$',
+        process_question, name='process_responsable'),
+    url(r'(?P<type>revisor)/(?P<view_type>\w+)/(?P<report_pk>\d+)/(?P<question_pk>\d+)/(?P<answer_pk>\d+)?$',
+        process_question, name='process_revisor')
+]
+
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^js/ckeditor_config.js', views.get_js_editor, name='js_ckeditor_config'),
     url(r'^init$', init.InitialIndexView.as_view(), name='init'),
     url(r'^question_types/', include(question_types_urls)),
     url(r'^report/', include(report_views_urls)),
+    url(r'^question_processing/', include(question_process_urls)),
     url(r"^get_catalog_display_fields", get_catalog_display_fields, name='get_catalog_display_fields')
 ]
