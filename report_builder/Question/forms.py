@@ -192,8 +192,8 @@ class FloatAnswerForm(IntegerAnswerForm):
 
 class UniqueSelectionQuestionForm(QuestionForm):
     register_test_catalogs()
-    CATALOGS = ((index, model[1]) for index, model in enumerate(models))
-    catalog = forms.ChoiceField(choices=CATALOGS)
+    CATALOGS = ((index, model[1].capitalize()) for index, model in enumerate(models))
+    catalog = forms.ChoiceField(choices=CATALOGS, widget=forms.Select(attrs={'class': 'form-control'}))
     display_fields = forms.Field(required=False)
 
     class Meta:

@@ -4,6 +4,7 @@ Created on 14/9/2016
 '''
 import json
 from django_ajax.decorators import ajax
+from django.utils.translation import ugettext as _
 
 from report_builder.Question import QuestionView
 from report_builder.Question.forms import UniqueSelectionQuestionForm
@@ -24,6 +25,7 @@ def get_catalog_values(queryset, display_fields):
                     text += ' - '
             yield (value, text)
 
+
 def get_catalog_choices(json_field):
     answer_options = json.loads(json_field)
     catalog = int(answer_options['catalog'][0])
@@ -31,7 +33,6 @@ def get_catalog_choices(json_field):
     queryset = models[catalog][0]
 
     return (value_text for value_text in get_catalog_values(queryset, display_fields))
-
 
 
 class UniqueSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
