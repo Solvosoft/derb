@@ -231,25 +231,25 @@ class UniqueSelectionAnswerForm(AnswerForm):
         else:
             super(UniqueSelectionAnswerForm, self).__init__(*args, **kwargs)
 
-        def save(self, db_use):
-            instance = super(AnswerForm, self).save(db_use)
-            object_pk = instance.text
-            answer_options_json = instance.question.answer_options
-            answer_options = json.loads(answer_options_json)
-            catalog = int(answer_options['catalog'][0])
-            display_fields = answer_options['display_fields']
+    def save(self, db_use):
+        instance = super(AnswerForm, self).save(db_use)
+        object_pk = instance.text
+        answer_options_json = instance.question.answer_options
+        answer_options = json.loads(answer_options_json)
+        catalog = int(answer_options['catalog'][0])
+        display_fields = answer_options['display_fields']
 
-            queryset = models[catalog][0]
-            object = queryset.get(pk=object_pk)
-            display_text = ''
+        queryset = models[catalog][0]
+        object = queryset.get(pk=object_pk)
+        display_text = ''
 
-            if display_fields is not None:
-                for i, field in enumerate(display_fields):
-                    display_text += getattr(object, field)
-                    if (i + 1) != len(display_fields):
-                        display_text += ' - '
-            else:
-                display_text = str(object)
+        if display_fields is not None:
+            for i, field in enumerate(display_fields):
+                display_text += getattr(object, field)
+                if (i + 1) != len(display_fields):
+                    display_text += ' - '
+        else:
+            display_text = str(object)
 
-            instance.display_text = display_text
-            return instance
+        instance.display_text = display_text
+        return instance
