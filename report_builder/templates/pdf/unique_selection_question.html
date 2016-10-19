@@ -37,7 +37,7 @@
 			{% if answer %}
 			<p>
 				Answer: {{ answer }}
-				{% trans 'Answer:' %} {{ answer }}
+				{% trans 'Answer:' %} {{ answer.display_text }}
 			</p>
 			{% else %}
 			<p>
