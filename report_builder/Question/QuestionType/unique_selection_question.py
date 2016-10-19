@@ -15,12 +15,14 @@ def get_catalog_values(queryset, display_fields):
     for object in queryset:
         text = ""
         value = object.pk
-        for i, field in enumerate(display_fields):
-            text += getattr(object, field)
-            if (i + 1) != len(display_fields):
-                text += ' - '
-        yield (value, text)
-
+        if display_fields is None:
+            yield (value, str(object))
+        else:
+            for i, field in enumerate(display_fields):
+                text += getattr(object, field)
+                if (i + 1) != len(display_fields):
+                    text += ' - '
+            yield (value, text)
 
 def get_catalog_choices(json_field):
     answer_options = json.loads(json_field)
@@ -31,13 +33,14 @@ def get_catalog_choices(json_field):
     return (value_text for value_text in get_catalog_values(queryset, display_fields))
 
 
+
 class UniqueSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
     form_class = UniqueSelectionQuestionForm
     template_name = 'admin/unique_selection_question.html'
     name = 'unique_selection_question'
     minimal_representation = {
-        'human_readable_name': 'Unique Selection Question',
-        'help': 'Allows you to make unique selection questions',
+        'human_readable_name': _('Unique Selection Question'),
+        'help': _('Allows you to make unique selection questions'),
         'color': '#330065'
     }
 
