@@ -36,10 +36,14 @@
                 <div> {{ form.help }} </div>
                 <br/>
                 
-              <div id="table" class="row">
+                <div class="row">
+              		<div id="table" class="col-md-8">
               	
-              </div>
-
+             		</div>
+             		<div class="col-md-4">
+              			<button onclick="alert('To do');" type="button" class="btn btn-success">+</button>
+              		</div>
+				</div>
               </div>
 
               <!-- Buttons Area -->
@@ -84,5 +88,10 @@
 {% endblock %}
 
 {% block body_js %}
+  <script>
+    var catalog_url = "{% url 'report_builder:get_catalog_display_fields' %}";
+  </script>
   <script src="{% static 'report_builder/js/derb_helpers.js' %}"></script>
+  <script src="{% static 'report_builder/js/derb_subcomponents/question_types/table_question.js' %}"></script>
+
 {% endblock %}

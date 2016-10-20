@@ -20,3 +20,15 @@ class TableQuestionViewAdmin(QuestionView.QuestionViewAdmin):
         'help': _('Allows you to make table questions'),
         'color': '#330065'
     }
+    
+@ajax
+def get_catalog_display_fields(request):
+    if request.method == 'GET':
+        if request.is_ajax():
+            catalog_id = request.GET.get('catalog_id', False)
+            if catalog_id.isdigit():
+                catalog_id = int(catalog_id)
+                if catalog_id >= 0 and catalog_id < len(models):
+                    catalog = models[catalog_id]
+                    return catalog[3]
+    return ()
