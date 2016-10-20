@@ -253,3 +253,30 @@ class UniqueSelectionAnswerForm(AnswerForm):
 
         instance.display_text = display_text
         return instance
+
+#Table_Question
+class TableQuestionForm(QuestionForm):
+    CATALOGS = ((index, model[1].capitalize()) for index, model in enumerate(models))
+    catalog = forms.ChoiceField(choices=CATALOGS, widget=forms.Select(attrs={'class': 'form-control'}))
+    
+    class Meta:
+        model = Question
+        fields = ('text', 'help', 'required', 'id')
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'rows': 6,
+                'placeholder': _('Write your question here'),
+                'class': 'form-control'
+            }),
+            'help': forms.Textarea(attrs={
+                'cols': 80,
+                'rows': 5,
+                'placeholder': _('A little help never hurts'),
+                'class': 'form-control'
+            }),
+            'required': forms.Select(attrs={
+                'class': 'form-control'
+            })
+        }
+    
+    

@@ -2,7 +2,8 @@ from django.conf.urls import url
 from django.conf.urls import include
 from report_builder import views
 from report_builder import initial_views as init
-from report_builder.Question.QuestionType import simple_text_question
+from report_builder.Question.QuestionType import simple_text_question,\
+    table_question
 from report_builder.Question.QuestionType import boolean_question
 from report_builder.Question.QuestionType import integer_question
 from report_builder.Question.QuestionType import float_question
@@ -57,6 +58,9 @@ question_types_urls = [
     url(r"unique/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)",
         unique_selection_question.UniqueSelectionQuestionViewPDF.as_view(),
         name="unique_selection_pdf"),
+    url(r"table/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$",
+        table_question.TableQuestionViewAdmin.as_view(),
+        name="table_question_admin"),
 ]
 
 urlpatterns = [
