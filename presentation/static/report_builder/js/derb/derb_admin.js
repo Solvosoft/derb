@@ -286,7 +286,7 @@ function add_update_category() {
                             <li ' + subcategory_func + ' class="active">\
                             <button type="button" onclick="delete_category(this);" class="cat_close btn" aria-hidden="true">&times;</button>\
                             <a id="categ_[category_name]" class="admin_subcategoria" href="#[category_name]" data-toggle="tab" title="[help]">[text]</a></li>\
-                            <li id="subcat_fin" class="btn btn-success" onclick="add_subcategory(this);" title="Add subcategory"> <span class="glyphicon glyphicon-plus-sign"></span></li></ul>\
+                            <li id="end_subcategories" class="btn btn-success" onclick="add_subcategory(this);" title="Add subcategory"> <span class="glyphicon glyphicon-plus-sign"></span></li></ul>\
                             <div class="tab-content">' + new_subcategory_content + '</div></div>';
 
     var modal = $('#categories_modal');
@@ -330,10 +330,12 @@ function add_update_category() {
             func = subcategory_func;
             begin = $('#' + type_value);
             klass = 'class="subcategory_admin"';
-            content = $($('#' + type_value + '. tab-content')[0]);
+            var selector = '#' + type_value + ' .tab-content';
+            content = $($('#' + type_value + ' .tab-content')[0]);
         }
 
         var end_nav = $(begin.find('#' + end)[0]);
+
         var ul = end_nav.closest('ul');
         name = pre + 'categ' + ul.children().length;
         var category_name = name;
@@ -357,4 +359,11 @@ function add_update_category() {
     sort_subcategories();
     modal.modal('hide');
     do_sortable();
+}
+
+function hide_if_enter(mi, event){
+	var keycode = event.which;
+	if (keycode == 13){
+		$(mi).closest('#modal_categorias').find('#bgm').click();
+	}
 }
