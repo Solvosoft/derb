@@ -1,10 +1,10 @@
 <ul id="ul_subcategories" class="subcategory nav nav-tabs">
     {% for subcategory in category.subcategories %}
-        <li ondblclick="edit_text_subcategory(this);" {% if forloop.counter == 1 %}class="active" {% endif %}>
+        <li ondblclick="edit_subcategory_text(this);" {% if forloop.counter == 1 %}class="active" {% endif %}>
             <button type="button" onclick="delete_category(this);" class="close_category btn"
                     title="Delete">&times;</button>
             <a id="categ_{{ subcategory.name }}" class="admin_subcategory" href="#{{ subcategory.name }}"
-               data-toggle="tab" title="{{ subcategory.human_name }}">{{ subcategory.name | truncatechars:20 }}</a>
+               data-toggle="tab" title="{{ subcategory.human_name }}">{{ subcategory.human_name | truncatechars:20 }}</a>
         </li>
     {% endfor %}
     <li id="end_subcategories" onclick="add_subcategory(this);" class="btn btn-success add_subcategory"

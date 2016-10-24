@@ -23,7 +23,7 @@
                                 title="Delete">&times;</button>
                         <a id="categ_{{ category.name }}" href="#{{ category.name }}" data-toggle="tab"
                            title="{{ category.human_name }}"
-                           class="admin_category">{{ category.name | truncatechars:20 }}</a>
+                           class="admin_category">{{ category.human_name | truncatechars:20 }}</a>
                     </li>
                 {% endfor %}
                 <li id="end_categories" class="btn btn-success add_category_subcategory" onclick="add_category();" title="Add category">
