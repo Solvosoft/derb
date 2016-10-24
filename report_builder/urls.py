@@ -18,7 +18,7 @@ from report_builder.views import Report
 # Simple text question
 # Unique selection question
 question_types_urls = [
-    url(r'boolean/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$', boolean_question.BooleanQuestionViewAdmin.as_view(),
+    url(r'boolean/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', boolean_question.BooleanQuestionViewAdmin.as_view(),
         name='boolean_question_admin'),
     url(r'boolean/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', boolean_question.BooleanQuestionViewResp.as_view(),
         name='boolean_question_resp'),
@@ -27,13 +27,13 @@ question_types_urls = [
     url(r'boolean/revisor/(?P<report_pk>\d+)/(?P<question_pk>\d+)$',
         boolean_question.BooleanQuestionViewReviewer.as_view(),
         name='boolean_question_revisor'),
-    url(r'integer/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$', integer_question.IntegerQuestionViewAdmin.as_view(),
+    url(r'integer/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', integer_question.IntegerQuestionViewAdmin.as_view(),
         name='integer_question_admin'),
     url(r'integer/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', integer_question.IntegerQuestionViewResp.as_view(),
         name='integer_question_resp'),
     url(r'integer/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)', integer_question.IntegerQuestionViewPDF.as_view(),
         name='integer_question_pdf'),
-    url(r'float/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$', float_question.FloatQuestionViewAdmin.as_view(),
+    url(r'float/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', float_question.FloatQuestionViewAdmin.as_view(),
         name='float_question_admin'),
     url(r'float/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', float_question.FloatQuestionViewResp.as_view(),
         name='float_question_resp'),
@@ -46,7 +46,7 @@ question_types_urls = [
         name='simple_text_question_resp'),
     url(r'simple/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)', simple_text_question.SimpleTextQuestionViewPDF.as_view(),
         name='simple_text_question_pdf'),
-    url(r"unique/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$",
+    url(r"unique/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$",
         unique_selection_question.UniqueSelectionQuestionViewAdmin.as_view(),
         name="unique_selection_admin"),
     url(r"unique/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$",
