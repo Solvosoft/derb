@@ -1,0 +1,12 @@
+{% load static i18n %}
+
+<div class="panel panel-info">
+  <div class="panel-heading">
+    {% block question_name %}{% endblock %}
+  </div>
+  <div class="panel-body">
+    {% block question_form %}{% endblock %}
+  </div>
+</div>
+
+{% block extra_js %}{% endblock %}

@@ -8,7 +8,7 @@ from report_builder.Question.forms import SimpleTextQuestionForm, SimpleTextAnsw
 
 class SimpleTextQuestionViewAdmin(QuestionViewAdmin):
     form_class = SimpleTextQuestionForm
-    template_name = 'admin/simple_text_question.html'
+    template_name = 'admin/question_types/simple_text_question.html'
     name = 'simple_text_question'
     minimal_representation = {
         'human_readable_name': 'Simple text question',

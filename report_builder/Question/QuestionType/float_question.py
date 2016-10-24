@@ -5,7 +5,7 @@ from report_builder.Question.forms import FloatAnswerForm
 
 
 class FloatQuestionViewAdmin(IntegerQuestionViewAdmin):
-    template_name = 'admin/float_question.html'
+    template_name = 'admin/question_types/float_question.html'
     name = 'float_question'
     minimal_representation = {
         'human_readable_name': 'Decimal number question',

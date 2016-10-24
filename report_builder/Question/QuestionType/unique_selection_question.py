@@ -33,7 +33,7 @@ def get_catalog_choices(json_field):
 
 class UniqueSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
     form_class = UniqueSelectionQuestionForm
-    template_name = 'admin/unique_selection_question.html'
+    template_name = 'admin/question_types/unique_selection_question.html'
     name = 'unique_selection_question'
     minimal_representation = {
         'human_readable_name': 'Unique Selection Question',

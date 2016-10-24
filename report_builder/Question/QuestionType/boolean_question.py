@@ -15,7 +15,7 @@ from report_builder.models import Question, Answer
 
 
 class BooleanQuestionViewAdmin(QuestionViewAdmin):
-    template_name = 'admin/boolean_question.html'
+    template_name = 'admin/question_types/boolean_question.html'
     name = 'boolean_question'
     minimal_representation = {
         'human_readable_name': _('Yes/No question'),

@@ -9,7 +9,7 @@ from report_builder.Question.forms import IntegerQuestionForm, AnswerForm, Integ
 
 class IntegerQuestionViewAdmin(QuestionViewAdmin):
     form_class = IntegerQuestionForm
-    template_name = 'admin/integer_question.html'
+    template_name = 'admin/question_types/integer_question.html'
     name = 'integer_question'
     minimal_representation = {
         'human_readable_name': 'Numerical question',
