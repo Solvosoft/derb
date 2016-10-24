@@ -26,17 +26,12 @@
       </div>
 
       <!-- Buttons Area -->
-      <div class="col-md-4 question_option_panel text-center" style="background-color: #DFDCDC">
+      <div class="col-md-4 question_option_panel text-center">
+        <br>
         <div class="btn-group">
-          <button onclick="toggle_help_input();" type="button" class="btn btn-primary">
-            {% trans 'See/Hide' %}
-          </button>
-          <button type="button" class="btn btn-danger">
-            {% trans 'Delete' %}
-          </button>
-          <button type="button" class="btn btn-success">
-            #
-          </button>
+          <a class="btn btn-primary" onclick="toggle_help_input();">{% trans 'See/Hide' %}</a>
+          <a class="btn btn-danger" onclick="alert('To do');">{% trans 'Delete' %}</a>
+          <a class="btn btn-success" onclick="alert('To do');">#</a>
         </div>
         <br/><br/><br/>
 
