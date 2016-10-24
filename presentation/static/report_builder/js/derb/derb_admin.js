@@ -247,3 +247,114 @@ function sort_subcategories() {
         connectWith: '.subcategory'
     });
 }
+
+function load_category(select, change) {
+    see_hide_combo(select);
+    if (change == 1) {
+        questions = $($(select).closest('.question_panel').find('#questions')[0]);
+        catalog = $(select).find(':selected').val();
+
+        $.getJSON('/derb/catalog/' + catalog, function (data) {
+            text = '<ul>';
+            $.each(data, function (key, val) {
+                text += "<li id='" + key + "'><h4>" + val + "</h4>";
+                text += "<ul class=\"sortable\"><li>Drag and drop here aquí</li></ul>";
+                text += '</li>';
+            });
+            text += '</ul>';
+            questions.html(text);
+            do_sortable();
+        });
+    }
+}
+
+function add_update_category() {
+    var category_func = 'onDblClick="edit_category_text(this);"';
+    var subcategory_func = 'onDblClick="edit_subcategory_text(this);"';
+    var category_id = 'end_categories';
+    var subcategory_id = 'end_subcategories';
+
+    var new_nav = '<li [func]> <button type="button" onclick="delete_category(this);" class="cat_close btn" aria-hidden="true">&times;</button>\
+	               <a [class] title="[help]" data-toggle="tab" href="#[name]" id="categ_[name]">[text]</a></li>';
+
+    var new_subcategory_content = '<div class="tab-pane [sub_active] class_subcategoria" id="[category_name]">\
+                                    <ul class="sortable list-group">\
+                                        <li class="list-group-item">Drag and drop your questions here</li></ul>\
+                                    </div>';
+    var new_category_content = ' <div  class="tab-pane class_categoria" id="[name]">\
+                            <ul id="ul_subcategories" class="subcategory nav nav-tabs">\
+                            <li ' + subcategory_func + ' class="active">\
+                            <button type="button" onclick="delete_category(this);" class="cat_close btn" aria-hidden="true">&times;</button>\
+                            <a id="categ_[category_name]" class="admin_subcategoria" href="#[category_name]" data-toggle="tab" title="[help]">[text]</a></li>\
+                            <li id="subcat_fin" class="btn btn-success" onclick="add_subcategory(this);" title="Add subcategory"> <span class="glyphicon glyphicon-plus-sign"></span></li></ul>\
+                            <div class="tab-content">' + new_subcategory_content + '</div></div>';
+
+    var modal = $('#categories_modal');
+    var input = $(modal.find('#category_modal_update'));
+    var text = input.val();
+    var name = input.attr('name');
+    var type = $(modal.find('#modal_category_type')[0]);
+    var type_name = type.attr('name');
+    var type_value = type.val();
+    var help = text;
+
+    if (text.length > 20) {
+        text = text.substr(0, 20);
+    }
+
+    if (name != '') {
+        if (type_name == 'category') {
+            cat = $($('#ul_categories .active').find('a')[0]);
+            cat.html(texto);
+            cat.attr('title', help);
+        } else {
+            var div = $('#' + type_value);
+            cat = $($(div.find('.activo')[0]).find('a')[0]);
+            cat.html(text);
+            cat.attr('title', help);
+        }
+    } else {
+        var end = category_id;
+        var pre = '';
+        var type_id = category_id;
+        var content = $.find('#category_content')[0];
+        var begin = $;
+        var func = category_func;
+        var klass = 'class="category_admin"';
+
+        if (type_name == 'subcategory') {
+            end = subcategory_id;
+            pre = type_value + '_';
+            new_category_content = new_subcategory_content;
+            type_id = subcategory_id;
+            func = subcategory_func;
+            begin = $('#' + type_value);
+            klass = 'class="subcategory_admin"';
+            content = $($('#' + type_value + '. tab-content')[0]);
+        }
+
+        var end_nav = $(begin.find('#' + end)[0]);
+        var ul = end_nav.closest('ul');
+        name = pre + 'categ' + ul.children().length;
+        var category_name = name;
+        var sub_active = '';
+        if (type_name == 'category') {
+            category_name = name + '_start';
+            sub_active = 'active';
+        }
+
+        var final_nav = new_nav.replace(/\[text\]/gi, text).replace(/\[name\]/gi, name).replace(/\[help\]/gi, help).replace(/\[func\]/gi, func).replace(/\[class\]/gi, klass);
+
+        var final_content = new_category_content.replace(/\[text\]/gi, text).replace(/\[name\]/gi,
+            name).replace(/\[type_id\]/gi, type_id).replace(/\[category_name\]/gi,
+                category_name).replace(/\[sub_active\]/gi, sub_active).replace(/\[help\]/gi, help);
+
+        end_nav.before(final_nav);
+        $(content).append(final_content);
+    }
+
+    sort_categories();
+    sort_subcategories();
+    modal.modal('hide');
+    do_sortable();
+}
