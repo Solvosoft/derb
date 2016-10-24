@@ -10,7 +10,7 @@ var last_type = '';
 var otables = {};
 
 $(document).ready(function () {
-    $('.sortable-palette').sortable({
+    $('.sortable_palette').sortable({
         connectWith: '.sortable'
     });
 
