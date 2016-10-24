@@ -52,8 +52,8 @@ function delete_category(button) {
         var category = $($(button).closest('li').find('a')[0]);
         var text = category.attr('title');
         var category_id = category.attr('id');
-        var modal = $('#rm_categories_modal').clone();
-        var html = modal.html().replace(/text/gi, texto).replace(/id_name/gi, category_id);
+        var modal = $('#categories_delete_modal').clone();
+        var html = modal.html().replace(/text/gi, text).replace(/id_name/gi, category_id);
 
         modal.html(html);
         modal.modal('show').bind('closed.bs.alert', function () {
