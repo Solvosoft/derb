@@ -20,29 +20,17 @@ body {
     height: 290px;
 }
 
-.informe_form {
-    color: #3366CC;
-    border-color: #666666;
-}
-
-.informe_form input, select {
-    color: #000;
-}
-
-.informe_form #id_type {
-    margin-left: 80px;
-}
-
-.informe_form #id_name {
-    margin-left: 58px;
-    width: 80%;
-}
-
-.informe_form #id_opening_date {
-    margin-left: 8px;
-}
-
-.informe_form .btn {
+.close_category {
+    color: #911419;
+    background-color: inherit;
+    float: left;
+    padding: 0 1px;
     position: relative;
-    top: -40px;
+    z-index: 1;
+    font-weight: bold;
+}
+
+.close_category:hover {
+    background-color: #FF6565;
+    color: #CFD5D9;
 }
