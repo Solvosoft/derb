@@ -269,6 +269,7 @@ function load_category(select, change) {
 }
 
 function add_update_category() {
+    console.log('asd');
     var category_func = 'onDblClick="edit_category_text(this);"';
     var subcategory_func = 'onDblClick="edit_subcategory_text(this);"';
     var category_id = 'end_categories';
@@ -305,15 +306,19 @@ function add_update_category() {
     if (name != '') {
         if (type_name == 'category') {
             cat = $($('#ul_categories .active').find('a')[0]);
-            cat.html(texto);
+            console.log(cat);
+            cat.html(text);
             cat.attr('title', help);
         } else {
+            console.log(type_value);
             var div = $('#' + type_value);
-            cat = $($(div.find('.activo')[0]).find('a')[0]);
+            cat = $($(div.find('.active')[0]).find('a')[0]);
+            console.log(cat);
             cat.html(text);
             cat.attr('title', help);
         }
     } else {
+        console.log('abajo');
         var end = category_id;
         var pre = '';
         var type_id = category_id;

@@ -18,7 +18,7 @@
         <div class="container-fluid">
             <ul id="ul_categories" class="nav nav-pills">
                 {% for category in categories %}
-                    <li {% if forloop.counter == 1 %}class="active"{% endif %} ondblclick="edit_text_category(this);">
+                    <li {% if forloop.counter == 1 %}class="active"{% endif %} ondblclick="edit_category_text(this);">
                         <button type="button" onclick="delete_category(this);" class="close_category btn"
                                 title="Delete">&times;</button>
                         <a id="categ_{{ category.name }}" href="#{{ category.name }}" data-toggle="tab"
