@@ -15,7 +15,7 @@ from django.utils.datastructures import OrderedDict
 from django.template import Context
 from weasyprint import HTML
 from io import StringIO
-from savReaderWriter import SavWriter
+#from savReaderWriter import SavWriter
 from tempfile import NamedTemporaryFile
 from django.conf import settings
 from report_builder.Observation.ObservationView import ObservationView
@@ -593,8 +593,8 @@ class QuestionViewSPSS(Question):
 
         spss_output = settings.MEDIA_ROOT + 'question.sav'
 
-        with SavWriter(spss_output, varNames, varTypes) as writer:
-            writer.writerow(record)
+        #with SavWriter(spss_output, varNames, varTypes) as writer:
+         #   writer.writerow(record)
 
         return HttpResponse(0)
 
