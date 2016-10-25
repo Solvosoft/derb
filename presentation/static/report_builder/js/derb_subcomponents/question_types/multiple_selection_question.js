@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    update_combo();
     $("#id_catalog").change(function () {
         update_combo();
     });

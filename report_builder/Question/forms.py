@@ -252,32 +252,30 @@ class UniqueSelectionAnswerForm(AnswerForm):
         return instance
 
 
-#Multiple Selection Question
-
+# Multiple Selection Question
 class MultipleSelectionQuestionForm(QuestionForm):
-    register_test_catalogs()
     CATALOGS = ((index, model[1]) for index, model in enumerate(models))
     catalog = forms.ChoiceField(choices=CATALOGS)
     display_fields = forms.Field(required=False)
-    WIDGETT = (
+    WIDGET_CHOICES = (
         (0, _('Checkbox')),
         (1, _('Multiple Select')),
         (2, _('Combobox'))
     )
-    widgett = forms.ChoiceField(choices=WIDGETT)
+    widget = forms.ChoiceField(choices=WIDGET_CHOICES)
 
-    
     def __init__(self, *args, **kwargs):
         super(MultipleSelectionQuestionForm, self).__init__(*args, **kwargs)
         if 'instance' in kwargs:
             instance = kwargs.get('instance')
             if instance is not None:
                 answer_options = json.loads(instance.answer_options)
-                self.fields['widgett'].initial = answer_options['widgett']
+                if 'widget' in answer_options:
+                    self.fields['widget'].initial = answer_options['widget']
 
     class Meta:
         model = Question
-        fields = ('text', 'help', 'required', 'id','widgett')
+        fields = ('text', 'help', 'required', 'id','widget')
         widgets = {
             'text': forms.Textarea(attrs={
                 'rows': 6,

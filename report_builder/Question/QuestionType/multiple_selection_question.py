@@ -7,26 +7,8 @@ from report_builder.Question import QuestionView
 from report_builder.Question.forms import MultipleSelectionQuestionForm,\
     MultipleSelectionAnswerForm
 import json
-from report_builder.registry import models
+from report_builder.Question.QuestionType.unique_selection_question import get_catalog_choices
 
-def get_catalog_values(queryset, display_fields):
-    for object in queryset:
-        text = ""
-        value = object.pk
-        for i, field in enumerate(display_fields):
-            text += getattr(object, field)
-            if (i + 1) != len(display_fields):
-                text += ' - '
-        yield (value, text)
-
-
-def get_catalog_choices(json_field):
-    answer_options = json.loads(json_field)
-    catalog = int(answer_options['catalog'][0])
-    display_fields = answer_options['display_fields']
-    queryset = models[catalog][0]
-
-    return (value_text for value_text in get_catalog_values(queryset, display_fields))
 class MultipleSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
     form_class = MultipleSelectionQuestionForm
     template_name = 'admin/multiple_selection_question.html'
@@ -37,13 +19,12 @@ class MultipleSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
         'color': '#330065'
     }
     
-    evaluator = int
     def pre_save(self, object, request, form):
         form_data = dict(form.data)
         answer_options = {
             'catalog': form_data.get('catalog'),
             'display_fields': form_data.get('display_fields'),
-            "widgett": self.evaluator(form_data.get('widgett')[0]),
+            "widget": form_data.get('widget')[0],
         }
         object.answer_options = json.dumps(answer_options)
         return object
