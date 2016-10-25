@@ -181,6 +181,9 @@ class IntegerAnswerForm(AnswerForm):
             self.fields['text'].max_value = answer_options['maximum']
             self.fields['text'].widget.attrs = {
                 'step': answer_options['steps'],
+                'min': answer_options['minimum'],
+                'max': answer_options['maximum'],
+                
             }
         else:
             super(IntegerAnswerForm, self).__init__(*args, **kwargs)
@@ -227,6 +230,94 @@ class UniqueSelectionAnswerForm(AnswerForm):
             self.fields['text'].choices = catalog
         else:
             super(UniqueSelectionAnswerForm, self).__init__(*args, **kwargs)
+
+    def save(self, db_use):
+        instance = super(AnswerForm, self).save(db_use)
+        object_pk = instance.text
+        answer_options_json = instance.question.answer_options
+        answer_options = json.loads(answer_options_json)
+        catalog = int(answer_options['catalog'][0])
+        display_fields = answer_options['display_fields']
+
+        queryset = models[catalog][0]
+        object = queryset.get(pk=object_pk)
+
+        display_text = ''
+        for i, field in enumerate(display_fields):
+            display_text += getattr(object, field)
+            if (i + 1) != len(display_fields):
+                display_text += ' - '
+
+        instance.display_text = display_text
+        return instance
+
+
+#Multiple Selection Question
+
+class MultipleSelectionQuestionForm(QuestionForm):
+    register_test_catalogs()
+    CATALOGS = ((index, model[1]) for index, model in enumerate(models))
+    catalog = forms.ChoiceField(choices=CATALOGS)
+    display_fields = forms.Field(required=False)
+    WIDGETT = (
+        (0, _('Checkbox')),
+        (1, _('Multiple Select')),
+        (2, _('Combobox'))
+    )
+    widgett = forms.ChoiceField(choices=WIDGETT)
+
+    
+    def __init__(self, *args, **kwargs):
+        super(MultipleSelectionQuestionForm, self).__init__(*args, **kwargs)
+        if 'instance' in kwargs:
+            instance = kwargs.get('instance')
+            if instance is not None:
+                answer_options = json.loads(instance.answer_options)
+                self.fields['widgett'].initial = answer_options['widgett']
+
+    class Meta:
+        model = Question
+        fields = ('text', 'help', 'required', 'id','widgett')
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'rows': 6,
+                'placeholder': _('Write your question here'),
+                'class': 'form-control'
+            }),
+            'help': forms.Textarea(attrs={
+                'cols': 80,
+                'rows': 5,
+                'placeholder': _('A little help never hurts'),
+                'class': 'form-control'
+            }),
+            'required': forms.Select(attrs={
+                'class': 'form-control'
+            })
+        }
+
+class MultipleSelectionAnswerForm(AnswerForm):
+    #text = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'})) #combo box
+    #text = forms.ChoiceField(widget=forms.CheckboxSelectMultiple())                #check box
+    text = forms.ChoiceField()
+    
+    
+    def __init__(self, *args, **kwargs):
+        
+        if 'extra' in kwargs:
+            catalog = kwargs.pop('extra')
+            super(MultipleSelectionAnswerForm, self).__init__(*args, **kwargs)
+          
+            #self.fields['text'].type = "checkbox"
+            self.fields['text'].choices=catalog
+            #self.fields['text'].widget.attrs = {
+            #   'type': forms.CheckboxSelectMultiple(),     
+            #}
+            
+            
+            
+            
+        else:
+            super(MultipleSelectionAnswerForm, self).__init__(*args, **kwargs)
 
     def save(self, db_use):
         instance = super(AnswerForm, self).save(db_use)

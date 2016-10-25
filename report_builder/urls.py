@@ -2,7 +2,8 @@ from django.conf.urls import url
 from django.conf.urls import include
 from report_builder import views
 from report_builder import initial_views as init
-from report_builder.Question.QuestionType import simple_text_question
+from report_builder.Question.QuestionType import simple_text_question,\
+    multiple_selection_question
 from report_builder.Question.QuestionType import boolean_question
 from report_builder.Question.QuestionType import integer_question
 from report_builder.Question.QuestionType import float_question
@@ -14,6 +15,7 @@ from report_builder.Question.QuestionType.unique_selection_question import get_c
 # Float question
 # Simple text question
 # Unique selection question
+# Multiple selection question
 question_types_urls = [
     url(r'boolean/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$', boolean_question.BooleanQuestionViewAdmin.as_view(),
         name='boolean_question_admin'),
@@ -48,6 +50,8 @@ question_types_urls = [
         name='simple_text_question_resp'),
     url(r'simple/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)', simple_text_question.SimpleTextQuestionViewPDF.as_view(),
         name='simple_text_question_pdf'),
+   
+    
     url(r"unique/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$",
         unique_selection_question.UniqueSelectionQuestionViewAdmin.as_view(),
         name="unique_selection_admin"),
@@ -57,6 +61,13 @@ question_types_urls = [
     url(r"unique/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)",
         unique_selection_question.UniqueSelectionQuestionViewPDF.as_view(),
         name="unique_selection_pdf"),
+                       
+     url(r"multiple/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$",
+         multiple_selection_question.MultipleSelectionQuestionViewAdmin.as_view(),
+        name="multiple_selection_admin"),
+    url(r"multiple/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$",
+        multiple_selection_question.MultipleSelectionQuestionViewResp.as_view(),
+        name="multiple_selection_resp"),
 ]
 
 urlpatterns = [
