@@ -1,49 +1,55 @@
 <nav class="navbar navbar-dark bg-inverse">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">Derb</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="{% url 'report_builder:index' %}"><strong>DERB</strong></a>
-        </div>
-
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            {% if request.user.is_authenticated %}
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Reports<span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">Reviews</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">Management<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                        </ul>
-                    </li>
-                </ul>
-            {% else %}
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Public reports<span class="sr-only">(current)</span></a></li>
-                </ul>
-            {% endif %}
-            {% if user.is_authenticated %}
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#">Settings</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">{{ request.user.get_username }}<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{% url 'auth_logout' %}">Logout</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            {% else %}
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{% url 'auth_login' %}">Login</a></li>
-                </ul>
-            {% endif %}
-        </div>
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Derb</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{% url 'report_builder:index' %}"><strong>DERB</strong></a>
     </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      {% if request.user.is_authenticated %}
+        <ul class="nav navbar-nav">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+               aria-expanded="false">Reports<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="{% url 'report_builder:new_report' %}">New report</a></li>
+            </ul>
+          </li>
+          <li><a href="#">Reviews</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+               aria-expanded="false">Management<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+            </ul>
+          </li>
+        </ul>
+      {% else %}
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">Public reports<span class="sr-only">(current)</span></a></li>
+        </ul>
+      {% endif %}
+      {% if user.is_authenticated %}
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#">Settings</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+               aria-expanded="false">{{ request.user.get_username }}<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="{% url 'auth_logout' %}">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      {% else %}
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="{% url 'auth_login' %}">Login</a></li>
+        </ul>
+      {% endif %}
+    </div>
+  </div>
 </nav>
