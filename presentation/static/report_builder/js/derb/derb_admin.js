@@ -274,7 +274,7 @@ function add_update_category() {
     var category_id = 'end_categories';
     var subcategory_id = 'end_subcategories';
 
-    var new_nav = '<li [func]> <button type="button" onclick="delete_category(this);" class="cat_close btn" aria-hidden="true">&times;</button>\
+    var new_nav = '<li [func]> <button type="button" onclick="delete_category(this);" class="close_category btn" aria-hidden="true">&times;</button>\
 	               <a [class] title="[help]" data-toggle="tab" href="#[name]" id="categ_[name]">[text]</a></li>';
 
     var new_subcategory_content = '<div class="tab-pane [sub_active] class_subcategoria" id="[category_name]">\
@@ -284,7 +284,7 @@ function add_update_category() {
     var new_category_content = ' <div  class="tab-pane class_categoria" id="[name]">\
                             <ul id="ul_subcategories" class="subcategory nav nav-tabs">\
                             <li ' + subcategory_func + ' class="active">\
-                            <button type="button" onclick="delete_category(this);" class="cat_close btn" aria-hidden="true">&times;</button>\
+                            <button type="button" onclick="delete_category(this);" class="close_category btn" aria-hidden="true">&times;</button>\
                             <a id="categ_[category_name]" class="admin_subcategoria" href="#[category_name]" data-toggle="tab" title="[help]">[text]</a></li>\
                             <li id="end_subcategories" class="btn btn-success" onclick="add_subcategory(this);" title="Add subcategory"> <span class="glyphicon glyphicon-plus-sign"></span></li></ul>\
                             <div class="tab-content">' + new_subcategory_content + '</div></div>';
