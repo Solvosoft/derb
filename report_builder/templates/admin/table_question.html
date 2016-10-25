@@ -3,20 +3,20 @@
 {% load static i18n %}
 
 {% block panel_heading %}
-	<div class="panel-heading">
-		{% trans 'Table Question (Admin)' %}
-    </div>
+  <div class="panel-heading">
+    {% trans 'Table Question (Admin)' %}
+  </div>
 {% endblock %}
 
 {% block panel_body %}
-    <div class="row">
-    	<div id="table" class="col-md-8">
-    		
-    	</div>
-        <div class="col-md-4">
-        	<button onclick="alert('To do');" type="button" class="btn btn-success">+</button>
-       	</div>
+  <div class="row">
+    <div id="table" class="col-md-8">
+
     </div>
+    <div class="col-md-4">
+      <button onclick="alert('To do');" type="button" class="btn btn-success">+</button>
+    </div>
+  </div>
 {% endblock %}
 
 {% block body_js %}
