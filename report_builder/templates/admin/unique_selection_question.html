@@ -1,88 +1,19 @@
-{% extends 'derb/base.html' %}
+{% extends 'derb/AdminBase.html' %}
 
 {% load static i18n %}
 
-{% block main_block %}
-  <div class="row">
-    <div class="col-md-offset-2 col-md-8">
-      <!-- Message Area -->
-      {% for message in messages %}
-        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-          <div class="alert alert-success">
-            <strong>{% trans 'Success:' %}</strong> {{ message }}
-          </div>
-        {% endif %}
-        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-          <div class="alert alert-danger">
-            <strong>{% trans 'Error:' %}</strong> {{ message }}
-          </div>
-        {% endif %}
-      {% endfor %}
-
-      <!-- Panel View -->
-      <div class="panel panel-info">
-        <div class="panel-heading">
-          {% trans 'Unique Selection Question (Admin)' %}
-        </div>
-
-        <div class="panel-body">
-          <form action="{% url 'report_builder:unique_selection_admin' report.pk question_pk %}" method="post">
-            {% csrf_token %}
-            <div class="row">
-              <!-- Question Area -->
-              <div class="col-md-8">
-                <div> {{ form.text }} </div>
-                <br/>
-                <div> {{ form.help }} </div>
-                <br/>
-
-                <h4 align="center"><strong>{% trans 'Display fields' %}</strong></h4>
-                <p><strong>{% trans 'Catalog:' %} </strong><span id="catalog_name"></span></p>
-                <div id='display_fields'>
-                  {{ form.display_fields }}
-                </div>
-
-              </div>
-
-              <!-- Buttons Area -->
-              <div class="col-md-4 question_option_panel text-center" style="background-color: #DFDCDC">
-                <div class="btn-group">
-                  <button onclick="toggle_help_input();" type="button" class="btn btn-primary">
-                    {% trans 'See/Hide' %}
-                  </button>
-                  <button type="button" class="btn btn-danger">
-                    {% trans 'Delete' %}
-                  </button>
-                  <button type="button" class="btn btn-success">
-                    #
-                  </button>
-                </div>
-                <br/><br/><br/>
-
-                {% trans 'Requirement:' %} {{ form.required }}
-                <br/><br/><br/><br/>
-
-                {% trans 'Catalog:' %} {{ form.catalog }}
-                <br/><br/><br/><br/>
-                <br/><br/><br/><br/>
-                <br/><br/><br/><br/>
-                <br/><br/><br/><br/>
-              </div>
-            </div>
-
-            <!-- Submit -->
-            <div class="row text-right">
-              <div class="col-md-12">
-                <input class="btn btn-primary" type="submit" value="Save">
-              </div>
-            </div>
-
-          </form>
-
-        </div>
-      </div>
+{% block panel_heading %}
+	<div class="panel-heading">
+		{% trans 'Unique Selection Question (Admin)' %}
     </div>
-  </div>
+{% endblock %}
+
+{% block panel_body %}
+	<h4 align="center"><strong>{% trans 'Display fields' %}</strong></h4>
+    <p><strong>{% trans 'Catalog:' %} </strong><span id="catalog_name"></span></p>
+    <div id='display_fields'>
+    	{{ form.display_fields }}
+    </div>
 {% endblock %}
 
 {% block body_js %}
