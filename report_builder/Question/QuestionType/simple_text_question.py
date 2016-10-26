@@ -8,6 +8,7 @@ from django_ajax.decorators import ajax
 
 from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF, QuestionViewReviewer
 from report_builder.Question.forms import SimpleTextQuestionForm, SimpleTextAnswerForm
+from report_builder.models import Answer, Observation, Reviewer
 
 
 class SimpleTextQuestionViewAdmin(QuestionViewAdmin):
@@ -44,8 +45,26 @@ class SimpleTextQuestionViewReviewer(QuestionViewReviewer):
 def submit_new_observation(request):
     if request.is_ajax():
         if request.method == 'POST':
+            report_pk = request.POST.get('report_pk', False)
+            question_pk = request.POST.get('question_pk', False)
+            answer_pk = request.POST.get('answer_pk', False)
+            observation = request.POST.get('observation', False)
 
-            return 0
+            print(report_pk, question_pk, answer_pk)
+
+            if report_pk and question_pk and answer_pk:
+                answer = Answer.objects.get(pk=answer_pk)
+                reviewer = Reviewer.objects.get(report__pk=report_pk, user=request.user)
+
+                observation = Observation.objects.create(
+                    reviewer=reviewer,
+                    text=observation,
+                    answer=answer
+                )
+
+                return observation.pk
+            else:
+                return False
 
     return HttpResponse(0)
     
