@@ -18,6 +18,8 @@ $(document).ready(function() {
 
 var catalog_id;
 var display_fields;
+var input_id;
+var select_id;
 
 function init_table() {
 	$("#id_catalog").find("option:selected").each(function() {
@@ -31,10 +33,12 @@ function init_table() {
 			success : function(data) {
 				var df_selector = $('#table');
 				df_selector.html('');
-
+				
+				input_id = 0;
+				select_id = 0;
 				display_fields = data.content;
-				var html = '<div class="col-md-12"><input class="form-control" type="text" placeholder="Write the header"><select class="form-control">';
-				var htmlend = '</select></div>';
+				var html = '<input id="input_'+input_id+'" class="form-control" type="text" placeholder="Write the header"><select id="select_'+select_id+'" class="form-control">';
+				var htmlend = '</select>';
 				var id = '';
 				for (var i = 0; i < display_fields.length; i++) {
 					id = 'id_display_fields_' + display_fields[i][1];
@@ -48,9 +52,11 @@ function init_table() {
 }
 
 function do_table() {
+	input_id += 1;
+	select_id += 1;
 	var df_selector = $('#table');
-	var bodyhtml = '<div class="col-md-12"><input class="form-control" type="text" placeholder="Write the header"><select class="form-control">';
-	var endhtml = '</select></div>';
+	var bodyhtml = '<input id="input_'+input_id+'" class="form-control" type="text" placeholder="Write the header"><select id="select_'+select_id+'" class="form-control">';
+	var endhtml = '</select>';
 	for (var i = 0; i < display_fields.length; i++) {
 		id = 'id_display_fields_' + display_fields[i][1];
 		bodyhtml += '<option value="' + id + '">' + display_fields[i][1] + '</option>';

@@ -3,6 +3,8 @@ Created on 20/10/2016
 
 @author: adolfo
 '''
+import json
+
 from django.utils.translation import ugettext as _
 
 from report_builder.Question import QuestionView
@@ -17,3 +19,12 @@ class TableQuestionViewAdmin(QuestionView.QuestionViewAdmin):
         'help': _('Allows you to make table questions'),
         'color': '#330065'
     }
+    
+    def pre_save(self, object, request, form):
+        form_data = dict(form.data)
+        print(form_data)
+        answer_options = {
+            'catalog': form_data.get('catalog'),
+        }
+        object.answer_options = json.dumps(answer_options)
+        return object
