@@ -63,7 +63,7 @@
 								<div>
 									{% for observation in answer.observation_set.all %}
 									<div class="well well-sm">
-										<strong>{{ observation.text }}</strong> ({{ observation.reviewer.user }}
+										<strong>{{ observation.text }}</strong><span id="observation">{{ observation.reviewer.user }}</span>
 									</div>
 									{% empty %}
 									<i>No observations yet</i>
@@ -75,7 +75,7 @@
 										{{ form.text }}
 										<br>
 										<div class="text-right">
-											<input class="btn btn-primary" onclick="submit_observation();" value="Submit">
+											<input class="btn btn-primary" type="submit" onclick="submit_observation();" value="Submit">
 										</div>
 									</form>
 								</div>
@@ -83,9 +83,12 @@
 						</div>
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</div>
 </div>
+{% endblock %}
+
+{% block body_js %}
+<script>var observation_url = "{% url 'report_builder:get_observations' %}";</script>
 {% endblock %}

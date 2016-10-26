@@ -74,13 +74,13 @@
 										{% csrf_token %}
 										{{ form.text }}
 										<br>
+										<div class="row text-right">
+											<div class="col-md-12">
+												<input class="btn btn-primary" onclick="submit_observation();" value="Submit">
+											</div>
+										</div>
 									</form>
 								</div>
-							</div>
-						</div>
-						<div class="row text-right">
-							<div class="col-md-12">
-								<input class="btn btn-primary" onclick="submit_observation();" type="submit" value="Save">
 							</div>
 						</div>
 					</div>

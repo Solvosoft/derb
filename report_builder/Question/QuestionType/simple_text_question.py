@@ -36,3 +36,13 @@ class SimpleTextQuestionViewReviewer(QuestionViewReviewer):
     name = 'simple_text_question'
     template_name = 'revisor/simple_text_question.html'
     
+
+@ajax
+def get_observations(request):
+    if request.method == 'GET':
+        if request.is_ajax():
+            observation_id = request.GET.get('observation_id', False)
+    return ()
+    
+    
+    
