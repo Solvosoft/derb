@@ -27,12 +27,10 @@ function update_combo() {
 
                 var display_fields = data.content;
                 var html = '';
-                var count = 0;
                 var id = '';
                 for (var i = 0; i < display_fields.length; i++) {
                     id = 'id_display_fields_' + display_fields[i][1];
                     html += '<ul><li><label for="' + id + '"><input id="' + id + '" type="checkbox" value="' + display_fields[i][0] + '" name="display_fields"> ' + display_fields[i][1] + '</label></li></ul>';
-                    count++;
                 }
                 df_selector.html(html);
             }
