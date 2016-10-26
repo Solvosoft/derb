@@ -13,8 +13,8 @@ function submit_observation() {
             data: {
                 observation_id: observation_id
             },
-            success: function (response) {
-            	$("#observation").html(response);
+            success: function (data) {
+            	$('#observation').html(html);
             }
         });
 
