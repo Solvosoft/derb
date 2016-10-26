@@ -6,8 +6,8 @@ Created on 18/10/2016
 from report_builder.Question import QuestionView
 from report_builder.Question.forms import MultipleSelectionQuestionForm,\
     MultipleSelectionAnswerForm
-import json
 from report_builder.Question.QuestionType.unique_selection_question import get_catalog_choices
+import json
 
 class MultipleSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
     form_class = MultipleSelectionQuestionForm
@@ -35,9 +35,16 @@ class MultipleSelectionQuestionViewResp(QuestionView.QuestionViewResp):
     form_class = MultipleSelectionAnswerForm
 
     def get_form(self, post=None, instance=None, extra=None):
-        catalog_choices = get_catalog_choices(self.question.answer_options)
+        catalog = get_catalog_choices(self.question.answer_options)
+        answer_options_json = json.loads(self.question.answer_options)
+
+        extra = {
+            "catalog": catalog,
+            "widget": answer_options_json['widget']
+        }
+
         if post is not None:
-            form = self.form_class(post, instance=instance, extra=catalog_choices)
+            form = self.form_class(post, instance=instance, extra=extra)
         else:
-            form = self.form_class(instance=instance, extra=catalog_choices)
+            form = self.form_class(instance=instance, extra=extra)
         return form

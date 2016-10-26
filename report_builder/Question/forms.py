@@ -3,11 +3,10 @@ import random
 
 from django import forms
 from django.core.exceptions import ValidationError
-from django.forms import NumberInput
 from django.utils.translation import ugettext as _
+
 from report_builder.models import Question, Answer, Observation
 from ckeditor.widgets import CKEditorWidget
-from report_builder.registry import models
 from report_builder.catalogs import register_test_catalogs
 from report_builder.registry import models
 
@@ -257,10 +256,14 @@ class MultipleSelectionQuestionForm(QuestionForm):
     CATALOGS = ((index, model[1]) for index, model in enumerate(models))
     catalog = forms.ChoiceField(choices=CATALOGS)
     display_fields = forms.Field(required=False)
+
+    CHECKBOX = 0
+    MULTIPLE_SELECT = 1
+    COMBOBOX = 2
     WIDGET_CHOICES = (
-        (0, _('Checkbox')),
-        (1, _('Multiple Select')),
-        (2, _('Combobox'))
+        (CHECKBOX, _('Checkbox')),
+        (MULTIPLE_SELECT, _('Multiple Select')),
+        (COMBOBOX, _('Combobox'))
     )
     widget = forms.ChoiceField(choices=WIDGET_CHOICES)
 
@@ -300,20 +303,27 @@ class MultipleSelectionAnswerForm(AnswerForm):
     
     
     def __init__(self, *args, **kwargs):
-        
         if 'extra' in kwargs:
-            catalog = kwargs.pop('extra')
+            extra = kwargs.pop('extra')
             super(MultipleSelectionAnswerForm, self).__init__(*args, **kwargs)
-          
-            #self.fields['text'].type = "checkbox"
-            self.fields['text'].choices=catalog
-            #self.fields['text'].widget.attrs = {
-            #   'type': forms.CheckboxSelectMultiple(),     
-            #}
-            
-            
-            
-            
+
+            catalog = extra['catalog']
+            widget = int(extra['widget'])
+            self.fields['text'].choices = catalog
+
+            if widget == MultipleSelectionQuestionForm.CHECKBOX:
+                pass
+                # Set the widget
+                # self.fields['text'].widget = ..
+            elif widget == MultipleSelectionQuestionForm.MULTIPLE_SELECT:
+                pass
+                # Set the widget
+                # self.fields['text'].widget = ..
+            elif widget == MultipleSelectionQuestionForm.COMBOBOX:
+                pass
+                # Set the widget
+                # self.fields['text'].widget = ..
+
         else:
             super(MultipleSelectionAnswerForm, self).__init__(*args, **kwargs)
 
