@@ -8,6 +8,10 @@
     </div>
 {% endblock %}
 
+{% block form_question %}
+	<form action="{% url 'report_builder:unique_selection_admin' report.pk question_pk %}" method="post">
+{% endblock %}
+
 {% block panel_body %}
 	<h4 align="center"><strong>{% trans 'Display fields' %}</strong></h4>
     <p><strong>{% trans 'Catalog:' %} </strong><span id="catalog_name"></span></p>

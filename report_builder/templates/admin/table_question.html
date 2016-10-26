@@ -8,6 +8,10 @@
   </div>
 {% endblock %}
 
+{% block form_question %}
+	<form action="{% url 'report_builder:table_question_admin' report.pk question_pk %}" method="post">
+{% endblock %}
+
 {% block panel_body %}
   <div class="row">
     <div id="table" class="col-md-8">

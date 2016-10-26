@@ -25,7 +25,8 @@
         {% endblock %}
 
         <div class="panel-body">
-          <form action="{% url 'report_builder:unique_selection_admin' report.pk question_pk %}" method="post">
+          {% block form_question %}
+          {% endblock %}
             {% csrf_token %}
             <div class="row">
               <!-- Question Area -->
