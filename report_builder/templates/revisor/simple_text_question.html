@@ -75,7 +75,7 @@
 										{{ form.text }}
 										<br>
 										<div class="text-right">
-											<input class="btn btn-primary" type="submit" onclick="submit_observation();" value="Submit">
+											<input class="btn btn-primary" onclick="submit_observation();" value="Submit">
 										</div>
 									</form>
 								</div>
@@ -90,5 +90,11 @@
 {% endblock %}
 
 {% block body_js %}
-<script>var observation_url = "{% url 'report_builder:get_observations' %}";</script>
+  <script>
+    var observation_url = "{% url 'report_builder:submit_new_observation' %}";
+    var report_pk = "{{ question.report.pk }}";
+    var question_pk = "{{ question.pk }}";
+    var answer_pk = "{{ answer.pk }}";
+  </script>
+  <script src="{% static 'report_builder/js/derb_subcomponents/observations.js' %}"></script>
 {% endblock %}

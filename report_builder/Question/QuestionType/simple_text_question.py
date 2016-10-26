@@ -2,6 +2,8 @@
 Created on 15/9/2016
 @author: nashyra
 '''
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from django_ajax.decorators import ajax
 
 from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF, QuestionViewReviewer
@@ -38,11 +40,13 @@ class SimpleTextQuestionViewReviewer(QuestionViewReviewer):
     
 
 @ajax
-def get_observations(request):
-    if request.method == 'GET':
-        if request.is_ajax():
-            observation_id = request.GET.get('observation_id', False)
-    return ()
-    
+@csrf_exempt
+def submit_new_observation(request):
+    if request.is_ajax():
+        if request.method == 'POST':
+
+            return 0
+
+    return HttpResponse(0)
     
     

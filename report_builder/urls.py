@@ -8,7 +8,7 @@ from report_builder.Question.QuestionType import integer_question
 from report_builder.Question.QuestionType import float_question
 from report_builder.Question.QuestionType import unique_selection_question
 from report_builder.Question.QuestionType.unique_selection_question import get_catalog_display_fields
-from report_builder.Question.QuestionType.simple_text_question import get_observations
+from report_builder.Question.QuestionType.simple_text_question import submit_new_observation
 
 # Boolean question
 # Integer question
@@ -74,5 +74,5 @@ urlpatterns = [
     url(r'^question_types/', include(question_types_urls)),
     url(r'^report/new/$', init.NewReportView.as_view(), name='new_report_template'),
     url(r"^get_catalog_display_fields", get_catalog_display_fields, name='get_catalog_display_fields'),
-    url(r"^get_observations", get_observations, name='get_observations')
+    url(r"^submit_new_observation$", submit_new_observation, name='submit_new_observation')
 ]
