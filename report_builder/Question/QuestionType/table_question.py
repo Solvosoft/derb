@@ -25,6 +25,10 @@ class TableQuestionViewAdmin(QuestionView.QuestionViewAdmin):
         answer_options = {
             'catalog': form_data.get('catalog'),
         }
+        for key in form_data.keys():
+            if key.startswith('header_') or key.startswith('display_field_'):
+                answer_options[key] = form_data[key]
+        print(answer_options)
         object.answer_options = json.dumps(answer_options)
         return object
 
@@ -44,4 +48,3 @@ class TableQuestionViewAdmin(QuestionView.QuestionViewAdmin):
         else:
             form = self.form_class(instance=instance, extra=count)
         return form
-        #return super(TableQuestionViewAdmin, self).get_form(post, instance, count)
