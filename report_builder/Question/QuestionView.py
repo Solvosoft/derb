@@ -187,7 +187,6 @@ class QuestionViewAdmin(Question):
             if redirection_needed == True:
                 return redirect(request.path + str(question_pk))
         else:
-            print(form.errors)
             messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
 
         parameters = {

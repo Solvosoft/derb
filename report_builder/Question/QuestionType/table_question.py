@@ -21,7 +21,6 @@ class TableQuestionViewAdmin(QuestionView.QuestionViewAdmin):
     }
     
     def pre_save(self, object, request, form):
-        print(request.data)
         form_data = dict(form.data)
         answer_options = {
             'catalog': form_data.get('catalog'),

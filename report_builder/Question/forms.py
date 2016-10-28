@@ -3,11 +3,9 @@ import random
 
 from django import forms
 from django.core.exceptions import ValidationError
-from django.forms import NumberInput
 from django.utils.translation import ugettext as _
 from report_builder.models import Question, Answer, Observation
 from ckeditor.widgets import CKEditorWidget
-from report_builder.registry import models
 from report_builder.catalogs import register_test_catalogs
 from report_builder.registry import models
 
@@ -260,7 +258,13 @@ class TableQuestionForm(QuestionForm):
     catalog = forms.ChoiceField(choices=CATALOGS, widget=forms.Select(attrs={'class': 'form-control'}))
     header_0 = forms.CharField(max_length=100)
     display_field_0 = forms.ChoiceField()
-    
+
+    def __init__(self, *args, **kwargs):
+        super(TableQuestionForm, self).__init__(*args, **kwargs)
+        if self.is_bound:
+            catalog = self.data['catalog']
+            self.fields['display_field_0'].choices = models[int(catalog)][3]
+
     class Meta:
         model = Question
         fields = ('text', 'help', 'required', 'id')
