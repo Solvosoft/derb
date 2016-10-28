@@ -252,7 +252,8 @@ class UniqueSelectionAnswerForm(AnswerForm):
         instance.display_text = display_text
         return instance
 
-#Table_Question
+
+# Table_Question
 class TableQuestionForm(QuestionForm):
     CATALOGS = ((index, model[1].capitalize()) for index, model in enumerate(models))
     catalog = forms.ChoiceField(choices=CATALOGS, widget=forms.Select(attrs={'class': 'form-control'}))
@@ -260,10 +261,17 @@ class TableQuestionForm(QuestionForm):
     display_field_0 = forms.ChoiceField()
 
     def __init__(self, *args, **kwargs):
+        count = kwargs.pop('extra')
         super(TableQuestionForm, self).__init__(*args, **kwargs)
+
+        for i in range(0, count):
+            self.fields['header_%d' % i] = forms.CharField(max_length=100)
+            self.fields['display_field_%d' % i] = forms.ChoiceField()
+
         if self.is_bound:
             catalog = self.data['catalog']
-            self.fields['display_field_0'].choices = models[int(catalog)][3]
+            for i in range(0, count):
+                self.fields['display_field_%d' % i].choices = models[int(catalog)][3]
 
     class Meta:
         model = Question
@@ -284,5 +292,3 @@ class TableQuestionForm(QuestionForm):
                 'class': 'form-control'
             })
         }
-    
-    

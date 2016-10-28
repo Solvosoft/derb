@@ -27,3 +27,21 @@ class TableQuestionViewAdmin(QuestionView.QuestionViewAdmin):
         }
         object.answer_options = json.dumps(answer_options)
         return object
+
+
+    def get_form(self, post=None, instance=None, extra=None):
+        if post is not None:
+            count = 0
+            post_data = dict(post)
+            for key in list(post_data.keys()):
+                if key.startswith('header_'):
+                    count = count + 1
+        else:
+            count = 1
+
+        if post is not None:
+            form = self.form_class(post, instance=instance, extra=count)
+        else:
+            form = self.form_class(instance=instance, extra=count)
+        return form
+        #return super(TableQuestionViewAdmin, self).get_form(post, instance, count)

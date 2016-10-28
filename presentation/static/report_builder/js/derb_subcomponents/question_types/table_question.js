@@ -55,10 +55,10 @@ function do_table() {
 	input_id += 1;
 	select_id += 1;
 	var df_selector = $('#table');
-	var bodyhtml = '<input id="input_'+input_id+'" class="form-control" type="text" placeholder="Write the header"><select id="select_'+select_id+'" class="form-control">';
+	var bodyhtml = '<input id="id_header_'+input_id+'" name="header_' + input_id + '" class="form-control" type="text" placeholder="Write the header"><select id="id_display_field_'+select_id+'" name="display_field_' + select_id + '" class="form-control">';
 	var endhtml = '</select>';
 	for (var i = 0; i < display_fields.length; i++) {
-		id = 'id_display_fields_' + display_fields[i][1];
+		id = display_fields[i][1];
 		bodyhtml += '<option value="' + id + '">' + display_fields[i][1] + '</option>';
 	}
 	bodyhtml += endhtml;
