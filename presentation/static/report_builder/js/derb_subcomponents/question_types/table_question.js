@@ -37,11 +37,11 @@ function init_table() {
 				input_id = 0;
 				select_id = 0;
 				display_fields = data.content;
-				var html = '<input id="input_'+input_id+'" class="form-control" type="text" placeholder="Write the header"><select id="select_'+select_id+'" class="form-control">';
+				var html = '<input id="id_header_'+input_id+'" name="header_' + input_id + '" class="form-control" type="text" placeholder="Write the header"><select id="id_display_field_'+select_id+'" name="display_field_' + select_id + '" class="form-control">';
 				var htmlend = '</select>';
 				var id = '';
 				for (var i = 0; i < display_fields.length; i++) {
-					id = 'id_display_fields_' + display_fields[i][1];
+					id = display_fields[i][1];
 					html += '<option value="' + id + '">' + display_fields[i][1] + '</option>';
 				}
 				html += htmlend;

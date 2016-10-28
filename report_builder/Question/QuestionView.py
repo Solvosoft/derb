@@ -159,6 +159,7 @@ class QuestionViewAdmin(Question):
         """
             TODO: docstring
         """
+        print(request.POST)
         redirection_needed = True
         question_pk = kwargs.get('question_pk', False)
         report_pk = kwargs.get('report_pk', False)
@@ -186,6 +187,7 @@ class QuestionViewAdmin(Question):
             if redirection_needed == True:
                 return redirect(request.path + str(question_pk))
         else:
+            print(form.errors)
             messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
 
         parameters = {

@@ -258,6 +258,8 @@ class UniqueSelectionAnswerForm(AnswerForm):
 class TableQuestionForm(QuestionForm):
     CATALOGS = ((index, model[1].capitalize()) for index, model in enumerate(models))
     catalog = forms.ChoiceField(choices=CATALOGS, widget=forms.Select(attrs={'class': 'form-control'}))
+    header_0 = forms.CharField(max_length=100)
+    display_field_0 = forms.ChoiceField()
     
     class Meta:
         model = Question
