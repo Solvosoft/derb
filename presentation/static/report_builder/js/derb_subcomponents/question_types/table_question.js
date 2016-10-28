@@ -23,6 +23,7 @@ var select_id;
 
 function init_table() {
 	$("#id_catalog").find("option:selected").each(function() {
+		$('#catalog_name').html($(this).text());
 		catalog_id = $(this).val();
 		$.ajax({
 			url : catalog_url,
