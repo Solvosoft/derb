@@ -5,6 +5,7 @@ Created on 15/9/2016
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django_ajax.decorators import ajax
+from django.template.loader import render_to_string
 
 from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF, QuestionViewReviewer
 from report_builder.Question.forms import SimpleTextQuestionForm, SimpleTextAnswerForm
@@ -49,6 +50,7 @@ def submit_new_observation(request):
             question_pk = request.POST.get('question_pk', False)
             answer_pk = request.POST.get('answer_pk', False)
             observation = request.POST.get('observation', False)
+            rendered = render_to_string('observations.html', {'foo': 'bar'})
 
             print(report_pk, question_pk, answer_pk)
 
