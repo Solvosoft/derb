@@ -1,38 +1,5 @@
-{% extends 'admin/question_types/question.html' %}
-{% load static i18n %}
+{% extends 'admin/base_question.html' %}
 
-{% block question_name %}
-  {% trans 'Yes/No question' %}
-{% endblock %}
-
-{% block question_form %}
-  <form action="{% url 'report_builder:boolean_question_admin' report.pk question_pk %}" method="post">
-    {% csrf_token %}
-    <div class="row">
-      <div class="col-md-8">
-        <div>{{ form.text }}</div>
-        <br/>
-        <div>{{ form.help }}</div>
-      </div>
-      <div class="col-md-4 question_option_panel text-center">
-        <br>
-        <div class="btn-group">
-          <a class="btn btn-primary" onclick="toggle_help_input();">{% trans 'See/Hide' %}</a>
-          <a class="btn btn-danger" onclick="alert('To do');">{% trans 'Delete' %}</a>
-          <a class="btn btn-success" onclick="alert('To do');">#</a>
-        </div>
-        <br><br>
-        {{ form.required }}
-      </div>
-    </div>
-    <div class="row text-right">
-      <div class="col-md-12">
-        <input class="btn btn-primary" type="submit" value="Save">
-      </div>
-    </div>
-  </form>
-{% endblock %}
-
-{% block extra_js %}
-  <script src="{% static 'report_builder/js/derb_helpers.js' %}"></script>
+{% block extra_content %}
+  {# Process children questions #}
 {% endblock %}

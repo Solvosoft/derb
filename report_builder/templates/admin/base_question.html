@@ -1,0 +1,117 @@
+{% load jquery_tags %}
+
+<div id="question_{{ form_number }}" class="question_panel panel panel-primary question_border">
+  <form method="post" id="question_{{ report.pk }}_{{ question.pk }}"
+        action="{% url 'report_builder:process_admin' 'admin' name report.pk %}"
+        onchange="set_modified_question('question_{{ form_number }}');">
+    {% csrf_token %}
+    <input type="hidden" id="name" value="{{ name }}">
+    <input type="hidden" id="question_id" value="{{ question.pk }}">
+
+    {{ form.children }}
+    {{ form.order }}
+    {{ form.media }}
+
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-8">
+          {# Form text field #}
+          {{ form.text }}
+          {{ form.text | is_jquery_widget:form_number }}
+
+          {# Form text field errors #}
+          {% if form.text.errors %}
+            <div class="alert alert-warning alert-dismissable">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+              <strong>Warning: </strong>{{ form.text.errors }}
+            </div>
+          {% endif %}
+        </div>
+        <div class="col-xs-6 col-md-4">
+          <div class="pull-right">
+            {# Save button (hidden) #}
+            <button id="save_button" type="button" class="hidden" onclick="save_form('question_{{ form_number }}');">
+              <span class="glyphicon glyphicon-save"></span> Save
+            </button>
+
+            {# See/hide button #}
+            <button type="button" class="btn btn-default btn-xs" onclick="see_hide(this);">
+              <span class="glyphicon glyphicon-eye-open"></span> See/Hide
+            </button>
+
+            {# Remove button #}
+            <button type="button" class="btn btn-default btn-xs" id="delete_question" onclick="remove(this);">
+              <span class="glyphicon glyphicon-remove"></span> Remove
+            </button>
+
+            {# Question order #}
+            <span id="order" class="btn btn-md" title="{{ minimal_representation.help }}"
+                  style="background-color: {{ minimal_representation.color }};">
+              {% if question.order %}
+                {{ question.order }}
+              {% else %}
+                {{ Undefined }}
+              {% endif %}
+            </span>
+          </div>
+          <div id="no_schema"></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        {# Form help field #}
+        <div class="col-md-8">
+          {{ form.help }}
+        </div>
+
+        {# Form help field errors #}
+        {% if form.help.errors %}
+          <div class="alert alert-warning alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          </div>
+          <strong>Warning: </strong>{{ form.help.errors }}
+        {% endif %}
+
+        <div class="col-md-4 form-inline">
+          {% block requirement %}
+            Required: {{ form.required }}
+          {% endblock %}
+
+          {% block catalog %}
+          {% endblock %}
+        </div>
+      </div>
+      {# Form content #}
+      {% block form_content %}{% endblock %}
+    </div>
+    {# Form footer #}
+    {% block form_footer %}{% endblock %}
+  </form>
+
+  <div id="content">
+    {# Question additional content #}
+    {% block extra_content %}{% endblock %}
+  </div>
+</div>
+
+<script>
+  {% block question_script %}
+    var question_pk, state;
+    var type = '{{ name }}';
+    var html_id = 'question_{{ form_number }}';
+    {% if question.pk %}
+      question_pk = {{ question.pk}};
+      {% if formulario.errors %}
+        state = 0;
+      {%else%}
+        state = 1;
+      {%endif%}
+    {%else%}
+      question_pk = -1;
+      state = 0;
+    {%endif%}
+    $("select").addClass('form-control');
+    add_question(question_pk, state, type, html_id);
+  {% endblock %}
+</script>
