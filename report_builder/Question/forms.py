@@ -13,7 +13,7 @@ from report_builder.registry import models
 
 
 class QuestionForm(forms.ModelForm):
-    children = forms.CharField
+    children = forms.CharField()
 
     class Meta:
         model = Question

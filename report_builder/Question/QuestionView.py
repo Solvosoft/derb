@@ -29,7 +29,7 @@ class Question(View):
         TODO: docstring
     """
     # TODO: define template
-    template_name = 'admin/simple_question.html'
+    template_name = 'admin/base_question.html'
     form_class = QuestionForm
     base_model = QuestionModel
     name = 'simple_question'
@@ -112,7 +112,7 @@ class QuestionViewAdmin(Question):
     """
         TODO: docstring
     """
-    template_name = 'admin/simple_question.html'
+    template_name = 'admin/base_question.html'
     name = 'simple_question'
     request = None
     minimal_representation = {

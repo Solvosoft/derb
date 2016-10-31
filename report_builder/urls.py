@@ -4,6 +4,7 @@ from django.conf.urls import include
 from report_builder import views
 from report_builder import initial_views as init
 from report_builder.Question.question_loader import process_question
+from report_builder.Question import QuestionView
 from report_builder.Question.QuestionType import simple_text_question
 from report_builder.Question.QuestionType import boolean_question
 from report_builder.Question.QuestionType import integer_question
@@ -18,6 +19,7 @@ from report_builder.views import Report
 # Simple text question
 # Unique selection question
 question_types_urls = [
+    url(r'base/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', QuestionView.QuestionViewAdmin.as_view(), name='base_question_admin'),
     url(r'boolean/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', boolean_question.BooleanQuestionViewAdmin.as_view(),
         name='boolean_question_admin'),
     url(r'boolean/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', boolean_question.BooleanQuestionViewResp.as_view(),
