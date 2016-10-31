@@ -9,6 +9,8 @@ from report_builder.models import Question, Answer, Observation
 from ckeditor.widgets import CKEditorWidget
 from report_builder.catalogs import register_test_catalogs
 from report_builder.registry import models
+from django.forms.widgets import CheckboxSelectMultiple, CheckboxChoiceInput
+from django.contrib.admin.helpers import checkbox
 
 
 class QuestionForm(forms.ModelForm):
@@ -309,12 +311,28 @@ class MultipleSelectionAnswerForm(AnswerForm):
 
             catalog = extra['catalog']
             widget = int(extra['widget'])
-            self.fields['text'].choices = catalog
+            #self.fields['text'].choices = catalog
 
             if widget == MultipleSelectionQuestionForm.CHECKBOX:
-                pass
+                #pass
+                print('checkbox')
                 # Set the widget
-                # self.fields['text'].widget = ..
+               # self.fields['text'].type="checkbox"
+                #self.fields['text'].choices = catalog
+                #self.fields['text'].widget='checkbox'
+                #self.fields['text'].widget.attrs = {
+                #'type': "checkbox",
+                self.fields['text'].widget = forms.MultipleSelection
+                #'type': forms.CheckboxSelectMultiple,
+            #}
+                
+                #self.fields['text'].widget = forms.CheckboxSelectMultiple()
+                #self.fields['text'].widget = CheckboxSelectMultiple()
+                
+                #self.fields['text'].widget='checkbox'
+                #self.fields['text'].value='checkbox'
+                #self.fields['text'].widget=CheckboxChoiceInput
+                
             elif widget == MultipleSelectionQuestionForm.MULTIPLE_SELECT:
                 pass
                 # Set the widget
