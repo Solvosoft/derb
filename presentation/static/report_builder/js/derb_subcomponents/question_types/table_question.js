@@ -40,7 +40,7 @@ function init_table() {
 				select_id = 0;
 				display_fields = data.content;
 				var html = '<input id="id_header_' + input_id + '" name="header_' + input_id + '" class="form-control" type="text" placeholder="Write the header"><select id="id_display_field_' + select_id + '" name="display_field_' + select_id + '" class="form-control">';
-				var htmlend = '</select>';
+				var htmlend = '</select> <br/>';
 				var id = '';
 				for (var i = 0; i < display_fields.length; i++) {
 					id = display_fields[i][1];
@@ -58,7 +58,7 @@ function do_table() {
 	select_id += 1;
 	var df_selector = $('#table');
 	var bodyhtml = '<input id="id_header_' + input_id + '" name="header_' + input_id + '" class="form-control" type="text" placeholder="Write the header"><select id="id_display_field_' + select_id + '" name="display_field_' + select_id + '" class="form-control">';
-	var endhtml = '</select>';
+	var endhtml = '</select> <br/>';
 	for (var i = 0; i < display_fields.length; i++) {
 		id = display_fields[i][1];
 		bodyhtml += '<option value="' + id + '">' + display_fields[i][1] + '</option>';
@@ -84,7 +84,7 @@ function init_values() {
 					$('#id_display_field_0').val(displays[0]);
 					var df_selector = $('#table');
 					var bodyhtml = '<input id="id_header_' + i + '" name="header_' + i + '" class="form-control" type="text" value="' + headers[i] + '"><select id="id_display_field_' + i + '" name="display_field_' + i + '" class="form-control">';
-					var endhtml = '</select>';
+					var endhtml = '</select> <br/>';
 					for (var j = 0; j < display_fields.length; j++) {
 						id = display_fields[j][1];
 						if (display_fields[j][1] == displays[i]) {
