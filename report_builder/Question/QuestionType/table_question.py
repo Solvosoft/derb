@@ -22,13 +22,28 @@ class TableQuestionViewAdmin(QuestionView.QuestionViewAdmin):
     
     def pre_save(self, object, request, form):
         form_data = dict(form.data)
+        headers = []
+        displays = []
+        for key in form_data.keys():
+            if key.startswith('header_'):
+                headers += [key]
+            if key.startswith('display_field_'):
+                displays += [key]       
+        headers_1 = sorted(headers)
+        displays_1 = sorted(displays)
+        headers = []
+        displays = []
+        for head in headers_1:
+            headers += form_data[head]
+        for display in displays_1:
+            displays += form_data[display]
+        print(headers)
+        print(displays)
         answer_options = {
             'catalog': form_data.get('catalog'),
+            'headers': headers,
+            'displays': displays
         }
-        for key in form_data.keys():
-            if key.startswith('header_') or key.startswith('display_field_'):
-                answer_options[key] = form_data[key]
-        print(answer_options)
         object.answer_options = json.dumps(answer_options)
         return object
 
