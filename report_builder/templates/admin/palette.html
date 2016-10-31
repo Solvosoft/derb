@@ -16,7 +16,7 @@
                 <div id="question_palette" class="tab-pane in active">
                     <ul class="list-group sortable_palette">
                         {% for name, value in palette.items %}
-                            <li orden="{{ forloop.counter0 }}" class="list-group-item palette_item"
+                            <li order="{{ forloop.counter0 }}" class="list-group-item palette_item"
                                 id="palette_{{ name }}" url="{% url 'report_builder:process_admin' 'admin' name report.pk %}"
                                 style="background-color: {{ value.color }}">
                                 <span title="{{ value.help }}" class="question_admin_palette">{{ value.human_readable_name }}</span>

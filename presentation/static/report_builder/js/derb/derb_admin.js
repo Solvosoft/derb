@@ -147,6 +147,8 @@ function do_sortable() {
         receive: function (event, ui) {
             if (ui.item.hasClass('palette_item')) {
                 new_item = ui.item.clone();
+                console.log(new_item);
+                console.log(ui.item);
                 ui.item.removeClass('palette_item');
                 ui.item.load(ui.item.attr('url'));
                 ui.item.attr('id', '');
