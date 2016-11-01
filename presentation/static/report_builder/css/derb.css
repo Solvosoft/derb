@@ -34,3 +34,10 @@ body {
     background-color: #FF6565;
     color: #CFD5D9;
 }
+
+.floating-palette {
+    position: fixed;
+    right: 10px;
+    z-index: 2;
+    bottom: 40px;
+}
