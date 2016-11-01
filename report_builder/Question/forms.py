@@ -9,7 +9,7 @@ from report_builder.models import Question, Answer, Observation
 from ckeditor.widgets import CKEditorWidget
 from report_builder.catalogs import register_test_catalogs
 from report_builder.registry import models
-from numbers import Number
+from ast import literal_eval
 
 
 class QuestionForm(forms.ModelForm):
@@ -302,7 +302,6 @@ class MultipleSelectionQuestionForm(QuestionForm):
 
 
 class MultipleSelectionAnswerForm(AnswerForm):
-    
     text = forms.ChoiceField()
 
     def __init__(self, *args, **kwargs):
@@ -325,42 +324,21 @@ class MultipleSelectionAnswerForm(AnswerForm):
 
     def save(self, db_use):
         instance = super(AnswerForm, self).save(db_use)
-        objectpk = instance.text
-        print('objectpk')
-        print(objectpk)
+        object_pks = literal_eval(instance.text)
         answer_options_json = instance.question.answer_options
         answer_options = json.loads(answer_options_json)
         catalog = int(answer_options['catalog'][0])
         display_fields = answer_options['display_fields']
         queryset = models[catalog][0]
-        
-        try:
-            int(objectpk) 
-            print('es numero')
-            object = queryset.get(pk=objectpk)                          
-            display_text = ''
-            for i, fild in enumerate(display_fields):
-                display_text += getattr(object, fild)
+        queryset = queryset.filter(pk__in=object_pks)
+
+        display_text = ''
+        for o, object in enumerate(queryset):
+            for i, field in enumerate(display_fields):
+                display_text += getattr(object, field)
                 if (i + 1) != len(display_fields):
                     display_text += ' - '
-            instance.display_text = display_text
-            return instance
-        
-        except:
-            print('es vector') 
-            display_resp=''
-            #EN LUGAR DE ESE VECTOR  ['2','5'] DEBERIA RECIBIR OBJECTPK
-            print('este es object pk')
-            print(objectpk)
-            for y, ob in enumerate(['2', '5']):
-                object = queryset.get(pk=ob)                         
-                display_text = ''
-                for i, field in enumerate(display_fields):
-                    display_text += getattr(object, field)
-                    if (i + 1) != len(display_fields):
-                        display_text += ' - '
-                display_resp += display_text + ' / '
-        instance.display_text = display_resp
+            if (o + 1) < len(queryset):
+                display_text += '\n'
+
         return instance
-        
-        
