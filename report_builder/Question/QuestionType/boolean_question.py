@@ -12,6 +12,7 @@ from report_builder.Question.QuestionView import QuestionViewResp
 from report_builder.Question.QuestionView import QuestionViewPDF
 from report_builder.Question.forms import BooleanAnswerForm
 from report_builder.models import Question, Answer
+from report_builder.shortcuts import get_children
 
 
 class BooleanQuestionViewAdmin(QuestionViewAdmin):
@@ -22,6 +23,20 @@ class BooleanQuestionViewAdmin(QuestionViewAdmin):
         'help': _('Allows you to make yes/no questions'),
         'color': '#5b4e77'
     }
+
+    def pre_save(self, object, request, form):
+        children = get_children(form)
+        object.answer_options = repr({'children': children})
+        return object
+
+
+    def additional_template_parameters(self, **kwargs):
+        parameters = self.get_question_answer_options()
+        if not parameters:
+            parameters = {}
+
+        parameters['children'] = self.process_children(self.request, parameters, kwargs)
+        return parameters
 
 
 class BooleanQuestionViewResp(QuestionViewResp):
