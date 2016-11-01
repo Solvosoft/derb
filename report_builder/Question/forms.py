@@ -299,4 +299,4 @@ class TableQuestionAnswerForm(AnswerForm):
     def __init__(self, *args, **kwargs):
         catalog = kwargs.pop('extra')
         super(TableQuestionAnswerForm, self).__init__(*args, **kwargs)
-        self.fields['display_fields_0'].choices = catalog
+        self.fields['display_fields_0'].choices = catalog[0]
