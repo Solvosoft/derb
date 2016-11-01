@@ -67,6 +67,16 @@ function do_table() {
 	df_selector.append(bodyhtml);
 }
 
+function remove_table() {
+	if (input_id && select_id > 0) {
+		$('#id_header_' + input_id + '').remove();
+		$('#id_display_field_' + select_id + '').remove();
+		$('#table br:last').remove();
+		input_id -= 1;
+		select_id -= 1;
+	}
+}
+
 function init_values() {
 	if (answer_options_json != '') {
 		window.setTimeout(function() {
