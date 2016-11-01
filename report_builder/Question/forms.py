@@ -9,6 +9,7 @@ from report_builder.models import Question, Answer, Observation
 from ckeditor.widgets import CKEditorWidget
 from report_builder.catalogs import register_test_catalogs
 from report_builder.registry import models
+from numbers import Number
 from ast import literal_eval
 
 
@@ -302,6 +303,7 @@ class MultipleSelectionQuestionForm(QuestionForm):
 
 
 class MultipleSelectionAnswerForm(AnswerForm):
+    
     text = forms.ChoiceField()
 
     def __init__(self, *args, **kwargs):
@@ -324,21 +326,40 @@ class MultipleSelectionAnswerForm(AnswerForm):
 
     def save(self, db_use):
         instance = super(AnswerForm, self).save(db_use)
-        object_pks = literal_eval(instance.text)
+        objectpk = instance.text
+        print('objectpk')
+        print(objectpk)
         answer_options_json = instance.question.answer_options
         answer_options = json.loads(answer_options_json)
         catalog = int(answer_options['catalog'][0])
         display_fields = answer_options['display_fields']
         queryset = models[catalog][0]
-        queryset = queryset.filter(pk__in=object_pks)
-
-        display_text = ''
-        for o, object in enumerate(queryset):
-            for i, field in enumerate(display_fields):
-                display_text += getattr(object, field)
+        
+        try:
+            int(objectpk) 
+            print('es numero')
+            object = queryset.get(pk=objectpk)                          
+            display_text = ''
+            for i, fild in enumerate(display_fields):
+                display_text += getattr(object, fild)
                 if (i + 1) != len(display_fields):
                     display_text += ' - '
-            if (o + 1) < len(queryset):
-                display_text += '\n'
-
-        return instance
+            instance.display_text = display_text
+            return instance
+        
+        except:
+            object_pks = literal_eval(instance.text)
+            queryset = queryset.filter(pk__in=object_pks)
+            display_text = ''
+            for o, object in enumerate(queryset):
+                for i, field in enumerate(display_fields):
+                    display_text += getattr(object, field)
+                    if (i + 1) != len(display_fields):
+                        display_text += ' - '
+                if (o + 1) < len(queryset):
+                    display_text += '\n'
+    
+            instance.display_text = display_text
+            return instance
+    
+ 
