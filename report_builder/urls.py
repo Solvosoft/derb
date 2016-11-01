@@ -61,6 +61,9 @@ question_types_urls = [
     url(r"table/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$",
         table_question.TableQuestionViewAdmin.as_view(),
         name="table_question_admin"),
+    url(r"table/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$",
+        table_question.TableQuestionViewResp.as_view(),
+        name="table_question_resp"),
 ]
 
 urlpatterns = [

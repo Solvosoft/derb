@@ -61,3 +61,7 @@ class TableQuestionViewAdmin(QuestionView.QuestionViewAdmin):
         else:
             form = self.form_class(instance=instance, extra=count)
         return form
+
+class TableQuestionViewResp(QuestionView.QuestionViewResp):
+    template_name = 'responsable/table_question.html'
+    name = 'table_question'
