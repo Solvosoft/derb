@@ -5,6 +5,7 @@ Created on 14/9/2016
 import json
 from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF
 from report_builder.Question.forms import IntegerQuestionForm, AnswerForm, IntegerAnswerForm
+from report_builder.shortcuts import get_children
 
 
 class IntegerQuestionViewAdmin(QuestionViewAdmin):
@@ -19,6 +20,8 @@ class IntegerQuestionViewAdmin(QuestionViewAdmin):
     evaluator = int
 
     def pre_save(self, object, request, form):
+        children = get_children(form)
+
         form_data = dict(form.data)
 
         answer_options = {
