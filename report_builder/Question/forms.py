@@ -292,3 +292,11 @@ class TableQuestionForm(QuestionForm):
                 'class': 'form-control'
             })
         }
+
+class TableQuestionAnswerForm(AnswerForm):
+    display_fields_0 = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}));
+    
+    def __init__(self, *args, **kwargs):
+        catalog = kwargs.pop('extra')
+        super(TableQuestionAnswerForm, self).__init__(*args, **kwargs)
+        self.fields['display_fields_0'].choices = catalog

@@ -8,7 +8,28 @@ import json
 from django.utils.translation import ugettext as _
 
 from report_builder.Question import QuestionView
-from report_builder.Question.forms import TableQuestionForm
+from report_builder.Question.forms import TableQuestionForm, TableQuestionAnswerForm
+from report_builder.registry import models
+
+def get_catalog_values(queryset, display_fields):
+    for object in queryset:
+        text = ""
+        value = object.pk
+        if display_fields is None:
+            yield (value, str(object))
+        else:
+            print("AQUI DENTRO DE GET: "+display_fields)
+            text += getattr(object, display_fields)
+            yield (value, text)
+
+
+def get_catalog_choices(catalog, display):
+    catalog_id = int(catalog)
+    display_fields = display
+    queryset = models[catalog_id][0]
+
+    return (value_text for value_text in get_catalog_values(queryset, display_fields))
+
 
 class TableQuestionViewAdmin(QuestionView.QuestionViewAdmin):
     form_class = TableQuestionForm
@@ -65,3 +86,23 @@ class TableQuestionViewAdmin(QuestionView.QuestionViewAdmin):
 class TableQuestionViewResp(QuestionView.QuestionViewResp):
     template_name = 'responsable/table_question.html'
     name = 'table_question'
+    form_class = TableQuestionAnswerForm
+    
+    def get_form(self, post=None, instance=None, extra=None):
+        answer_options = json.loads(self.question.answer_options)
+        displays = answer_options['displays']
+        catalog = answer_options['catalog'][0]
+        catalog_choices = []
+        elements = []
+        for dis in displays:
+            for x in get_catalog_choices(catalog, dis):
+                elements.append(x)
+            catalog_choices.append(elements)
+        
+        print(catalog_choices)
+            
+        if post is not None:
+            form = self.form_class(post, instance=instance, extra=catalog_choices)
+        else:
+            form = self.form_class(instance=instance, extra=catalog_choices)
+        return form       
