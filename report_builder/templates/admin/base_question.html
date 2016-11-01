@@ -95,23 +95,6 @@
   </div>
 </div>
 
-<script>
-  {% block question_script %}
-    var question_pk, state;
-    var type = '{{ name }}';
-    var html_id = 'question_{{ form_number }}';
-    {% if question.pk %}
-      question_pk = {{ question.pk}};
-      {% if formulario.errors %}
-        state = 0;
-      {%else%}
-        state = 1;
-      {%endif%}
-    {%else%}
-      question_pk = -1;
-      state = 0;
-    {%endif%}
-    $("select").addClass('form-control');
-    add_question(question_pk, state, type, html_id);
-  {% endblock %}
-</script>
+{% block question_script %}
+  {% include 'admin/add_question.html' %}
+{% endblock %}
