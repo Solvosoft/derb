@@ -3,7 +3,7 @@
  */
 $(document).ready(function() {
     //console.log(observation_url);
-    submit_observation();
+    //submit_observation();
 });
 
 function submit_observation() {

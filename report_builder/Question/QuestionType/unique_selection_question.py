@@ -4,11 +4,15 @@ Created on 14/9/2016
 '''
 import json
 from django_ajax.decorators import ajax
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.template.loader import render_to_string
 
 from report_builder.Question import QuestionView
 from report_builder.Question.forms import UniqueSelectionQuestionForm
 from report_builder.Question.forms import UniqueSelectionAnswerForm
 from report_builder.registry import models
+from report_builder.models import Answer, Observation, Reviewer
 
 
 def get_catalog_values(queryset, display_fields):
@@ -86,3 +90,32 @@ def get_catalog_display_fields(request):
 class UniqueSelectionQuestionViewReviewer(QuestionView.QuestionViewReviewer):
     name = 'unique_selection_question'
     template_name = 'revisor/unique_selection_question.html'
+    
+@ajax
+@csrf_exempt
+def submit_new_observation(request):
+    if request.is_ajax():
+        if request.method == 'POST':
+            report_pk = request.POST.get('report_pk', False)
+            question_pk = request.POST.get('question_pk', False)
+            answer_pk = request.POST.get('answer_pk', False)
+            observation = request.POST.get('observation', False)
+
+            print(report_pk, question_pk, answer_pk)
+
+            if report_pk and question_pk and answer_pk:
+                answer = Answer.objects.get(pk=answer_pk)
+                reviewer = Reviewer.objects.get(report__pk=report_pk, user=request.user)
+
+                observation = Observation.objects.create(
+                    reviewer=reviewer,
+                    text=observation,
+                    answer=answer
+                )
+                rendered = render_to_string('revisor/observations.html', {'observations': observation})
+
+                return rendered
+            else:
+                return False
+
+    return HttpResponse(0)
