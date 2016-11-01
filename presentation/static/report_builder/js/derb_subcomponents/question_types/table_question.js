@@ -92,8 +92,10 @@ function init_values() {
 				for (var i = 1; i <= headers.length - 1; i++) {
 					$('#id_header_0').val(headers[0]);
 					$('#id_display_field_0').val(displays[0]);
+					input_id = i;
+					select_id = i;
 					var df_selector = $('#table');
-					var bodyhtml = '<input id="id_header_' + i + '" name="header_' + i + '" class="form-control" type="text" value="' + headers[i] + '"><select id="id_display_field_' + i + '" name="display_field_' + i + '" class="form-control">';
+					var bodyhtml = '<input id="id_header_' + input_id + '" name="header_' + input_id + '" class="form-control" type="text" value="' + headers[i] + '"><select id="id_display_field_' + select_id + '" name="display_field_' + select_id + '" class="form-control">';
 					var endhtml = '</select> <br/>';
 					for (var j = 0; j < display_fields.length; j++) {
 						id = display_fields[j][1];
