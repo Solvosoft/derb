@@ -60,11 +60,11 @@
                   <strong>Observations</strong>
                 </div>
                 <div class="panel-body">
-                  <div>
+                  <div id="observations">
                     {% for observation in answer.observation_set.all %}
                       <div class="well well-sm">
                         <strong>{{ observation.text }}</strong><span
-                          id="observation">  {{ observation.reviewer.user }}</span>
+                          >  {{ observation.reviewer.user }}</span>
                       </div>
                     {% empty %}
                       <i>No observations yet</i>

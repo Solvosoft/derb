@@ -50,7 +50,6 @@ def submit_new_observation(request):
             question_pk = request.POST.get('question_pk', False)
             answer_pk = request.POST.get('answer_pk', False)
             observation = request.POST.get('observation', False)
-            rendered = render_to_string('observations.html', {'foo': 'bar'})
 
             print(report_pk, question_pk, answer_pk)
 
@@ -63,8 +62,9 @@ def submit_new_observation(request):
                     text=observation,
                     answer=answer
                 )
+                rendered = render_to_string('revisor/observations.html', {'observations': observation})
 
-                return observation.pk
+                return rendered
             else:
                 return False
 

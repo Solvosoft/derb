@@ -1,8 +1,9 @@
-/**
+/** 
  * Created by mau on 26/10/16.
  */
 $(document).ready(function() {
-    console.log(observation_url);
+    //console.log(observation_url);
+    submit_observation();
 });
 
 function submit_observation() {
@@ -18,7 +19,10 @@ function submit_observation() {
             type: 'POST',
             data: data,
             success: function (response) {
-            	console.log(response);
+            	//console.log(response);
+            	var div_observation = $('#observations');
+            	div_observation.html('');
+            	$('#observations').append(response.content);
             }
     });
 
