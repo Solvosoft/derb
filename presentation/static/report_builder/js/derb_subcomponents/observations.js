@@ -20,7 +20,9 @@ function submit_observation() {
             data: data,
             success: function (response) {
                 var div_observation = $('#observations');
-                div_observation.html('');
+                if (div_observation.html().startsWith("<i>")){
+                    div_observation.html('');
+                }
                 div_observation.append(response.content);
             }
     });
