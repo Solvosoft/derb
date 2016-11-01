@@ -112,6 +112,24 @@ class SimpleTextQuestionForm(QuestionForm):
         instance.display_text = instance.text
         return instance
 
+    def __init__(self, *args, **kwargs):
+        on_modal = False
+        if 'extra' in kwargs:
+            extra = kwargs.pop('extra')
+            on_modal = extra['on_modal']
+        super(SimpleTextQuestionForm, self).__init__(*args, **kwargs)
+
+        self.fields['on_modal'] = forms.BooleanField(
+            label='See on modal',
+            required=False,
+            initial=on_modal,
+            widget=forms.CheckboxInput(
+                attrs={
+                    'onchange': 'get_button_name_info(this);'
+                }
+            )
+        )
+
 # Boolean answer form
 class BooleanAnswerForm(AnswerForm):
     option = forms.ChoiceField

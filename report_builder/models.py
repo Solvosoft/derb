@@ -216,6 +216,9 @@ class Reviewer(models.Model):
 
 @python_2_unicode_compatible
 class Question(models.Model):
+    OPTIONAL = 0
+    REQUIRED = 1
+    HIERARCHY_REQUIRED = 2
     REQUIREMENT_TYPE = (
         (0, _('Optional')),
         (1, _('Required')),
