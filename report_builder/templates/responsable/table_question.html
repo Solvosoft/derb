@@ -1,6 +1,6 @@
 {% include 'derb/base.html' %}
 
-{% load i18n %}
+{% load static i18n %}
 {% block main_block %}
   <div class="row">
     <div class="col-md-offset-2 col-md-8">
@@ -40,8 +40,8 @@
                     {% endif %}
                     <div class="row">
                       <div class="col-md-12" style="padding-top: 3%">
-                        <div> 
-                        	{{ form.display_fields_0 }}
+                        <div id="responsable"> 
+                        	{{ form.display_field_0 }}
                         </div>
                       </div>
                     </div>
@@ -61,4 +61,12 @@
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block body_js %}
+    <script>
+        var answer_options_json = "{{ question.answer_options | escapejs }}";
+    </script>
+    <script
+            src="{% static 'report_builder/js/derb_subcomponents/question_types/table_question_resp.js' %}"></script>
 {% endblock %}

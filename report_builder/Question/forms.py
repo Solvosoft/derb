@@ -294,9 +294,12 @@ class TableQuestionForm(QuestionForm):
         }
 
 class TableQuestionAnswerForm(AnswerForm):
-    display_fields_0 = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}));
+    display_field_0 = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}));
     
     def __init__(self, *args, **kwargs):
         catalog = kwargs.pop('extra')
         super(TableQuestionAnswerForm, self).__init__(*args, **kwargs)
-        self.fields['display_fields_0'].choices = catalog[0]
+        
+        for i in range(0, len(catalog)):
+            self.fields['header_%d' % i] = forms.CharField(max_length=100)
+            self.fields['display_field_%d' % i] = forms.ChoiceField(choices=catalog[i])
