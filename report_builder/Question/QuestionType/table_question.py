@@ -18,7 +18,6 @@ def get_catalog_values(queryset, display_fields):
         if display_fields is None:
             yield (value, str(object))
         else:
-            print("AQUI DENTRO DE GET: "+display_fields)
             text += getattr(object, display_fields)
             yield (value, text)
 
@@ -97,10 +96,10 @@ class TableQuestionViewResp(QuestionView.QuestionViewResp):
         for dis in displays:
             for x in get_catalog_choices(catalog, dis):
                 elements.append(x)
+                print(elements)
+                print(x)
             catalog_choices.append(elements)
-        
-        print(catalog_choices)
-            
+            elements = []
         if post is not None:
             form = self.form_class(post, instance=instance, extra=catalog_choices)
         else:
