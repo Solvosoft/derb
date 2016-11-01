@@ -37,8 +37,6 @@ class TableQuestionViewAdmin(QuestionView.QuestionViewAdmin):
             headers += form_data[head]
         for display in displays_1:
             displays += form_data[display]
-        print(headers)
-        print(displays)
         answer_options = {
             'catalog': form_data.get('catalog'),
             'headers': headers,
