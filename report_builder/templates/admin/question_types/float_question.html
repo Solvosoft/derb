@@ -1,55 +1,28 @@
-{% extends 'admin/question_types/question.html' %}
-{% load i18n %}
-{% load static %}
+{% extends 'admin/question_types/integer_question.html' %}
 
-{% block question_name %}
-  {% trans 'Decimal question' %}
-{% endblock %}
-
-{% block question_form %}
-  <form action="{% url 'report_builder:float_question_admin' report.pk question_pk %}" method="post">
-    {% csrf_token %}
-    <div class="row">
-      <div class="col-md-7">
-        <div>
-          {{ form.text }}
-        </div>
-        <br/>
-        <div id="help">
-          {{ form.help }}
-        </div>
-      </div>
-      <div class="col-md-4 question_option_panel text-center">
-        <div class="btn-group">
-          <a class="btn btn-primary" onclick="toggle_help_input();">{% trans 'See/Hide' %}</a>
-          <a class="btn btn-danger" onclick="alert('To do');">{% trans 'Delete' %}</a>
-          <a class="btn btn-success" onclick="alert('To do');">#</a>
-        </div>
-        <br/>
-        <br/>
-        {% trans 'Requirement:' %} {{ form.required }}
-        <br/>
-        <br/>
-        {% trans 'Minimum:' %} {{ form.minimum }}
-        <br/>
-        <br/>
-        {% trans 'Maximum:' %} {{ form.maximum }}
-        <br/>
-        <br/>
-        {% trans 'Steps:' %} {{ form.steps }}
-      </div>
-    </div>
-    <div class="row text-right">
-      <div class="col-md-12">
-        <br/>
-        <br/>
-        <br/>
-        <input class="btn btn-primary" type="submit" value="Save">
-      </div>
-    </div>
-  </form>
-{% endblock %}
-
-{% block extra_js %}
-  <script src="{% static 'report_builder/js/derb_helpers.js' %}"></script>
+{% block spinner %}
+  <script>
+      $(document).ready(function () {
+        $('#question_{{ form_number }}').find('#id_minimum').spinner({
+          step: 0.01,
+          numberFormat: 'n'
+        });
+        $('#question_{{ form_number }}').find('#id_maximum').spinner({
+          step: 0.01,
+          numberFormat: 'n'
+        });
+        $('#question_{{ form_number }}').find('#id_steps').spinner({
+          step: 0.01,
+          numberFormat: 'n'
+        });
+        $('.steps_help').popover({
+          placement: 'right',
+          html: 'true',
+          title: 'Help' +
+          '<button type="button" id="close_popover" class="close pull-right" onclick="$(&quot;.steps_help&quot;).popover(&quot;hide&quot;);">&times;</button>',
+          content: 'How much it increases and decreases the numeric value every time the controls (up and down) are pressed.',
+          container: 'body'
+        })
+      });
+    </script>
 {% endblock %}
