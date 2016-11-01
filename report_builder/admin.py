@@ -9,6 +9,7 @@ from report_builder.models import Answer
 from report_builder.models import Observation
 
 from report_builder.view_registration import register_admin_views
+from report_builder.catalogs import register_test_catalogs
 
 class ProjectAdmin(admin.ModelAdmin):
     search_fields = ('description', 'object_id')
@@ -51,3 +52,6 @@ admin.site.register(Observation, ObservationAdmin)
 # Views registration
 # [admin views]
 register_admin_views()
+
+# Register test catalogs
+register_test_catalogs()

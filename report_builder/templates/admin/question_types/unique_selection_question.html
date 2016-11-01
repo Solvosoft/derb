@@ -1,62 +1,58 @@
-{% extends 'admin/question_types/question.html' %}
-{% load static i18n %}
+{% extends 'admin/base_question.html' %}
+{% load i18n %}
+{% load static %}
 
-{% block question_name %}
-  {% trans 'Unique selection question' %}
+{% block catalog %}
+  <br/>
+  <div id="catalog_div">
+    Catalogs: {{ form.catalog }}
+    <script>
+      $('#question_{{ form_number }} #catalog_div').attr(
+        'onchange', 'see_hide_combo(this);'
+      );
+      $(document).ready(function () {
+        see_hide_combo($('#question_{{ form_number }} #catalog_div'));
+      })
+    </script>
+
+    {% if form.catalog.errors %}
+      <div class="alert alert-warning alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Warning: </strong>{{ form.catalog.errors }}
+      </div>
+    {% endif %}
+  </div>
 {% endblock %}
 
-{% block question_form %}
-  <form action="{% url 'report_builder:unique_selection_admin' report.pk question_pk %}" method="post">
-    {% csrf_token %}
-    <div class="row">
-      <!-- Question Area -->
-      <div class="col-md-8">
-        <div> {{ form.text }} </div>
-        <br/>
-        <div> {{ form.help }} </div>
-        <br/>
-
-        <div id="display_fields">
-          <h4 align="center"><strong>{% trans 'Display fields' %}</strong></h4>
-          <p><strong>{% trans 'Catalog:' %} </strong><span id="catalog_name"></span></p>
-          <div id='display_fields'>
-            {{ form.display_fields }}
-          </div>
-        </div>
-      </div>
-
-      <!-- Buttons Area -->
-      <div class="col-md-4 question_option_panel text-center">
-        <br>
-        <div class="btn-group">
-          <a class="btn btn-primary" onclick="toggle_help_input();">{% trans 'See/Hide' %}</a>
-          <a class="btn btn-danger" onclick="alert('To do');">{% trans 'Delete' %}</a>
-          <a class="btn btn-success" onclick="alert('To do');">#</a>
-        </div>
-        <br/><br/><br/>
-
-        {% trans 'Requirement:' %} {{ form.required }}
-        <br/><br/><br/><br/>
-
-        {% trans 'Catalog:' %} {{ form.catalog }}
-        <br/><br/><br/><br/>
-        <br/><br/><br/><br/>
-        <br/><br/><br/><br/>
-        <br/><br/><br/><br/>
-      </div>
+{% block form_content %}
+  <div id="display_fields">
+    <h4 align="center"><strong>{% trans 'Display fields' %}</strong></h4>
+    <p><strong>{% trans 'Catalog:' %} </strong><span id="catalog_name"></span></p>
+    <div id='display_fields'>
+      {{ form.display_fields }}
     </div>
-
-    <!-- Submit -->
-    <div class="row text-right">
-      <div class="col-md-12">
-        <input class="btn btn-primary" type="submit" value="Save">
-      </div>
-    </div>
-
-  </form>
+  </div>
 {% endblock %}
 
-{% block extra_js %}
+{% block form_footer %}
+  {% if widgets %}
+    <div class="panel-footer">
+      {% if form.widget.errors %}
+        <div class="alert alert-warning alert-dismissable">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          <strong>Warning: </strong>{{ form.widget.errors }}
+        </div>
+      {% endif %}
+      <strong>See as: </strong>
+      {% for radio in form.widget %}
+        {{ radio }}
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block question_script %}
+  {% include 'admin/add_question.html' %}
   <script>
     var catalog_url = "{% url 'report_builder:get_catalog_display_fields' %}";
     var m = "{{ question }}";

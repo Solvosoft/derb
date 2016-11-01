@@ -3,12 +3,9 @@ import random
 
 from django import forms
 from django.core.exceptions import ValidationError
-from django.forms import NumberInput
 from django.utils.translation import ugettext as _
 from report_builder.models import Question, Answer, Observation
 from ckeditor.widgets import CKEditorWidget
-from report_builder.registry import models
-from report_builder.catalogs import register_test_catalogs
 from report_builder.registry import models
 
 
@@ -244,7 +241,6 @@ class UniqueSelectionQuestionForm(QuestionForm):
         # Answer options > TODO
 
         # Catalog
-        register_test_catalogs()
         catalog_choices = ((index, model[1]) for index, model in enumerate(models))
         self.fields['catalog'].choices = catalog_choices
 
