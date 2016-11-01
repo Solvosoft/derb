@@ -9,8 +9,7 @@ from report_builder.models import Question, Answer, Observation
 from ckeditor.widgets import CKEditorWidget
 from report_builder.catalogs import register_test_catalogs
 from report_builder.registry import models
-from django.forms.widgets import CheckboxSelectMultiple, CheckboxChoiceInput
-from django.contrib.admin.helpers import checkbox
+from numbers import Number
 
 
 class QuestionForm(forms.ModelForm):
@@ -98,6 +97,7 @@ class SimpleTextAnswerForm(AnswerForm):
         instance.display_text = instance.text
         return instance
 
+
 # Simple_Text_Question
 class SimpleTextQuestionForm(QuestionForm):
     class Meta:
@@ -112,6 +112,7 @@ class SimpleTextQuestionForm(QuestionForm):
         instance = super(SimpleTextQuestionForm, self).save(db_use)
         instance.display_text = instance.text
         return instance
+
 
 # Boolean answer form
 class BooleanAnswerForm(AnswerForm):
@@ -184,10 +185,11 @@ class IntegerAnswerForm(AnswerForm):
                 'step': answer_options['steps'],
                 'min': answer_options['minimum'],
                 'max': answer_options['maximum'],
-                
+
             }
         else:
             super(IntegerAnswerForm, self).__init__(*args, **kwargs)
+
 
 # Float answer form
 class FloatAnswerForm(IntegerAnswerForm):
@@ -280,7 +282,7 @@ class MultipleSelectionQuestionForm(QuestionForm):
 
     class Meta:
         model = Question
-        fields = ('text', 'help', 'required', 'id','widget')
+        fields = ('text', 'help', 'required', 'id', 'widget')
         widgets = {
             'text': forms.Textarea(attrs={
                 'rows': 6,
@@ -298,12 +300,11 @@ class MultipleSelectionQuestionForm(QuestionForm):
             })
         }
 
+
 class MultipleSelectionAnswerForm(AnswerForm):
-    #text = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'})) #combo box
-    #text = forms.ChoiceField(widget=forms.CheckboxSelectMultiple())                #check box
+    
     text = forms.ChoiceField()
-    
-    
+
     def __init__(self, *args, **kwargs):
         if 'extra' in kwargs:
             extra = kwargs.pop('extra')
@@ -311,56 +312,55 @@ class MultipleSelectionAnswerForm(AnswerForm):
 
             catalog = extra['catalog']
             widget = int(extra['widget'])
-            #self.fields['text'].choices = catalog
 
             if widget == MultipleSelectionQuestionForm.CHECKBOX:
-                #pass
-                print('checkbox')
-                # Set the widget
-               # self.fields['text'].type="checkbox"
-                #self.fields['text'].choices = catalog
-                #self.fields['text'].widget='checkbox'
-                #self.fields['text'].widget.attrs = {
-                #'type': "checkbox",
-                self.fields['text'].widget = forms.MultipleSelection
-                #'type': forms.CheckboxSelectMultiple,
-            #}
-                
-                #self.fields['text'].widget = forms.CheckboxSelectMultiple()
-                #self.fields['text'].widget = CheckboxSelectMultiple()
-                
-                #self.fields['text'].widget='checkbox'
-                #self.fields['text'].value='checkbox'
-                #self.fields['text'].widget=CheckboxChoiceInput
-                
+                self.fields['text'] = forms.MultipleChoiceField(choices=catalog, widget=forms.CheckboxSelectMultiple)
             elif widget == MultipleSelectionQuestionForm.MULTIPLE_SELECT:
-                pass
-                # Set the widget
-                # self.fields['text'].widget = ..
+                self.fields['text'] = forms.MultipleChoiceField(choices=catalog)
             elif widget == MultipleSelectionQuestionForm.COMBOBOX:
-                pass
-                # Set the widget
-                # self.fields['text'].widget = ..
+                self.fields['text'] = forms.ChoiceField(choices=catalog)
 
         else:
             super(MultipleSelectionAnswerForm, self).__init__(*args, **kwargs)
 
     def save(self, db_use):
         instance = super(AnswerForm, self).save(db_use)
-        object_pk = instance.text
+        objectpk = instance.text
+        print('objectpk')
+        print(objectpk)
         answer_options_json = instance.question.answer_options
         answer_options = json.loads(answer_options_json)
         catalog = int(answer_options['catalog'][0])
         display_fields = answer_options['display_fields']
-
         queryset = models[catalog][0]
-        object = queryset.get(pk=object_pk)
-
-        display_text = ''
-        for i, field in enumerate(display_fields):
-            display_text += getattr(object, field)
-            if (i + 1) != len(display_fields):
-                display_text += ' - '
-
-        instance.display_text = display_text
+        
+        try:
+            int(objectpk) 
+            print('es numero')
+            object = queryset.get(pk=objectpk)                          
+            display_text = ''
+            for i, fild in enumerate(display_fields):
+                display_text += getattr(object, fild)
+                if (i + 1) != len(display_fields):
+                    display_text += ' - '
+            instance.display_text = display_text
+            return instance
+        
+        except:
+            print('es vector') 
+            display_resp=''
+            #EN LUGAR DE ESE VECTOR  ['2','5'] DEBERIA RECIBIR OBJECTPK
+            print('este es object pk')
+            print(objectpk)
+            for y, ob in enumerate(['2', '5']):
+                object = queryset.get(pk=ob)                         
+                display_text = ''
+                for i, field in enumerate(display_fields):
+                    display_text += getattr(object, field)
+                    if (i + 1) != len(display_fields):
+                        display_text += ' - '
+                display_resp += display_text + ' / '
+        instance.display_text = display_resp
         return instance
+        
+        
