@@ -9,6 +9,7 @@ from report_builder.Question import QuestionView
 from report_builder.Question.forms import UniqueSelectionQuestionForm
 from report_builder.Question.forms import UniqueSelectionAnswerForm
 from report_builder.registry import models
+from report_builder.shortcuts import get_children
 
 
 def get_catalog_values(queryset, display_fields):
@@ -40,15 +41,63 @@ class UniqueSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
         'help': 'Allows you to make unique selection questions',
         'color': '#fde95c'
     }
+    widgets = (
+        ('radiobox', 'Radio selection'),
+        ('combobox', 'Dropdown selection'),
+        ('select', 'Displayed list')
+    )
+
+    def additional_template_parameters(self, **kwargs):
+        parameters = super(UniqueSelectionQuestionViewAdmin, self).additional_template_parameters(**kwargs)
+        if parameters is None:
+            parameters = {}
+        report_type = self.report.type
+        name = report_type.app_name + '.' + report_type.name
+        parameters.update({
+            'widgets': self.widgets
+        })
+        return parameters
+
 
     def pre_save(self, object, request, form):
         form_data = dict(form.data)
+        # Widget
+        widget = None
+        if 'widget' in form_data:
+            widget = form_data['']
+
+        # Schema
+        schema = ''
+        if 'schema' in form_data:
+            schema = form_data['schema']
+
+        # Children questions
+        children = get_children(form)
+
         answer_options = {
             'catalog': form_data.get('catalog'),
-            'display_fields': form_data.get('display_fields')
+            'display_fields': form_data.get('display_fields'),
+            'widget': widget,
+            'children': children,
+            'schema': schema
         }
         object.answer_options = json.dumps(answer_options)
         return object
+
+
+    def get_form(self, post=None, instance=None, extra=None):
+        answer_options = self.get_question_answer_options()
+        if extra is None:
+            extra = {}
+
+        report_type = self.report.type
+        name = report_type.app_name + '.' + report_type.name
+        extra.update({
+            'answer_options': answer_options,
+            'widgets': self.widgets
+        })
+
+        return super(UniqueSelectionQuestionViewAdmin, self).get_form(post=post, instance=instance, extra=extra)
 
 
 class UniqueSelectionQuestionViewResp(QuestionView.QuestionViewResp):

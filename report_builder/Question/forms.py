@@ -209,10 +209,10 @@ class FloatAnswerForm(IntegerAnswerForm):
 
 
 class UniqueSelectionQuestionForm(QuestionForm):
-    register_test_catalogs()
-    CATALOGS = ((index, model[1]) for index, model in enumerate(models))
-    catalog = forms.ChoiceField(choices=CATALOGS)
+    catalog = forms.ChoiceField()
     display_fields = forms.Field(required=False)
+
+    extra = None
 
     class Meta:
         model = Question
@@ -233,6 +233,31 @@ class UniqueSelectionQuestionForm(QuestionForm):
                 'class': 'form-control'
             })
         }
+
+    def __init__(self, *args, **kwargs):
+        if 'extra' in kwargs:
+            self.extra = kwargs.pop('extra')
+        super(UniqueSelectionQuestionForm, self).__init__(*args, **kwargs)
+
+        widgets_choices = self.extra['widgets']
+
+        # Answer options > TODO
+
+        # Catalog
+        register_test_catalogs()
+        catalog_choices = ((index, model[1]) for index, model in enumerate(models))
+        self.fields['catalog'].choices = catalog_choices
+
+        # Widget
+        if widgets_choices is not None:
+            self.fields['widget'] = forms.ChoiceField(
+                widget=forms.RadioSelect(attrs={
+                    'id': str(random.randint(50, 10000)) + '_select'
+                }),
+                required=True,
+                choices=widgets_choices
+            )
+
 
 
 class UniqueSelectionAnswerForm(AnswerForm):
