@@ -19,10 +19,9 @@ function submit_observation() {
             type: 'POST',
             data: data,
             success: function (response) {
-            	//console.log(response);
-            	var div_observation = $('#observations');
-            	div_observation.html('');
-            	$('#observations').append(response.content);
+                var div_observation = $('#observations');
+                div_observation.html('');
+                div_observation.append(response.content);
             }
     });
 

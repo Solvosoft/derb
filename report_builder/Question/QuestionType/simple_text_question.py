@@ -62,7 +62,7 @@ def submit_new_observation(request):
                     text=observation,
                     answer=answer
                 )
-                rendered = render_to_string('revisor/observations.html', {'observations': observation})
+                rendered = render_to_string('revisor/observations.html', {'observation': observation})
 
                 return rendered
             else:
