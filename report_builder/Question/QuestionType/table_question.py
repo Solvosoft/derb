@@ -96,8 +96,6 @@ class TableQuestionViewResp(QuestionView.QuestionViewResp):
         for dis in displays:
             for x in get_catalog_choices(catalog, dis):
                 elements.append(x)
-                print(elements)
-                print(x)
             catalog_choices.append(elements)
             elements = []
         if post is not None:
