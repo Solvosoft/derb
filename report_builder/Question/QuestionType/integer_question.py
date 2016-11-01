@@ -28,9 +28,21 @@ class IntegerQuestionViewAdmin(QuestionViewAdmin):
             "maximum": self.evaluator(form_data.get('maximum')[0]),
             "minimum": self.evaluator(form_data.get('minimum')[0]),
             "steps": self.evaluator(form_data.get('steps')[0]),
+            'children': children
         }
         object.answer_options = json.dumps(answer_options)
         return object
+
+    def additional_template_parameters(self, **kwargs):
+        parameters = self.get_question_answer_options()
+        if not parameters:
+            parameters = {}
+        parameters['children'] = self.process_children(self.request, parameters, kwargs)
+        return parameters
+
+    def get_form(self, post=None, instance=None, extra=None):
+        extra = self.get_question_answer_options()
+        return super(IntegerQuestionViewAdmin, self).get_form(post=post, instance=instance, extra=extra)
 
 
 class IntegerQuestionViewResp(QuestionViewResp):

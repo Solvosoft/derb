@@ -1,54 +1,78 @@
-{% extends 'admin/question_types/question.html' %}
-{% load static i18n %}
+{% extends 'admin/base_question.html' %}
 
-{% block question_name %}
-  {% trans 'Numerical question' %}
+{% block  catalog %}
+  {# Minimum #}
+  <div class="row spinbox">
+    Minimum: {{ form.minimum }}
+  </div>
+
+  {# Maximum #}
+  <div class="row spinbox">
+    Maximum: {{ form.maximum }}
+  </div>
+
+  {# Steps #}
+  <div class="row spinbox">
+    Steps: {{ form.steps }}
+    <button type="button" class="btn btn-xs btn-success steps_help">?</button>
+  </div>
+
+  {% block spinner %}
+    <script>
+      $(document).ready(function () {
+        $('#question_{{ form_number }}').find('#id_minimum').spinner();
+        $('#question_{{ form_number }}').find('#id_maximum').spinner();
+        $('#question_{{ form_number }}').find('#id_steps').spinner();
+        $('.steps_help').popover({
+          placement: 'right',
+          html: 'true',
+          title: 'Help' +
+          '<button type="button" id="close_popover" class="close pull-right" onclick="$(&quot;.steps_help&quot;).popover(&quot;hide&quot;);">&times;</button>',
+          content: 'How much it increases and decreases the numeric value every time the controls (up and down) are pressed.',
+          container: 'body'
+        })
+      });
+    </script>
+
+  {% endblock %}
 {% endblock %}
 
-{% block question_form %}
-  <form action="{% url 'report_builder:integer_question_admin' report.pk question_pk %}" method="post">
-    {% csrf_token %}
-    <div class="row">
-      <div class="col-md-7">
-        <div>
-          {{ form.text }}
-        </div>
-        <br/>
-        <div id="help">
-          {{ form.help }}
-        </div>
-      </div>
-      <div class="col-md-4 question_option_panel text-center">
-        <div class="btn-group">
-          <a class="btn btn-primary" onclick="toggle_help_input();">{% trans 'See/Hide' %}</a>
-          <a class="btn btn-danger" onclick="alert('To do');">{% trans 'Delete' %}</a>
-          <a class="btn btn-success" onclick="alert('To do');">#</a>
-        </div>
-        <br/>
-        <br/>
-        {% trans 'Requirement:' %} {{ form.required }}
-        <br/>
-        <br/>
-        {% trans 'Minimum:' %} {{ form.minimum }}
-        <br/>
-        <br/>
-        {% trans 'Maximum:' %} {{ form.maximum }}
-        <br/>
-        <br/>
-        {% trans 'Steps:' %} {{ form.steps }}
-      </div>
+{% block extra_content %}
+  <div id="questions">
+    {# Maximum not reached questions #}
+    <div id="question_{{ form_number }}_no_max" class="well-sm">
+      <div class="well">Questions when maximum value has not been reached</div>
+      {% if children.no_max %}
+        <ul class="sortable list-group">
+        {% for question in children.no_max %}
+          <li class="list-group-item">
+            {{ question | safe }}
+          </li>
+        {% empty %}
+          Drag and drop your questions here
+        {% endfor %}
+        </ul>
+      {% else %}
+        {% include 'admin/sortable_body.html' %}
+      {% endif %}
     </div>
-    <div class="row text-right">
-      <div class="col-md-12">
-        <br/>
-        <br/>
-        <br/>
-        <input class="btn btn-primary" type="submit" value="Save">
-      </div>
-    </div>
-  </form>
-{% endblock %}
 
-{% block extra_js %}
-  <script src="{% static 'report_builder/js/derb_helpers.js' %}"></script>
+    {# Maximum reached questions #}
+    <div id="question_{{ form_number }}_max" class="well-sm">
+      <div class="well">Questions when maximum value has been reached</div>
+      {% if children.max %}
+        <ul class="sortable list-group">
+        {% for question in children.max %}
+          <li class="list-group-item">
+            {{ question | safe }}
+          </li>
+        {% empty %}
+          Drag and drop your questions here
+        {% endfor %}
+        </ul>
+      {% else %}
+        {% include 'admin/sortable_body.html' %}
+      {% endif %}
+    </div>
+  </div>
 {% endblock %}
