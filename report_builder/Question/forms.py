@@ -294,16 +294,16 @@ class TableQuestionForm(QuestionForm):
         }
 
 class TableQuestionAnswerForm(AnswerForm):
-    display_field_0 = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}));
     
     def __init__(self, *args, **kwargs):
         catalog = kwargs.pop('extra')
+        head = kwargs.pop('headers')
         super(TableQuestionAnswerForm, self).__init__(*args, **kwargs)
         
         for i in range(0, len(catalog)):
-            self.fields['header_%d' % i] = forms.CharField(max_length=100)
-            self.fields['display_field_%d' % i] = forms.ChoiceField()
-            
-        if self.is_bound:
-            for i in range(0, len(catalog)):
-                self.fields['display_field_%d' % i].choices = catalog[i]
+            self.fields['header_%d' % i] = forms.CharField(disabled=True)
+            self.fields['display_field_%d' % i] = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}))
+    
+        for i in range(0, len(catalog)):
+            self.initial['header_%d' % i] = head[i]
+            self.fields['display_field_%d' % i].choices = catalog[i]

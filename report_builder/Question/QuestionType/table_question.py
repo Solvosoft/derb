@@ -89,6 +89,7 @@ class TableQuestionViewResp(QuestionView.QuestionViewResp):
     
     def get_form(self, post=None, instance=None, extra=None):
         answer_options = json.loads(self.question.answer_options)
+        headers = answer_options['headers']
         displays = answer_options['displays']
         catalog = answer_options['catalog'][0]
         catalog_choices = []
@@ -100,7 +101,7 @@ class TableQuestionViewResp(QuestionView.QuestionViewResp):
             elements = []
             
         if post is not None:
-            form = self.form_class(post, instance=instance, extra=catalog_choices)
+            form = self.form_class(post, instance=instance, extra=catalog_choices, headers=headers)
         else:
-            form = self.form_class(instance=instance, extra=catalog_choices)
+            form = self.form_class(instance=instance, extra=catalog_choices, headers=headers)
         return form       
