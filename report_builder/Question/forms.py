@@ -302,4 +302,8 @@ class TableQuestionAnswerForm(AnswerForm):
         
         for i in range(0, len(catalog)):
             self.fields['header_%d' % i] = forms.CharField(max_length=100)
-            self.fields['display_field_%d' % i] = forms.ChoiceField(choices=catalog[i])
+            self.fields['display_field_%d' % i] = forms.ChoiceField()
+            
+        if self.is_bound:
+            for i in range(0, len(catalog)):
+                self.fields['display_field_%d' % i].choices = catalog[i]
