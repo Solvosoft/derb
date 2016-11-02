@@ -9,7 +9,7 @@ from report_builder.Question.forms import MultipleSelectionQuestionForm,\
 from report_builder.Question.QuestionType.unique_selection_question import get_catalog_choices
 import json
 from report_builder.Question.QuestionView import QuestionViewPDF,\
-    QuestionViewCSV, QuestionViewJSON
+    QuestionViewCSV, QuestionViewJSON, QuestionViewReviewer
 from report_builder.models import Question, Answer
 import random
 from django.http import HttpResponse
@@ -95,3 +95,7 @@ class MultipleSelectionQuestionViewCSV(QuestionViewCSV):
 
 class MultipleSelectionQuestionViewJSON(QuestionViewJSON):
     name = 'multiple_selection_question'
+
+class MultipleSelectionQuestionViewReviewer(QuestionViewReviewer):
+    name = 'multiple_selection_question'
+    template_name = 'reviewer/multiple_selection_question.html'
