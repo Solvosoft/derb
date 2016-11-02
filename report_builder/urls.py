@@ -77,6 +77,8 @@ question_types_urls = [
     url(r'multiple/json/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', 
         multiple_selection_question.MultipleSelectionQuestionViewJSON.as_view(),
         name='multiple_selection_question_json'),
+    url(r'multiple/revisor/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', boolean_question.BooleanQuestionViewReviewer.as_view(),
+        name='boolean_question_revisor'),
 ]
 
 urlpatterns = [
