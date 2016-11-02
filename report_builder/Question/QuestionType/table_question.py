@@ -99,9 +99,15 @@ class TableQuestionViewResp(QuestionView.QuestionViewResp):
                 elements.append(x)
             catalog_choices.append(elements)
             elements = []
+
+        extra = {
+            'headers': headers,
+            'displays': displays,
+            'catalog_choices': catalog_choices
+        }
             
         if post is not None:
-            form = self.form_class(post, instance=instance, extra=catalog_choices, headers=headers)
+            form = self.form_class(post, instance=instance, extra=extra)
         else:
-            form = self.form_class(instance=instance, extra=catalog_choices, headers=headers)
+            form = self.form_class(instance=instance, extra=extra)
         return form       
