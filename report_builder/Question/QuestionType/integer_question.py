@@ -8,7 +8,7 @@ from django_ajax.decorators import ajax
 from django.template.loader import render_to_string
 
 import json
-from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF, QuestionViewReviewer
+from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF, QuestionViewReviewer, QuestionViewCSV, QuestionViewJSON
 from report_builder.Question.forms import IntegerQuestionForm, IntegerAnswerForm
 from report_builder.models import Answer, Observation, Reviewer
 
@@ -88,3 +88,11 @@ def submit_new_observation(request):
                 return False
 
     return HttpResponse(0)
+
+
+class IntegerQuestionViewCSV(QuestionViewCSV):
+    name = 'integer_question'
+    
+
+class IntegerQuestionViewJSON(QuestionViewJSON):
+    name = 'integer_question'

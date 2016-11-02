@@ -119,3 +119,11 @@ def submit_new_observation(request):
                 return False
 
     return HttpResponse(0)
+
+
+class UniqueQuestionViewCSV(QuestionView.QuestionViewCSV):
+    name = 'unique_selection_question'
+    
+
+class UniqueQuestionViewJSON(QuestionView.QuestionViewJSON):
+    name = 'unique_selection_question'
