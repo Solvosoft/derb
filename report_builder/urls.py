@@ -62,12 +62,21 @@ question_types_urls = [
         unique_selection_question.UniqueSelectionQuestionViewPDF.as_view(),
         name="unique_selection_pdf"),
                        
-     url(r"multiple/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$",
-         multiple_selection_question.MultipleSelectionQuestionViewAdmin.as_view(),
+    url(r"multiple/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$",
+        multiple_selection_question.MultipleSelectionQuestionViewAdmin.as_view(),
         name="multiple_selection_admin"),
     url(r"multiple/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$",
         multiple_selection_question.MultipleSelectionQuestionViewResp.as_view(),
         name="multiple_selection_resp"),
+    url(r'multiple/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', 
+        multiple_selection_question.MultipleSelectionQuestionViewPDF.as_view(),
+        name='multiple_seletion_question_pdf'),
+    url(r'multiple/csv/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', 
+        multiple_selection_question.MultipleSelectionQuestionViewCSV.as_view(),
+        name='multiple_selection_question_csv'),
+    url(r'multiple/json/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', 
+        multiple_selection_question.MultipleSelectionQuestionViewJSON.as_view(),
+        name='multiple_selection_question_json'),
 ]
 
 urlpatterns = [
