@@ -111,3 +111,7 @@ class TableQuestionViewResp(QuestionView.QuestionViewResp):
         else:
             form = self.form_class(instance=instance, extra=extra)
         return form       
+    
+class TableQuestionViewPDF(QuestionView.QuestionViewPDF):
+    name = 'table_question'
+    template_name = 'pdf/table_question.html'

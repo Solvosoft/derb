@@ -63,7 +63,10 @@ question_types_urls = [
         name="table_question_admin"),
     url(r"table/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$",
         table_question.TableQuestionViewResp.as_view(),
-        name="table_question_resp"),
+        name="table_question_resp"),    
+    url(r"table/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)",
+        table_question.TableQuestionViewPDF.as_view(),
+        name="table_question_pdf"),
 ]
 
 urlpatterns = [

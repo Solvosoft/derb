@@ -313,10 +313,10 @@ class TableQuestionAnswerForm(AnswerForm):
 
     def save(self, db_use):
         instance = super(AnswerForm, self).save(db_use)
-        instance.text = str(self.cleaned_data)
+        instance.text = str(sorted(self.cleaned_data.items()))
 
         display_text = ''
-        for key, value in self.cleaned_data.items():
+        for key, value in sorted(self.cleaned_data.items()):
             display_text += '%s: %s\n' % (self.fields[key].label, value)
         instance.display_text = display_text
         return instance
