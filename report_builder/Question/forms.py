@@ -293,8 +293,8 @@ class TableQuestionForm(QuestionForm):
             })
         }
 
+
 class TableQuestionAnswerForm(AnswerForm):
-    
     def __init__(self, *args, **kwargs):
         extra = kwargs.pop('extra')
         catalog = extra['catalog_choices']
@@ -303,9 +303,20 @@ class TableQuestionAnswerForm(AnswerForm):
         super(TableQuestionAnswerForm, self).__init__(*args, **kwargs)
         del self.fields['text']
         del self.fields['annotation']
-        
+
         for i in range(0, len(catalog)):
-            self.fields['display_field_%d' % i] = forms.ChoiceField(label=headers [i], widget=forms.Select(attrs={'class': 'form-control'}))
-    
+            self.fields['display_field_%d' % i] = forms.ChoiceField(label=headers[i], widget=forms.Select(
+                attrs={'class': 'form-control'}))
+
         for i in range(0, len(catalog)):
             self.fields['display_field_%d' % i].choices = catalog[i]
+
+    def save(self, db_use):
+        instance = super(AnswerForm, self).save(db_use)
+        instance.text = str(self.cleaned_data)
+
+        display_text = ''
+        for key, value in self.cleaned_data.items():
+            display_text += '%s: %s\n' % (self.fields[key].label, value)
+        instance.display_text = display_text
+        return instance
