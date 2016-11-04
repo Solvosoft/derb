@@ -27,23 +27,38 @@ from report_builder.Question import question_loader
 
 class Question(LoginRequiredMixin, View):
     """
-        TODO: docstring
+        Question class contains the general functionality for a question object, and sets the base for the different
+        question types of the Derb system.
+
+        Until now, this are the question types that can be created based on Question:
+
+            - simple_text_question
+            - boolean_question
+            - integer_question
+            - float_question
+            - unique_selection_question
+
+        The Question class also provides the way to extend the functionality of a question object. For instance:
+
+            * Define additional answer options to the question object
+            * Define additional context attributes to the question template
+            * Modify question form parameters
     """
-    # TODO: define template
-    template_name = 'admin/base_question.html'
-    form_class = QuestionForm
-    base_model = QuestionModel
-    name = 'simple_question'
-    question = None
-    start_number = 500
-    end_number = 10000
-    report_number = 0
-    view_type = 'admin'
-    request = None
+    template_name = 'admin/base_question.html'  #: Specifies which template to load
+    form_class = QuestionForm  #: Default form for the class
+    base_model = QuestionModel  #: Base model for the form (:mod:`report_builder.models.Question`)
+    name = 'simple_question'  #: Class reference name
+    question = None  #: Question instance
+    answer = None  #: Answer reference (if it exists)
+    start_number = 500  #: Random start value for the question template
+    end_number = 10000  #: Random end value  for the question template
+    form_number = 0  #: Unique value for the view
+    view_type = 'admin'  #: View type to load, it can be: admin, responsable, revisor, pdf, csv, json
+    request = None  #: Copy of the request provided by the view (GET or POST)
 
     def get_question_answer_options(self):
         """
-            TODO: docstring
+            Returns a dict with extra options for the question. It uses JSON parsing to unpack the answer options
         """
         results = None
         if self.question is not None and self.question.answer_options:
@@ -52,19 +67,36 @@ class Question(LoginRequiredMixin, View):
 
     def additional_template_parameters(self, **kwargs):
         """
-            TODO: docstring
+            Allows to add extra entries to the template context.
+            It receives a copy of the context and must return only the extra parameters (answer_options)
+
+            .. note:: This method is called before the templated is rendered
         """
         return self.get_question_answer_options()
 
     def pre_save(self, object, request, form):
         """
-            TODO: docstring
+            It allows add or set attributes to the question object.
+            The data can be extracted directly from the request (POST) or the form provided.
+            It returns the instance of the object with the modifications applied
         """
         return object
 
     def get_form(self, post=None, instance=None, extra=None):
         """
-            TODO: docstring
+            It allows to add or set attributes to the question form.
+            *extra* is a a dictionary tha is passed to the form constructor
+            If you want to override this method in a class that extends from Question, you have to do it like this:
+
+            .. code:: python
+
+                class ExampleClass(Question):
+
+                    def get_form(self, post=None, instance=None, extra=None):
+                        extra = {
+                            'extra_value': data
+                        }
+                        return super(ExampleClass, self).get_form(post=post, instance=instance, extra=extra)
         """
         form = None
         if extra is None:
@@ -78,9 +110,9 @@ class Question(LoginRequiredMixin, View):
         return form
 
     def get_observations(self, request, *args, **kwargs):
-        """
-            TODO: docstring
-        """
+        '''
+            Returns the observations rendered template for the question object (to allow to see, allow and add observations)
+        '''
         request = transform_request_to_get(request=request)
         observation_view = ObservationView.as_view()
         keywords = self.kwargs
@@ -91,13 +123,16 @@ class Question(LoginRequiredMixin, View):
         observations = observation_view(request, *args, **keywords)
         return observations.render().content
 
-    def process_children(self, request, parameters, arguments, include=[]):
+    def process_children(self, request, parameters, arguments, include=None):
         """
-            TODO: docstring
+            Allows to process the children questions for the current question
         """
+        if include is None:
+            include = []
         children = {}
         report = arguments['report']
         children_parameters = {}
+
         if 'children' in parameters and parameters['children'] is not None:
             children_parameters = OrderedDict(parameters['children'])
             for child, value in children_parameters.items():
