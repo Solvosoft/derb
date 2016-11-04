@@ -98,6 +98,36 @@ def get_reviewers_by_report(reportbyproj):
     return Reviewer.actives.filter(report=reportbyproj).order_by('order')
 
 
+def process_list(list, report):
+    new_list = []
+    for value in list:
+        if type(value) == dict:
+            new_list.append(process_dict(value, report))
+        elif type(value) == int:
+            new_list.append(get_question_copy(value, report))
+        else:
+            new_list.append(value)
+    return new_list
+
+
+def process_dict(dic, report):
+    '''
+        Iterates over the dict values looking for keys (pk) that contain the questions' primary keys
+        and creates a copy for every single one of them
+    '''
+    new_dict = {}
+    for key, value in dic.items():
+        if type(value) == dict:
+            new_dict[key] = process_dict(value, report)
+        elif type(value) == list:
+            new_dict[key] = process_list(value, report)
+        elif key == 'pk':
+            new_dict[key] = get_question_copy(value, report)
+        else:
+            new_dict[key] = value
+    return new_dict
+
+
 def copy_report(report):
     '''
         TODO: docstring
@@ -137,7 +167,10 @@ def copy_report(report):
 
     new_template = []
     for template in report.template:
-        pass
+        new_template.append(process_dict(template, new))
+
+    new.template = new_template
+    return new
 
 
 def copy_questions(text, report):

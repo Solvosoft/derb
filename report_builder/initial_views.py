@@ -138,7 +138,7 @@ def NewReportTemplate(request, pk):
     report = get_object_or_404(Report, pk=pk)
     new = copy_report(report)
     new.save()
-    return redirect(reverse('report_admin', args=[new.pk]))
+    return redirect(reverse('report_builder:admin_report', args=[new.pk]))
 
 
 def assign_type_porcentage_to_reports(reports):
