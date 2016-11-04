@@ -305,7 +305,7 @@ class QuestionViewAdmin(Question):
 
 class QuestionViewResp(Question):
     """
-        QuestionViewAdmin class represents the implementation of the template administrator view for a question object
+        QuestionViewResp class represents the implementation of the template administrator view for a question object
         This view is built to be extended from the different question types of the Derb system
         By itself, this view shows the simple question created by the template administrator, including the question text and help
         set by the user. Additionally, it provides a form two fields, a text area for the user to answer the question and a text area
@@ -476,7 +476,16 @@ class QuestionViewResp(Question):
 
 class QuestionViewPDF(Question):
     """
-        TODO: docstring
+        QuestionViewPDF class represents the implementation of exporting a question object to a PDF document
+        This view is built to be extended from the different question types of the Derb system
+        By itself, this view saves in the PDF the simple question created by the template administrator, including
+        the question text and help set by the user. Additionally, if a responsable user has answered the question,
+        it shows the answer text and annotations provided. Finally, if one or more reviewer users applied
+        observations to the question, it shows such observations.
+
+        .. note::
+            * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
+            you can find it in :mod:`report_builder.Question.QuestionView.Question`
     """
     template_name = "pdf/simple_question.html"
     form_class = None
@@ -487,14 +496,25 @@ class QuestionViewPDF(Question):
 
     def post(self, request, *args, **kwargs):
         """
-            TODO: docstring
+            This view can be handled only using the GET verb
+            For security reasons, when a request is sent using the POST verb, the 403 exception is raised
         """
         return bad_request(request)
 
     def get(self, request, *args, **kwargs):
-        """
-            TODO: docstring
-        """
+        '''
+             Handles the requests using the *GET* HTTP verb triggered by a user to export a question to a PDF document
+             The context passed to the template contains (at least) the next elements:
+                - name
+                - form
+                - question
+                - question_number
+                - answer
+                - reportbyproj
+                - form_number
+                - observations
+                - requirement
+        '''
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
         self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
