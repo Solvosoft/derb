@@ -1,6 +1,8 @@
 import datetime
 
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic.base import TemplateView
@@ -114,7 +116,7 @@ class InitialTemplateAdminView(ListView):
         return context
 
 
-class NewReportView(CreateView):
+class NewReportView(LoginRequiredMixin, CreateView):
     '''
         View that allows a new report (template) creation.
         Takes advantage of the generic view for creating objects
@@ -131,6 +133,7 @@ class NewReportView(CreateView):
         return reverse('report_builder:admin_report', args=[self.object.id])
 
 
+@login_required
 def NewReportTemplate(request, pk):
     '''
          TODO: docstring
