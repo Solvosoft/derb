@@ -67,6 +67,12 @@ question_types_urls = [
     url(r"table/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)",
         table_question.TableQuestionViewPDF.as_view(),
         name="table_question_pdf"),
+    url(r'table/csv/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', 
+        table_question.TableQuestionViewCSV.as_view(),
+        name='table_question_csv'),
+    url(r'table/json/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', 
+        table_question.TableQuestionViewJSON.as_view(),
+        name='table_question_json'),
 ]
 
 urlpatterns = [

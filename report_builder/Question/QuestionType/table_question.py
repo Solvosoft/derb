@@ -115,3 +115,12 @@ class TableQuestionViewResp(QuestionView.QuestionViewResp):
 class TableQuestionViewPDF(QuestionView.QuestionViewPDF):
     name = 'table_question'
     template_name = 'pdf/table_question.html'
+    
+
+class TableQuestionViewCSV(QuestionView.QuestionViewCSV):
+    name = 'table_question'
+
+
+class TableQuestionViewJSON(QuestionView.QuestionViewJSON):
+    name = 'table_question'
+
