@@ -4,6 +4,7 @@ import random
 import reversion
 
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.utils import timezone
 from django.http import HttpResponse
@@ -24,7 +25,7 @@ from report_builder.shortcuts import transform_request_to_get, get_children, get
 from report_builder.Question import question_loader
 
 
-class Question(View):
+class Question(LoginRequiredMixin, View):
     """
         TODO: docstring
     """
