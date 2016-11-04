@@ -145,9 +145,35 @@ class Question(LoginRequiredMixin, View):
 
 
 class QuestionViewAdmin(Question):
-    """
-        TODO: docstring
-    """
+    '''
+        QuestionViewAdmin class represents the implementation of the template administrator view for a question object
+        This view is built to be extended from the different question types of the Derb system
+        By itself, this view provides the functionality for ordering and deletion of question, and a form with question
+        text and help
+
+        This class be extended using an implementation like this:
+
+        .. code:: python
+
+            from report_builder.Question.QuestionView import QuestionViewAdmin
+            class MyQuestion(QuestionViewAdmin):
+                template_name = 'path/to/the/template'
+                name = 'my_question'
+
+        The extended methods can be overridden to adjust the functionality of the extended class. For instance:
+
+        .. code:: python
+
+            def additional_template_parameters(self, **kwargs):
+                some_dict = {
+                    'something': some_variable
+                }
+                return some_dict
+
+        .. note::
+            *kwargs* is a dict that contains the Question attributes 'form', 'report', 'question' and 'name'
+            You don't have to append the kwargs content in the return value, only the additional elements
+    '''
     template_name = 'admin/base_question.html'
     name = 'simple_question'
     request = None
@@ -158,9 +184,17 @@ class QuestionViewAdmin(Question):
     }
 
     def get(self, request, *args, **kwargs):
-        """
-            TODO: docstring
-        """
+        '''
+            Handles the requests using the *GET* HTTP verb triggered by the template administrator
+            The context passed to the template contains (at least) the next elements:
+                - form
+                - report
+                - question
+                - name
+                - form_number
+                - minimal_representation
+            Returns the rendered template for the question
+        '''
         question_pk = kwargs.get('question_pk', False)
         report_pk = kwargs.get('report_pk', False)
 
@@ -190,9 +224,18 @@ class QuestionViewAdmin(Question):
         return render(request, self.template_name, parameters)
 
     def post(self, request, *args, **kwargs):
-        """
-            TODO: docstring
-        """
+        '''
+            Handles the requests using the *POST* HTTP verb triggered by the template administrator
+            The context passed to the template contains (at least) the next elements:
+                - form
+                - report
+                - question
+                - name
+                - form_number
+                - minimal_representation
+            Returns the question pk when the POST request is processed correctly
+            Return the rendered template (with errors) when the form presents errors
+        '''
         redirection_needed = True
         question_pk = kwargs.get('question_pk', False)
         report_pk = kwargs.get('report_pk', False)
@@ -236,10 +279,18 @@ class QuestionViewAdmin(Question):
             parameters.update(extra)
         return render(request, template_name=self.template_name, context=parameters)
 
-    def process_children(self, request, parameters, arguments, include=[]):
-        """
-            TODO: docstring
-        """
+    def process_children(self, request, parameters, arguments, include=None):
+        '''
+            Gets the rendered template (HTML code) for every child question of the current question
+
+            :param request:
+            :param dict parameters: context parameters passed to the template, generally self.question.answer_options
+            :param dict arguments: parameters passed to the function additional_template_parameters
+            :return: list of string with the rendered templates for the child questions
+        '''
+
+        if include is None:
+            include = []
         return_value = {}
         report = arguments['report']
         form = arguments['form']
