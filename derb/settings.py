@@ -192,3 +192,5 @@ CKEDITOR_CONFIGS = {
         "skin": "moono",
     }
 }
+
+DATE_INPUT_FORMATS = ('%d-%m-%Y')

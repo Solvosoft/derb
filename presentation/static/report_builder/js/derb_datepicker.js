@@ -3,6 +3,6 @@
  */
 
 $.datepicker.regional['en'] = {
-    dateFormat: 'mm/dd/yy'
+    dateFormat: 'dd/mm/yy'
 };
 $.datepicker.setDefaults($.datepicker.regional['en']);

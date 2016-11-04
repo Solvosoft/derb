@@ -3,5 +3,5 @@
  */
 
 $('#id_opening_date').datepicker({
-    'dateFormat': 'dd/mm/yy'
+    'dateFormat': 'mm/dd/yy'
 });
