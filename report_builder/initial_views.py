@@ -16,7 +16,7 @@ from report_builder.shortcuts import get_reviewers_by_user, get_reviewers_by_rep
 from report_builder import registry
 
 
-class InitialIndexView(TemplateView):
+class InitialIndexView(LoginRequiredMixin, TemplateView):
     '''
         TODO: docstring
     '''
@@ -50,7 +50,7 @@ class InitialIndexView(TemplateView):
         return return_value
 
 
-class InitialReviewerView(ListView):
+class InitialReviewerView(LoginRequiredMixin, ListView):
     '''
         Initial view for reviewer role.
         Lists the projects that must be reviewed for the reviewer authenticated user
@@ -87,7 +87,7 @@ def calculate_reviewer_list_porcentage(report):
         return 0
 
 
-class InitialTemplateAdminView(ListView):
+class InitialTemplateAdminView(LoginRequiredMixin, ListView):
     '''
         Initial view for the template administrator role.
         List all the existing report templates for the authenticated user
@@ -167,7 +167,7 @@ def assign_type_porcentage_to_reports(reports):
     return reps
 
 
-class InitialResponsableView(ListView):
+class InitialResponsableView(LoginRequiredMixin, ListView):
     '''
         Initial view for the responsable role. Lists the current projects for responsables and
         collaborators of the project. Takes advantage of the Django generic view for object creation
