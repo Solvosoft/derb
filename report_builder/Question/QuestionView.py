@@ -305,7 +305,15 @@ class QuestionViewAdmin(Question):
 
 class QuestionViewResp(Question):
     """
-        TODO: docstring
+        QuestionViewAdmin class represents the implementation of the template administrator view for a question object
+        This view is built to be extended from the different question types of the Derb system
+        By itself, this view shows the simple question created by the template administrator, including the question text and help
+        set by the user. Additionally, it provides a form two fields, a text area for the user to answer the question and a text area
+        to add annotations for the reviewers. Plus, when a reviewer user has applied observations to the question, it shows such observations.
+
+        .. note::
+            * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
+            you can find it in :mod:`report_builder.Question.QuestionView.Question`
     """
     template_name = 'responsable/simple_question.html'
     form_class = AnswerForm
@@ -315,13 +323,24 @@ class QuestionViewResp(Question):
     view_type = 'responsable'
 
     def get(self, request, *args, **kwargs):
-        """
-            TODO: docstring
-        """
+        '''
+             Handles the requests using the *GET* HTTP verb triggered by the responsable
+             The context passed to the template contains (at least) the next elements:
+                - name
+                - form
+                - question
+                - question_number
+                - answer
+                - reportbyproj
+                - form_number
+                - observations
+                - requirement
+        '''
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
         self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
         reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+
         if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
             self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
 
@@ -343,9 +362,21 @@ class QuestionViewResp(Question):
         return render(request, self.template_name, parameters)
 
     def post(self, request, *args, **kwargs):
-        """
-            TODO: docstring
-        """
+        '''
+            Handles the requests using the *POST* HTTP verb triggered by the responsable
+            The context passed to the template contains (at least) the next elements:
+               - name
+               - form
+               - question
+               - question_number
+               - answer
+               - reportbyproj
+               - form_number
+               - observations
+               - requirement
+            Returns the answer pk when the POST request is processed correctly
+            Return the rendered template (with errors) when the form presents errors
+       '''
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
         self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
@@ -394,6 +425,12 @@ class QuestionViewResp(Question):
             reversion.set_user(self.request.user)
 
     def is_valid_question(self, reportbyproj_pk, question_pk, answer_pk):
+        '''
+            Checks if the question has been answered correctly
+            Used when checking if the report is complete before to submit for revision or when the user request the report status
+
+            In the case that the question has not been answered correctly or answered at all, returns the error info
+        '''
         question = None
         try:
             question = QuestionModel.objects.get(pk=question_pk)
