@@ -1,5 +1,6 @@
 $(document).ready(function () {
     update_combo();
+
     $("#id_catalog").change(function () {
         update_combo();
     });
@@ -23,12 +24,10 @@ function update_combo() {
 
                 var display_fields = data.content;
                 var html = '';
-                var count = 0;
                 var id = '';
                 for (var i = 0; i < display_fields.length; i++) {
-                    id = 'id_display_fields_' + count;
+                    id = 'id_display_fields_' + display_fields[i][1];
                     html += '<ul><li><label for="' + id + '"><input id="' + id + '" type="checkbox" value="' + display_fields[i][0] + '" name="display_fields"> ' + display_fields[i][1] + '</label></li></ul>';
-                    count++;
                 }
                 df_selector.html(html);
             }
@@ -42,16 +41,16 @@ function initial_values() {
             var answer_options = JSON.parse(answer_options_json);
             var catalog = answer_options.catalog;
             var display_fields = answer_options.display_fields;
-            var checkbox = $('[id^=id_display_fields_]');
 
             $('#id_catalog').val(catalog);
             update_combo();
 
-            for (var i = 0; i < checkbox.length; i++) {
-                if (display_fields.indexOf($(checkbox[i]).attr('value')) != -1) {
-                    $(checkbox[i]).prop('checked', true);
-                }
-            }
+            window.setTimeout(function() {
+            	for (var i=0; i < display_fields.length; i++){
+            		$('#id_display_fields_'+display_fields[i]+'').prop('checked', true);
+            	}
+            }, 100);
+
         }, 100);
     }
 }
