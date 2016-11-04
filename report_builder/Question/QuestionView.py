@@ -502,7 +502,7 @@ class QuestionViewPDF(Question):
         return bad_request(request)
 
     def get(self, request, *args, **kwargs):
-        '''
+        """
              Handles the requests using the *GET* HTTP verb triggered by a user to export a question to a PDF document
              The context passed to the template contains (at least) the next elements:
                 - name
@@ -514,7 +514,7 @@ class QuestionViewPDF(Question):
                 - form_number
                 - observations
                 - requirement
-        '''
+        """
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
         self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
@@ -549,7 +549,16 @@ class QuestionViewPDF(Question):
 
 class QuestionViewReviewer(Question):
     """
-        TODO: docstring
+        QuestionViewReviewer class represents the implementation of the reviewer view for a question object
+        This view is built to be extended from the different question types of the Derb system
+        By itself, this view shows the simple question created by the template administrator, including
+        the question text and help set by the user. Additionally, if a responsable user has answered the question,
+        it shows the answer text and annotations provided. Finally, if one or more reviewer users applied
+        observations to the question, it shows such observations.
+
+        .. note::
+            * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
+            you can find it in :mod:`report_builder.Question.QuestionView.Question`
     """
     template_name = 'reviewer/simple_question.html'
     view_type = 'reviewer'
@@ -558,15 +567,9 @@ class QuestionViewReviewer(Question):
     form_class = ObservationForm
 
     def post(self, request, *args, **kwargs):
-        """
-            TODO: docstring
-        """
         return bad_request(request)
 
     def get(self, request, *args, **kwargs):
-        """
-            TODO: docstring
-        """
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
         self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
@@ -589,11 +592,26 @@ class QuestionViewReviewer(Question):
 
 
 class QuestionViewCSV(Question):
+    """
+        QuestionViewJSON class represents the implementation of exporting a question object to a CSV formatted string
+        This view is built to be extended from the different question types of the Derb system
+        By itself, this view saves in the CSV string the simple question created by the template administrator, including
+        the question text and help set by the user. Additionally, if a responsable user has answered the question,
+        it saves the answer text and annotations provided. Finally, if one or more reviewer users applied
+        observations to the question, it saves such observations.
+
+        .. note::
+            * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
+            you can find it in :mod:`report_builder.Question.QuestionView.Question`
+    """
     name = 'simple_question'
     view_type = 'csv'
     answer = None
 
     def get_question_data(self, question, report, answer=None):
+        """
+            Recovers the question data, according to its definition and related objects (report, answer, observations)
+        """
         data = {}
 
         data['pk'] = question.pk
@@ -613,7 +631,22 @@ class QuestionViewCSV(Question):
         else:
             data['answer'] = ''
 
+        return data
+
     def get(self, request, *args, **kwargs):
+        """
+            Handles the requests using the *GET* HTTP verb triggered by a user to export a question to a CSV string
+            The context passed to the template contains (at least) the next elements:
+               - name
+               - form
+               - question
+               - question_number
+               - answer
+               - reportbyproj
+               - form_number
+               - observations
+               - requirement
+       """
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
         self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
@@ -636,15 +669,34 @@ class QuestionViewCSV(Question):
         return response
 
     def post(self, request, *args, **kwargs):
+        """
+            This view can be handled only using the GET verb
+            For security reasons, when a request is sent using the POST verb, the 403 exception is raised
+        """
         return bad_request(request)
 
 
 class QuestionViewJSON(Question):
+    """
+        QuestionViewJSON class represents the implementation of exporting a question object to a JSON formatted string
+        This view is built to be extended from the different question types of the Derb system
+        By itself, this view saves in the JSON string the simple question created by the template administrator, including
+        the question text and help set by the user. Additionally, if a responsable user has answered the question,
+        it saves the answer text and annotations provided. Finally, if one or more reviewer users applied
+        observations to the question, it saves such observations.
+
+        .. note::
+            * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
+            you can find it in :mod:`report_builder.Question.QuestionView.Question`
+    """
     name = 'simple_question'
     view_type = 'json'
     answer = None
 
     def get_question_data(self, question, report, answer=None):
+        """
+            Recovers the question data, according to its definition and related objects (report, answer, observations)
+        """
         data = {}
 
         data['pk'] = question.pk
@@ -665,6 +717,19 @@ class QuestionViewJSON(Question):
             data['answer'] = ''
 
     def get(self, request, *args, **kwargs):
+        '''
+            Handles the requests using the *GET* HTTP verb triggered by a user to export a question to a PDF document
+            The context passed to the template contains (at least) the next elements:
+               - name
+               - form
+               - question
+               - question_number
+               - answer
+               - reportbyproj
+               - form_number
+               - observations
+               - requirement
+       '''
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
         self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
@@ -678,11 +743,14 @@ class QuestionViewJSON(Question):
 
         response = HttpResponse(json_data, content_type='application/json')
 
-        response[
-            'Content-Disposition'] = 'attachment; filename="question.json"'
+        response['Content-Disposition'] = 'attachment; filename="question.json"'
         return response
 
     def post(self, request, *args, **kwargs):
+        """
+            This view can be handled only using the GET verb
+            For security reasons, when a request is sent using the POST verb, the 403 exception is raised
+        """
         return bad_request(request)
 
 
