@@ -317,6 +317,7 @@ class TableQuestionAnswerForm(AnswerForm):
 
         display_text = ''
         for key, value in sorted(self.cleaned_data.items()):
-            display_text += '%s: %s\n' % (self.fields[key].label, value)
+            dictionary = dict(self.fields[key].choices)
+            display_text += '%s: %s\n' % (self.fields[key].label, list(dictionary.values())[int(value)])
         instance.display_text = display_text
         return instance
