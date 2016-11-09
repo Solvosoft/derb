@@ -2,10 +2,16 @@
 Created on 14/9/2016
 @author: natalia
 '''
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django_ajax.decorators import ajax
+from django.template.loader import render_to_string
+
 import json
-from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF
-from report_builder.Question.forms import IntegerQuestionForm, AnswerForm, IntegerAnswerForm
 from report_builder.shortcuts import get_children
+from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF, QuestionViewReviewer, QuestionViewCSV, QuestionViewJSON
+from report_builder.Question.forms import IntegerQuestionForm, IntegerAnswerForm
+from report_builder.models import Answer, Observation, Reviewer
 
 
 class IntegerQuestionViewAdmin(QuestionViewAdmin):
@@ -63,3 +69,43 @@ class IntegerQuestionViewResp(QuestionViewResp):
 class IntegerQuestionViewPDF(QuestionViewPDF):
     name = 'integer_question'
     template_name = 'pdf/integer_question.html'
+    
+    
+class IntegerQuestionViewReviewer(QuestionViewReviewer):
+    name = 'integer_question'
+    template_name = 'revisor/integer_question.html'
+    
+@ajax
+@csrf_exempt
+def submit_new_observation(request):
+    if request.is_ajax():
+        if request.method == 'POST':
+            report_pk = request.POST.get('report_pk', False)
+            question_pk = request.POST.get('question_pk', False)
+            answer_pk = request.POST.get('answer_pk', False)
+            observation = request.POST.get('observation', False)
+
+            if report_pk and question_pk and answer_pk:
+                answer = Answer.objects.get(pk=answer_pk)
+                reviewer = Reviewer.objects.get(report__pk=report_pk, user=request.user)
+
+                observation = Observation.objects.create(
+                    reviewer=reviewer,
+                    text=observation,
+                    answer=answer
+                )
+                rendered = render_to_string('revisor/observations.html', {'observations': observation})
+
+                return rendered
+            else:
+                return False
+
+    return HttpResponse(0)
+
+
+class IntegerQuestionViewCSV(QuestionViewCSV):
+    name = 'integer_question'
+    
+
+class IntegerQuestionViewJSON(QuestionViewJSON):
+    name = 'integer_question'

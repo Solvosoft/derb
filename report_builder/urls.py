@@ -16,6 +16,7 @@ from report_builder.Question.QuestionType import model_info
 from report_builder.Question.QuestionType import question_model_info
 from report_builder.Question.QuestionType.unique_selection_question import get_catalog_display_fields
 from report_builder.views import Report
+from report_builder.Question.QuestionType.simple_text_question import submit_new_observation
 
 # Boolean question
 # Integer question
@@ -48,7 +49,16 @@ question_types_urls = [
         name='integer_question_resp'),
     url(r'integer/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)', integer_question.IntegerQuestionViewPDF.as_view(),
         name='integer_question_pdf'),
-    url(r'float/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', float_question.FloatQuestionViewAdmin.as_view(),
+    url(r'integer/revisor/(?P<report_pk>\d+)/(?P<question_pk>\d+)',
+        integer_question.IntegerQuestionViewReviewer.as_view(),
+        name='integer_question_revisor'),
+    url(r'integer/csv/(?P<report_pk>\d+)/(?P<question_pk>\d+)$',
+        integer_question.IntegerQuestionViewCSV.as_view(),
+        name='integer_question_csv'),
+    url(r'integer/json/(?P<report_pk>\d+)/(?P<question_pk>\d+)$',
+        integer_question.IntegerQuestionViewJSON.as_view(),
+        name='integer_question_json'),
+    url(r'float/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$', float_question.FloatQuestionViewAdmin.as_view(),
         name='float_question_admin'),
     url(r'float/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', float_question.FloatQuestionViewResp.as_view(),
         name='float_question_resp'),
@@ -61,6 +71,13 @@ question_types_urls = [
         name='simple_text_question_resp'),
     url(r'simple/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)', simple_text_question.SimpleTextQuestionViewPDF.as_view(),
         name='simple_text_question_pdf'),
+    url(r'simple/revisor/(?P<report_pk>\d+)/(?P<question_pk>\d+)',
+        simple_text_question.SimpleTextQuestionViewReviewer.as_view(),
+        name='simple_text_question_revisor'),
+    url(r'simple/csv/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', simple_text_question.SimpleQuestionViewCSV.as_view(),
+        name='simple_text_question_csv'),
+    url(r'simple/json/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', simple_text_question.SimpleQuestionViewJSON.as_view(),
+        name='simple_text_question_json'),
     url(r"unique/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$",
         unique_selection_question.UniqueSelectionQuestionViewAdmin.as_view(),
         name="unique_selection_admin"),
@@ -70,6 +87,15 @@ question_types_urls = [
     url(r"unique/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)",
         unique_selection_question.UniqueSelectionQuestionViewPDF.as_view(),
         name="unique_selection_pdf"),
+    url(r'unique/revisor/(?P<report_pk>\d+)/(?P<question_pk>\d+)',
+        unique_selection_question.UniqueSelectionQuestionViewReviewer.as_view(),
+        name='unique_selection_question_revisor'),
+    url(r'unique/csv/(?P<report_pk>\d+)/(?P<question_pk>\d+)$',
+        unique_selection_question.UniqueQuestionViewCSV.as_view(),
+        name='unique_selection_csv'),
+    url(r'unique/json/(?P<report_pk>\d+)/(?P<question_pk>\d+)$',
+        unique_selection_question.UniqueQuestionViewJSON.as_view(),
+        name='unique_selection_json'),
     url(r"table/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$",
         table_question.TableQuestionViewAdmin.as_view(),
         name="table_question_admin"),
@@ -131,5 +157,6 @@ urlpatterns = [
     url(r'^question_types/', include(question_types_urls)),
     url(r'^report/', include(report_views_urls)),
     url(r'^question_processing/', include(question_process_urls)),
-    url(r"^get_catalog_display_fields", get_catalog_display_fields, name='get_catalog_display_fields')
+    url(r"^get_catalog_display_fields", get_catalog_display_fields, name='get_catalog_display_fields'),
+    url(r"^submit_new_observation$", submit_new_observation, name='submit_new_observation')
 ]

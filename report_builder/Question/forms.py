@@ -10,7 +10,6 @@ from ckeditor.widgets import CKEditorWidget
 from report_builder.registry import models
 from ast import literal_eval
 
-
 class QuestionForm(forms.ModelForm):
     children = forms.CharField(widget=forms.HiddenInput, max_length=1024 ** 3, initial=' ')
 
@@ -67,7 +66,7 @@ class AnswerForm(forms.ModelForm):
         instance = super(AnswerForm, self).save(db_use)
         instance.display_text = instance.text
         return instance
-
+    
 
 class ObservationForm(forms.ModelForm):
     class Meta:
@@ -80,7 +79,7 @@ class ObservationForm(forms.ModelForm):
                 'class': 'form-control'
             })
         }
-
+        
 
 class SimpleTextAnswerForm(AnswerForm):
     class Meta:
