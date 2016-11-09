@@ -38,3 +38,34 @@
     </div>
   {% endif %}
 {% endblock %}
+
+{% block extra_content %}
+  <div id="questions">
+    {% if children %}
+      <ul class="sorted">
+        {% for key, value in children.items %}
+          <li id="{{ key }}">
+            <h4>{{ value.answer_pk }}</h4>
+
+            {% if value.status == 'empty' %}
+              {% include 'admin/sortable_body.html' %}
+            {% else %}
+              <ul class="sortable list-group">
+                {% for quest in value.text %}
+                  <li class="list-group-item">
+                    {{ quest | safe }}
+                  </li>
+                {% endfor %}
+              </ul>
+              <script>
+                $(function () {
+                  do_sortable();
+                });
+              </script>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+{% endblock %}

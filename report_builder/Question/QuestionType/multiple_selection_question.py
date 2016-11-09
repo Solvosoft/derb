@@ -3,6 +3,8 @@ Created on 18/10/2016
 
 @author: natalia
 '''
+from collections import OrderedDict
+
 from report_builder.Question import QuestionView
 from report_builder.Question.forms import MultipleSelectionQuestionForm,\
     MultipleSelectionAnswerForm
@@ -27,6 +29,7 @@ class MultipleSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
         'help': 'Allows you to make multiple selection questions',
         'color': '#FF69B4'
     }
+
     
     def pre_save(self, object, request, form):
         form_data = dict(form.data)
