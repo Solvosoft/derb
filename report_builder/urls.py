@@ -25,6 +25,7 @@ from report_builder.Question.QuestionType.simple_text_question import submit_new
 # Unique selection question
 # Multiple selection question
 # Model info
+# Model info with questions
 question_types_urls = [
     url(r'base/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', QuestionView.QuestionViewAdmin.as_view(),
         name='base_question_admin'),
@@ -43,7 +44,7 @@ question_types_urls = [
         name='boolean_question_json'),
     url(r'boolean/spss/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', boolean_question.BooleanQuestionViewSPSS.as_view(),
         name='boolean_question_spss'),
-    url(r'integer/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$', integer_question.IntegerQuestionViewAdmin.as_view(),
+    url(r'integer/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', integer_question.IntegerQuestionViewAdmin.as_view(),
         name='integer_question_admin'),
     url(r'integer/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', integer_question.IntegerQuestionViewResp.as_view(),
         name='integer_question_resp'),
@@ -58,7 +59,7 @@ question_types_urls = [
     url(r'integer/json/(?P<report_pk>\d+)/(?P<question_pk>\d+)$',
         integer_question.IntegerQuestionViewJSON.as_view(),
         name='integer_question_json'),
-    url(r'float/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$', float_question.FloatQuestionViewAdmin.as_view(),
+    url(r'float/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', float_question.FloatQuestionViewAdmin.as_view(),
         name='float_question_admin'),
     url(r'float/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', float_question.FloatQuestionViewResp.as_view(),
         name='float_question_resp'),
@@ -78,7 +79,7 @@ question_types_urls = [
         name='simple_text_question_csv'),
     url(r'simple/json/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', simple_text_question.SimpleQuestionViewJSON.as_view(),
         name='simple_text_question_json'),
-    url(r"unique/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$",
+    url(r"unique/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$",
         unique_selection_question.UniqueSelectionQuestionViewAdmin.as_view(),
         name="unique_selection_admin"),
     url(r"unique/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$",
@@ -96,7 +97,7 @@ question_types_urls = [
     url(r'unique/json/(?P<report_pk>\d+)/(?P<question_pk>\d+)$',
         unique_selection_question.UniqueQuestionViewJSON.as_view(),
         name='unique_selection_json'),
-    url(r"table/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$",
+    url(r"table/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$",
         table_question.TableQuestionViewAdmin.as_view(),
         name="table_question_admin"),
     url(r"table/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$",
@@ -111,7 +112,7 @@ question_types_urls = [
     url(r'table/json/(?P<report_pk>\d+)/(?P<question_pk>\d+)$',
         table_question.TableQuestionViewJSON.as_view(),
         name='table_question_json'),
-    url(r"multiple/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$",
+    url(r"multiple/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$",
         multiple_selection_question.MultipleSelectionQuestionViewAdmin.as_view(),
         name="multiple_selection_admin"),
     url(r"multiple/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$",
