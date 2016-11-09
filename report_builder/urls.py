@@ -6,6 +6,7 @@ from report_builder import initial_views as init
 from report_builder.Question.question_loader import process_question
 from report_builder.Question import QuestionView
 from report_builder.Question.QuestionType import simple_text_question
+from report_builder.Question.QuestionType import table_question
 from report_builder.Question.QuestionType import boolean_question
 from report_builder.Question.QuestionType import integer_question
 from report_builder.Question.QuestionType import float_question
@@ -29,7 +30,13 @@ question_types_urls = [
     url(r'boolean/revisor/(?P<report_pk>\d+)/(?P<question_pk>\d+)$',
         boolean_question.BooleanQuestionViewReviewer.as_view(),
         name='boolean_question_revisor'),
-    url(r'integer/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', integer_question.IntegerQuestionViewAdmin.as_view(),
+    url(r'boolean/csv/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', boolean_question.BooleanQuestionViewCSV.as_view(),
+        name='boolean_question_csv'),
+    url(r'boolean/json/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', boolean_question.BooleanQuestionViewJSON.as_view(),
+        name='boolean_question_json'),
+    url(r'boolean/spss/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', boolean_question.BooleanQuestionViewSPSS.as_view(),
+        name='boolean_question_spss'),
+    url(r'integer/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$', integer_question.IntegerQuestionViewAdmin.as_view(),
         name='integer_question_admin'),
     url(r'integer/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', integer_question.IntegerQuestionViewResp.as_view(),
         name='integer_question_resp'),
@@ -57,6 +64,21 @@ question_types_urls = [
     url(r"unique/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)",
         unique_selection_question.UniqueSelectionQuestionViewPDF.as_view(),
         name="unique_selection_pdf"),
+    url(r"table/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$",
+        table_question.TableQuestionViewAdmin.as_view(),
+        name="table_question_admin"),
+    url(r"table/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$",
+        table_question.TableQuestionViewResp.as_view(),
+        name="table_question_resp"),
+    url(r"table/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)",
+        table_question.TableQuestionViewPDF.as_view(),
+        name="table_question_pdf"),
+    url(r'table/csv/(?P<report_pk>\d+)/(?P<question_pk>\d+)$',
+        table_question.TableQuestionViewCSV.as_view(),
+        name='table_question_csv'),
+    url(r'table/json/(?P<report_pk>\d+)/(?P<question_pk>\d+)$',
+        table_question.TableQuestionViewJSON.as_view(),
+        name='table_question_json'),
 ]
 
 # Report views

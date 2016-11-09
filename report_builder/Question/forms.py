@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 from report_builder.models import Question, Answer, Observation
 from ckeditor.widgets import CKEditorWidget
+from report_builder.catalogs import register_test_catalogs
 from report_builder.registry import models
 
 
@@ -93,6 +94,7 @@ class SimpleTextAnswerForm(AnswerForm):
         instance = super(SimpleTextAnswerForm, self).save(db_use)
         instance.display_text = instance.text
         return instance
+
 
 # Simple_Text_Question
 class SimpleTextQuestionForm(QuestionForm):
@@ -200,6 +202,7 @@ class IntegerAnswerForm(AnswerForm):
         else:
             super(IntegerAnswerForm, self).__init__(*args, **kwargs)
 
+
 # Float answer form
 class FloatAnswerForm(IntegerAnswerForm):
     text = forms.DecimalField()
@@ -277,12 +280,85 @@ class UniqueSelectionAnswerForm(AnswerForm):
 
         queryset = models[catalog][0]
         object = queryset.get(pk=object_pk)
+        display_text = ''
+
+        if display_fields is not None:
+            for i, field in enumerate(display_fields):
+                display_text += getattr(object, field)
+                if (i + 1) != len(display_fields):
+                    display_text += ' - '
+        else:
+            display_text = str(object)
+
+        instance.display_text = display_text
+        return instance
+
+
+# Table_Question
+class TableQuestionForm(QuestionForm):
+    CATALOGS = ((index, model[1].capitalize()) for index, model in enumerate(models))
+    catalog = forms.ChoiceField(choices=CATALOGS, widget=forms.Select(attrs={'class': 'form-control'}))
+    header_0 = forms.CharField(max_length=100)
+    display_field_0 = forms.ChoiceField()
+
+    def __init__(self, *args, **kwargs):
+        count = kwargs.pop('extra')
+        super(TableQuestionForm, self).__init__(*args, **kwargs)
+
+        for i in range(0, count):
+            self.fields['header_%d' % i] = forms.CharField(max_length=100)
+            self.fields['display_field_%d' % i] = forms.ChoiceField()
+
+        if self.is_bound:
+            catalog = self.data['catalog']
+            for i in range(0, count):
+                self.fields['display_field_%d' % i].choices = models[int(catalog)][3]
+
+    class Meta:
+        model = Question
+        fields = ('text', 'help', 'required', 'id')
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'rows': 6,
+                'placeholder': _('Write your question here'),
+                'class': 'form-control'
+            }),
+            'help': forms.Textarea(attrs={
+                'cols': 80,
+                'rows': 5,
+                'placeholder': _('A little help never hurts'),
+                'class': 'form-control'
+            }),
+            'required': forms.Select(attrs={
+                'class': 'form-control'
+            })
+        }
+
+
+class TableQuestionAnswerForm(AnswerForm):
+    def __init__(self, *args, **kwargs):
+        extra = kwargs.pop('extra')
+        catalog = extra['catalog_choices']
+        headers = extra['headers']
+
+        super(TableQuestionAnswerForm, self).__init__(*args, **kwargs)
+        del self.fields['text']
+        del self.fields['annotation']
+
+        for i in range(0, len(catalog)):
+            self.fields['display_field_%d' % i] = forms.ChoiceField(label=headers[i], widget=forms.Select(
+                attrs={'class': 'form-control'}))
+
+        for i in range(0, len(catalog)):
+            self.fields['display_field_%d' % i].choices = catalog[i]
+
+    def save(self, db_use):
+        instance = super(AnswerForm, self).save(db_use)
+        instance.text = str(sorted(self.cleaned_data.items()))
 
         display_text = ''
-        for i, field in enumerate(display_fields):
-            display_text += getattr(object, field)
-            if (i + 1) != len(display_fields):
-                display_text += ' - '
-
+        for key, value in sorted(self.cleaned_data.items()):
+            dictionary = dict(self.fields[key].choices)
+            display_text += '%s: %s\n' % (self.fields[key].label, list(dictionary.values())[int(value)])
         instance.display_text = display_text
         return instance

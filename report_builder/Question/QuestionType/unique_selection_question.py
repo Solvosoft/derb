@@ -4,6 +4,7 @@ Created on 14/9/2016
 '''
 import json
 from django_ajax.decorators import ajax
+from django.utils.translation import ugettext as _
 
 from report_builder.Question import QuestionView
 from report_builder.Question.forms import UniqueSelectionQuestionForm
@@ -16,11 +17,14 @@ def get_catalog_values(queryset, display_fields):
     for object in queryset:
         text = ""
         value = object.pk
-        for i, field in enumerate(display_fields):
-            text += getattr(object, field)
-            if (i + 1) != len(display_fields):
-                text += ' - '
-        yield (value, text)
+        if display_fields is None:
+            yield (value, str(object))
+        else:
+            for i, field in enumerate(display_fields):
+                text += getattr(object, field)
+                if (i + 1) != len(display_fields):
+                    text += ' - '
+            yield (value, text)
 
 
 def get_catalog_choices(json_field):
@@ -37,9 +41,9 @@ class UniqueSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
     template_name = 'admin/question_types/unique_selection_question.html'
     name = 'unique_selection_question'
     minimal_representation = {
-        'human_readable_name': 'Unique Selection Question',
-        'help': 'Allows you to make unique selection questions',
-        'color': '#fde95c'
+        'human_readable_name': _('Unique Selection Question'),
+        'help': _('Allows you to make unique selection questions'),
+        'color': '#330065'
     }
     widgets = (
         ('radiobox', 'Radio selection'),
