@@ -1,0 +1,59 @@
+{% extends 'admin/base_question.html' %}
+{% load static i18n %}
+
+{% block catalog %}
+  <br/>
+  <div id="catalog_div">
+    Catalogs: {{ form.catalog }}
+    <script>
+      $('#question_{{ form_number }} #catalog_div').attr(
+          'onchange', 'see_hide_combo(this);'
+      );
+      $(document).ready(function () {
+        see_hide_combo($('#question_{{ form_number }} #catalog_div'));
+      })
+    </script>
+
+    {% if form.catalog.errors %}
+      <div class="alert alert-warning alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Warning: </strong>{{ form.catalog.errors }}
+      </div>
+    {% endif %}
+  </div>
+  <br/>
+{% endblock %}
+
+{% block form_content %}
+  <h4 align="center"><strong>{% trans 'Display fields' %}</strong></h4>
+  <p><strong>{% trans 'Catalog:' %} </strong><span id="catalog_name"></span></p>
+
+  <div class="row">
+    <div class="col-md-offset-2 col-md-8">
+      <div id="table">
+        <div class="col-md-4">
+          {{ form.header_0 }}
+          {{ form.display_field_0 }}
+        </div>
+      </div>
+      <div class="col-md-4">
+        <button onclick="do_table();" type="button" class="btn btn-success">+</button>
+        <button onclick="remove_table();" type="button" class="btn btn-danger">-</button>
+      </div>
+    </div>
+
+
+  </div>
+{% endblock %}
+
+{% block question_script %}
+  {% include 'admin/add_question.html' %}
+  <script>
+    var catalog_url = "{% url 'report_builder:get_catalog_display_fields' %}";
+    var m = "{{ question }}";
+    var answer_options_json = "{{ question.answer_options | escapejs }}";
+  </script>
+  <script src="{% static 'report_builder/js/derb_helpers.js' %}"></script>
+  <script
+      src="{% static 'report_builder/js/derb_subcomponents/question_types/table_question.js' %}"></script>
+{% endblock %}

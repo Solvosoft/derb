@@ -241,10 +241,8 @@ class UniqueSelectionQuestionForm(QuestionForm):
 
         widgets_choices = self.extra['widgets']
 
-        # Answer options > TODO
-
         # Catalog
-        catalog_choices = ((index, model[1]) for index, model in enumerate(models))
+        catalog_choices = ((index, model[1].capitalize()) for index, model in enumerate(models))
         self.fields['catalog'].choices = catalog_choices
 
         # Widget
@@ -296,14 +294,17 @@ class UniqueSelectionAnswerForm(AnswerForm):
 
 # Table_Question
 class TableQuestionForm(QuestionForm):
-    CATALOGS = ((index, model[1].capitalize()) for index, model in enumerate(models))
-    catalog = forms.ChoiceField(choices=CATALOGS, widget=forms.Select(attrs={'class': 'form-control'}))
+    catalog = forms.ChoiceField()
     header_0 = forms.CharField(max_length=100)
     display_field_0 = forms.ChoiceField()
 
     def __init__(self, *args, **kwargs):
         count = kwargs.pop('extra')
         super(TableQuestionForm, self).__init__(*args, **kwargs)
+
+        # Catalog
+        catalog_choices = ((index, model[1].capitalize()) for index, model in enumerate(models))
+        self.fields['catalog'].choices = catalog_choices
 
         for i in range(0, count):
             self.fields['header_%d' % i] = forms.CharField(max_length=100)

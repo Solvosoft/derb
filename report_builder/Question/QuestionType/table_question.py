@@ -32,7 +32,7 @@ def get_catalog_choices(catalog, display):
 
 class TableQuestionViewAdmin(QuestionView.QuestionViewAdmin):
     form_class = TableQuestionForm
-    template_name = 'admin/table_question.html'
+    template_name = 'admin/question_types/table_question.html'
     name = 'table_question'
     minimal_representation = {
         'human_readable_name': _('Table question'),
@@ -57,6 +57,7 @@ class TableQuestionViewAdmin(QuestionView.QuestionViewAdmin):
             headers += form_data[head]
         for display in displays_1:
             displays += form_data[display]
+
         answer_options = {
             'catalog': form_data.get('catalog'),
             'headers': headers,
