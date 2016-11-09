@@ -244,7 +244,10 @@ class UniqueSelectionQuestionForm(QuestionForm):
             self.extra = kwargs.pop('extra')
         super(UniqueSelectionQuestionForm, self).__init__(*args, **kwargs)
 
-        widgets_choices = self.extra['widgets']
+        if self.extra is not None and 'widgets' in self.extra:
+            widgets_choices = self.extra['widgets']
+        else:
+            widgets_choices = ()
 
         # Catalog
         catalog_choices = ((index, model[1].capitalize()) for index, model in enumerate(models))
@@ -449,8 +452,6 @@ class MultipleSelectionAnswerForm(AnswerForm):
     def save(self, db_use):
         instance = super(AnswerForm, self).save(db_use)
         objectpk = instance.text
-        print('objectpk')
-        print(objectpk)
         answer_options_json = instance.question.answer_options
         answer_options = json.loads(answer_options_json)
         catalog = int(answer_options['catalog'][0])
@@ -483,3 +484,30 @@ class MultipleSelectionAnswerForm(AnswerForm):
 
             instance.display_text = display_text
             return instance
+
+
+class ModelInfoQuestionForm(UniqueSelectionQuestionForm):
+    with_text = 'text'
+    widgets = {
+        'text': CKEditorWidget(config_name='default'),
+    }
+
+    def __init__(self, *args, **kwargs):
+        self.post = args
+        on_modal = False
+        if 'extra' in kwargs:
+            extra = kwargs.pop('extra')
+            on_modal = extra['on_modal']
+
+        super(ModelInfoQuestionForm, self).__init__(*args, **kwargs)
+
+        self.fields['on_modal'] = forms.BooleanField(
+            label='See on modal',
+            required=False,
+            initial=on_modal,
+            widget=forms.CheckboxInput(
+                attrs={
+                    'onchange': 'get_button_name_info(this);'
+                }
+            )
+        )

@@ -12,6 +12,7 @@ from report_builder.Question.QuestionType import boolean_question
 from report_builder.Question.QuestionType import integer_question
 from report_builder.Question.QuestionType import float_question
 from report_builder.Question.QuestionType import unique_selection_question
+from report_builder.Question.QuestionType import model_info
 from report_builder.Question.QuestionType.unique_selection_question import get_catalog_display_fields
 from report_builder.views import Report
 
@@ -21,6 +22,7 @@ from report_builder.views import Report
 # Simple text question
 # Unique selection question
 # Multiple selection question
+# Model info
 question_types_urls = [
     url(r'base/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', QuestionView.QuestionViewAdmin.as_view(),
         name='base_question_admin'),
@@ -96,7 +98,9 @@ question_types_urls = [
         name='multiple_selection_question_csv'),
     url(r'multiple/json/(?P<report_pk>\d+)/(?P<question_pk>\d+)$',
         multiple_selection_question.MultipleSelectionQuestionViewJSON.as_view(),
-        name='multiple_selection_question_json')
+        name='multiple_selection_question_json'),
+    url(r'model_info/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?', model_info.ModelInfoViewAdmin.as_view(),
+        name='model_info_question')
 ]
 
 # Report views
