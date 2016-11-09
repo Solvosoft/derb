@@ -40,17 +40,18 @@
             </button>
 
             {# Remove button #}
-            <button type="button" class="btn btn-default btn-xs" id="delete_question" onclick="remove(this);">
+            <button type="button" class="btn btn-default btn-xs" id="question_delete" onclick="delete_question(this);">
               <span class="glyphicon glyphicon-remove"></span> Remove
             </button>
 
             {# Question order #}
-            <span id="order" class="btn btn-md" title="{{ minimal_representation.help }}"
+            <span id="order" class="btn btn-xs" title="{{ minimal_representation.help }}"
                   style="background-color: {{ minimal_representation.color }};">
               {% if question.order %}
+                asd
                 {{ question.order }}
               {% else %}
-                {{ Undefined }}
+                Undefined
               {% endif %}
             </span>
           </div>

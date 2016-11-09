@@ -214,7 +214,7 @@ function delete_question_admin(question_ids) {
 
 function delete_question(button) {
     var question = $(button).closest('.question_panel');
-    var dialog = $('#delete_question_modal').clone();
+    var dialog = $('#question_delete_modal').clone();
     var forms = question.find('form');
     var text = '<ul>';
     var question_id = '$';

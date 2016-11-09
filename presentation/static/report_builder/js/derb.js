@@ -303,6 +303,7 @@ function delete_question_table_row(element, url, form_number) {
 
 function see_hide(button) {
     panel = $(button).closest('.question_panel');
+    console.log(panel);
     body = panel.find('.panel-body');
     content = panel.find('#content');
 
