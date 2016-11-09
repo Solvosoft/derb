@@ -10,7 +10,7 @@ from report_builder.registry import models
 
 
 class QuestionForm(forms.ModelForm):
-    children = forms.CharField()
+    children = forms.CharField(widget=forms.HiddenInput, max_length=1024**3, initial=' ')
 
     class Meta:
         model = Question
