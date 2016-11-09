@@ -239,7 +239,6 @@ class QuestionViewAdmin(Question):
             Returns the question pk when the POST request is processed correctly
             Return the rendered template (with errors) when the form presents errors
         '''
-        redirection_needed = True
         question_pk = kwargs.get('question_pk', False)
         report_pk = kwargs.get('report_pk', False)
 
@@ -260,11 +259,9 @@ class QuestionViewAdmin(Question):
             question.report = self.report
             question = self.pre_save(question, request, form)
             question.save()
-            question_pk = question.pk
             messages.add_message(request, messages.SUCCESS, 'Question saved successfully')
 
-            if redirection_needed == True:
-                return redirect(request.path + str(question_pk))
+            return HttpResponse(question.pk, status=200)
         else:
             messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
 
@@ -280,7 +277,8 @@ class QuestionViewAdmin(Question):
         extra = self.additional_template_parameters(**parameters)
         if extra:
             parameters.update(extra)
-        return render(request, template_name=self.template_name, context=parameters)
+
+        return render(request, template_name=self.template_name, context=parameters, status=302)
 
     def process_children(self, request, parameters, arguments, include=None):
         '''
