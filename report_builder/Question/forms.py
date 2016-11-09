@@ -4,10 +4,11 @@ import random
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
+
 from report_builder.models import Question, Answer, Observation
 from ckeditor.widgets import CKEditorWidget
-from report_builder.catalogs import register_test_catalogs
 from report_builder.registry import models
+from ast import literal_eval
 
 
 class QuestionForm(forms.ModelForm):
@@ -198,6 +199,9 @@ class IntegerAnswerForm(AnswerForm):
             self.fields['text'].max_value = answer_options['maximum']
             self.fields['text'].widget.attrs = {
                 'step': answer_options['steps'],
+                'min': answer_options['minimum'],
+                'max': answer_options['maximum'],
+
             }
         else:
             super(IntegerAnswerForm, self).__init__(*args, **kwargs)
@@ -363,3 +367,112 @@ class TableQuestionAnswerForm(AnswerForm):
             display_text += '%s: %s\n' % (self.fields[key].label, list(dictionary.values())[int(value)])
         instance.display_text = display_text
         return instance
+
+
+# Multiple Selection Question
+class MultipleSelectionQuestionForm(QuestionForm):
+    CATALOGS = ((index, model[1]) for index, model in enumerate(models))
+    catalog = forms.ChoiceField(choices=CATALOGS)
+    display_fields = forms.Field(required=False)
+
+    CHECKBOX = 0
+    MULTIPLE_SELECT = 1
+    COMBOBOX = 2
+    WIDGET_CHOICES = (
+        (CHECKBOX, _('Checkbox')),
+        (MULTIPLE_SELECT, _('Multiple Select')),
+        (COMBOBOX, _('Combobox'))
+    )
+    widget = forms.ChoiceField(choices=WIDGET_CHOICES)
+
+    def __init__(self, *args, **kwargs):
+        super(MultipleSelectionQuestionForm, self).__init__(*args, **kwargs)
+        if 'instance' in kwargs:
+            instance = kwargs.get('instance')
+            if instance is not None:
+                answer_options = json.loads(instance.answer_options)
+                if 'widget' in answer_options:
+                    self.fields['widget'].initial = answer_options['widget']
+
+    class Meta:
+        model = Question
+        fields = ('text', 'help', 'required', 'id', 'widget')
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'rows': 6,
+                'placeholder': _('Write your question here'),
+                'class': 'form-control'
+            }),
+            'help': forms.Textarea(attrs={
+                'cols': 80,
+                'rows': 5,
+                'placeholder': _('A little help never hurts'),
+                'class': 'form-control'
+            }),
+            'required': forms.Select(attrs={
+                'class': 'form-control'
+            })
+        }
+
+
+class MultipleSelectionAnswerForm(AnswerForm):
+    
+    text = forms.ChoiceField()
+
+    def __init__(self, *args, **kwargs):
+        if 'extra' in kwargs:
+            extra = kwargs.pop('extra')
+            super(MultipleSelectionAnswerForm, self).__init__(*args, **kwargs)
+
+            catalog = extra['catalog']
+            widget = int(extra['widget'])
+
+            if widget == MultipleSelectionQuestionForm.CHECKBOX:
+                self.fields['text'] = forms.MultipleChoiceField(choices=catalog, widget=forms.CheckboxSelectMultiple)
+            elif widget == MultipleSelectionQuestionForm.MULTIPLE_SELECT:
+                self.fields['text'] = forms.MultipleChoiceField(choices=catalog)
+            elif widget == MultipleSelectionQuestionForm.COMBOBOX:
+                self.fields['text'] = forms.ChoiceField(choices=catalog)
+
+        else:
+            super(MultipleSelectionAnswerForm, self).__init__(*args, **kwargs)
+
+    def save(self, db_use):
+        instance = super(AnswerForm, self).save(db_use)
+        objectpk = instance.text
+        print('objectpk')
+        print(objectpk)
+        answer_options_json = instance.question.answer_options
+        answer_options = json.loads(answer_options_json)
+        catalog = int(answer_options['catalog'][0])
+        display_fields = answer_options['display_fields']
+        queryset = models[catalog][0]
+        
+        try:
+            int(objectpk) 
+            print('es numero')
+            object = queryset.get(pk=objectpk)                          
+            display_text = ''
+            for i, fild in enumerate(display_fields):
+                display_text += getattr(object, fild)
+                if (i + 1) != len(display_fields):
+                    display_text += ' - '
+            instance.display_text = display_text
+            return instance
+        
+        except:
+            object_pks = literal_eval(instance.text)
+            queryset = queryset.filter(pk__in=object_pks)
+            display_text = ''
+            for o, object in enumerate(queryset):
+                for i, field in enumerate(display_fields):
+                    display_text += getattr(object, field)
+                    if (i + 1) != len(display_fields):
+                        display_text += ' - '
+                if (o + 1) < len(queryset):
+                    display_text += '\n'
+    
+            instance.display_text = display_text
+            return instance
+    
+ 

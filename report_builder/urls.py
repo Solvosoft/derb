@@ -5,8 +5,9 @@ from report_builder import views
 from report_builder import initial_views as init
 from report_builder.Question.question_loader import process_question
 from report_builder.Question import QuestionView
-from report_builder.Question.QuestionType import simple_text_question
 from report_builder.Question.QuestionType import table_question
+from report_builder.Question.QuestionType import simple_text_question
+from report_builder.Question.QuestionType import multiple_selection_question
 from report_builder.Question.QuestionType import boolean_question
 from report_builder.Question.QuestionType import integer_question
 from report_builder.Question.QuestionType import float_question
@@ -19,8 +20,10 @@ from report_builder.views import Report
 # Float question
 # Simple text question
 # Unique selection question
+# Multiple selection question
 question_types_urls = [
-    url(r'base/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', QuestionView.QuestionViewAdmin.as_view(), name='base_question_admin'),
+    url(r'base/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', QuestionView.QuestionViewAdmin.as_view(),
+        name='base_question_admin'),
     url(r'boolean/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', boolean_question.BooleanQuestionViewAdmin.as_view(),
         name='boolean_question_admin'),
     url(r'boolean/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', boolean_question.BooleanQuestionViewResp.as_view(),
@@ -55,7 +58,7 @@ question_types_urls = [
         name='simple_text_question_resp'),
     url(r'simple/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)', simple_text_question.SimpleTextQuestionViewPDF.as_view(),
         name='simple_text_question_pdf'),
-    url(r"unique/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$",
+    url(r"unique/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$",
         unique_selection_question.UniqueSelectionQuestionViewAdmin.as_view(),
         name="unique_selection_admin"),
     url(r"unique/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$",
@@ -96,7 +99,25 @@ question_process_urls = [
     url(r'(?P<type>responsable)/(?P<view_type>\w+)/(?P<report_pk>\d+)/(?P<question_pk>\d+)/(?P<answer_pk>\d+)?$',
         process_question, name='process_responsable'),
     url(r'(?P<type>revisor)/(?P<view_type>\w+)/(?P<report_pk>\d+)/(?P<question_pk>\d+)/(?P<answer_pk>\d+)?$',
-        process_question, name='process_revisor')
+        process_question, name='process_revisor'),
+    url(r"multiple/admin/(?P<report_pk>\d+)/(?P<question_pk>\d*)$",
+        multiple_selection_question.MultipleSelectionQuestionViewAdmin.as_view(),
+        name="multiple_selection_admin"),
+    url(r"multiple/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$",
+        multiple_selection_question.MultipleSelectionQuestionViewResp.as_view(),
+        name="multiple_selection_resp"),
+    url(r'multiple/pdf/(?P<report_pk>\d+)/(?P<question_pk>\d+)$',
+        multiple_selection_question.MultipleSelectionQuestionViewPDF.as_view(),
+        name='multiple_seletion_question_pdf'),
+    url(r'multiple/csv/(?P<report_pk>\d+)/(?P<question_pk>\d+)$',
+        multiple_selection_question.MultipleSelectionQuestionViewCSV.as_view(),
+        name='multiple_selection_question_csv'),
+    url(r'multiple/json/(?P<report_pk>\d+)/(?P<question_pk>\d+)$',
+        multiple_selection_question.MultipleSelectionQuestionViewJSON.as_view(),
+        name='multiple_selection_question_json'),
+    url(r'multiple/revisor/(?P<report_pk>\d+)/(?P<question_pk>\d+)$',
+        boolean_question.BooleanQuestionViewReviewer.as_view(),
+        name='boolean_question_revisor'),
 ]
 
 urlpatterns = [
