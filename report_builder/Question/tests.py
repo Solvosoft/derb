@@ -10,6 +10,8 @@ from report_builder.models import Report, ReportType, Question
 
 
 class QuestionViewAdminTest(TestCase):
+    url = 'report_builder:base_question_admin'
+
     def setUp(self):
         User.objects.create_user(username='test', password='test')
         report_type = ReportType.objects.create(
@@ -34,7 +36,7 @@ class QuestionViewAdminTest(TestCase):
     def test_get_without_arguments(self):
         resp = None
         try:
-            url = reverse('report_builder:base_question_admin')  # 404
+            url = reverse(self.url)
             resp = self.client.get(url)
         except:
             url = None
@@ -44,7 +46,7 @@ class QuestionViewAdminTest(TestCase):
 
     def test_get_with_report_pk_without_login(self):
         report = Report.objects.first()
-        url = reverse('report_builder:base_question_admin', kwargs={
+        url = reverse(self.url, kwargs={
             'report_pk': report.pk
         })
         resp = self.client.get(url)
@@ -54,7 +56,7 @@ class QuestionViewAdminTest(TestCase):
     def test_get_with_report_and_question_pk_without_login(self):
         report = Report.objects.first()
         question = Question.objects.first()
-        url = reverse('report_builder:base_question_admin', kwargs={
+        url = reverse(self.url, kwargs={
             'report_pk': report.pk,
             'question_pk': question.pk
         })
@@ -65,7 +67,7 @@ class QuestionViewAdminTest(TestCase):
     def test_get_with_report_pk_with_login(self):
         user = User.objects.first()
         report = Report.objects.first()
-        url = reverse('report_builder:base_question_admin', kwargs={
+        url = reverse(self.url, kwargs={
             'report_pk': report.pk
         })
         self.client.login(username=user.username, password='test')
@@ -77,7 +79,7 @@ class QuestionViewAdminTest(TestCase):
         user = User.objects.first()
         report = Report.objects.first()
         question = Question.objects.first()
-        url = reverse('report_builder:base_question_admin', kwargs={
+        url = reverse(self.url, kwargs={
             'report_pk': report.pk,
             'question_pk': question.pk
         })
@@ -89,7 +91,7 @@ class QuestionViewAdminTest(TestCase):
     def test_post_without_arguments_without_login(self):
         report = Report.objects.first()
         question = Question.objects.first()
-        url = reverse('report_builder:base_question_admin', kwargs={
+        url = reverse(self.url, kwargs={
             'report_pk': report.pk,
             'question_pk': question.pk
         })
@@ -101,7 +103,7 @@ class QuestionViewAdminTest(TestCase):
     def test_post_with_null_arguments_with_login(self):
         user = User.objects.first()
         report = Report.objects.first()
-        url = reverse('report_builder:base_question_admin', kwargs={
+        url = reverse(self.url, kwargs={
             'report_pk': report.pk
         })
         self.client.login(username=user.username, password='test')
@@ -112,7 +114,7 @@ class QuestionViewAdminTest(TestCase):
     def test_post_create_with_correct_arguments_with_login(self):
         user = User.objects.first()
         report = Report.objects.first()
-        url = reverse('report_builder:base_question_admin', kwargs={
+        url = reverse(self.url, kwargs={
             'report_pk': report.pk
         })
         data = {
@@ -136,7 +138,7 @@ class QuestionViewAdminTest(TestCase):
         user = User.objects.first()
         report = Report.objects.first()
         question = Question.objects.first()
-        url = reverse('report_builder:base_question_admin', kwargs={
+        url = reverse(self.url, kwargs={
             'report_pk': report.pk,
             'question_pk': question.pk
         })
@@ -160,7 +162,7 @@ class QuestionViewAdminTest(TestCase):
     def test_post_create_with_incorrect_arguments_with_login(self):
         user = User.objects.first()
         report = Report.objects.first()
-        url = reverse('report_builder:base_question_admin', kwargs={
+        url = reverse(self.url, kwargs={
             'report_pk': report.pk
         })
         data = {
@@ -179,7 +181,7 @@ class QuestionViewAdminTest(TestCase):
         user = User.objects.first()
         report = Report.objects.first()
         question = Question.objects.first()
-        url = reverse('report_builder:base_question_admin', kwargs={
+        url = reverse(self.url, kwargs={
             'report_pk': report.pk,
             'question_pk': question.pk
         })
@@ -198,7 +200,7 @@ class QuestionViewAdminTest(TestCase):
     def test_post_create_with_incomplete_arguments_with_login(self):
         user = User.objects.first()
         report = Report.objects.first()
-        url = reverse('report_builder:base_question_admin', kwargs={
+        url = reverse(self.url, kwargs={
             'report_pk': report.pk
         })
         data = {
@@ -216,7 +218,7 @@ class QuestionViewAdminTest(TestCase):
         user = User.objects.first()
         report = Report.objects.first()
         question = Question.objects.first()
-        url = reverse('report_builder:base_question_admin', kwargs={
+        url = reverse(self.url, kwargs={
             'report_pk': report.pk,
             'question_pk': question.pk
         })
