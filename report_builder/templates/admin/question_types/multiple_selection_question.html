@@ -1,6 +1,4 @@
-{% extends 'admin/base_question.html' %}
-{% load i18n %}
-{% load static %}
+{% extends 'admin/question_types/unique_selection_question.html' %}
 
 {% block catalog %}
   <br/>
@@ -24,16 +22,8 @@
   </div>
 {% endblock %}
 
-{% block form_content %}
-  <h4 align="center"><strong>{% trans 'Display fields' %}</strong></h4>
-  <p><strong>{% trans 'Catalog:' %} </strong><span id="catalog_name"></span></p>
-  <div id='display_fields'>
-    {{ form.display_fields }}
-  </div>
-{% endblock %}
-
 {% block form_footer %}
-  {% if widgets %}
+  {% if form.widget %}
     <div class="panel-footer">
       {% if form.widget.errors %}
         <div class="alert alert-warning alert-dismissable">
@@ -47,16 +37,4 @@
       {% endfor %}
     </div>
   {% endif %}
-{% endblock %}
-
-{% block question_script %}
-  {% include 'admin/add_question.html' %}
-  <script>
-    var catalog_url = "{% url 'report_builder:get_catalog_display_fields' %}";
-    var m = "{{ question }}";
-    var answer_options_json = "{{ question.answer_options | escapejs }}";
-  </script>
-  <script src="{% static 'report_builder/js/derb_helpers.js' %}"></script>
-  <script
-      src="{% static 'report_builder/js/derb_subcomponents/question_types/unique_selection_question.js' %}"></script>
 {% endblock %}

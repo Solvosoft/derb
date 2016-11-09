@@ -20,7 +20,7 @@ from weasyprint import HTML
 
 class MultipleSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
     form_class = MultipleSelectionQuestionForm
-    template_name = 'admin/multiple_selection_question.html'
+    template_name = 'admin/question_types/multiple_selection_question.html'
     name = 'multiple_selection_question'
     minimal_representation = {
         'human_readable_name': 'Multiple Selection Question',

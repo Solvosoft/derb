@@ -12,7 +12,7 @@ from ast import literal_eval
 
 
 class QuestionForm(forms.ModelForm):
-    children = forms.CharField(widget=forms.HiddenInput, max_length=1024**3, initial=' ')
+    children = forms.CharField(widget=forms.HiddenInput, max_length=1024 ** 3, initial=' ')
 
     class Meta:
         model = Question
@@ -129,6 +129,7 @@ class SimpleTextQuestionForm(QuestionForm):
                 }
             )
         )
+
 
 # Boolean answer form
 class BooleanAnswerForm(AnswerForm):
@@ -260,7 +261,6 @@ class UniqueSelectionQuestionForm(QuestionForm):
             )
 
 
-
 class UniqueSelectionAnswerForm(AnswerForm):
     text = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}))
 
@@ -371,8 +371,7 @@ class TableQuestionAnswerForm(AnswerForm):
 
 # Multiple Selection Question
 class MultipleSelectionQuestionForm(QuestionForm):
-    CATALOGS = ((index, model[1]) for index, model in enumerate(models))
-    catalog = forms.ChoiceField(choices=CATALOGS)
+    catalog = forms.ChoiceField()
     display_fields = forms.Field(required=False)
 
     CHECKBOX = 0
@@ -383,10 +382,21 @@ class MultipleSelectionQuestionForm(QuestionForm):
         (MULTIPLE_SELECT, _('Multiple Select')),
         (COMBOBOX, _('Combobox'))
     )
-    widget = forms.ChoiceField(choices=WIDGET_CHOICES)
+    widget = forms.ChoiceField(
+        widget=forms.RadioSelect(attrs={
+            'id': str(random.randint(50, 10000)) + '_select'
+        }),
+        required=True,
+        choices=WIDGET_CHOICES
+    )
 
     def __init__(self, *args, **kwargs):
         super(MultipleSelectionQuestionForm, self).__init__(*args, **kwargs)
+
+        # Catalog
+        catalog_choices = ((index, model[1].capitalize()) for index, model in enumerate(models))
+        self.fields['catalog'].choices = catalog_choices
+
         if 'instance' in kwargs:
             instance = kwargs.get('instance')
             if instance is not None:
@@ -416,7 +426,6 @@ class MultipleSelectionQuestionForm(QuestionForm):
 
 
 class MultipleSelectionAnswerForm(AnswerForm):
-    
     text = forms.ChoiceField()
 
     def __init__(self, *args, **kwargs):
@@ -447,11 +456,11 @@ class MultipleSelectionAnswerForm(AnswerForm):
         catalog = int(answer_options['catalog'][0])
         display_fields = answer_options['display_fields']
         queryset = models[catalog][0]
-        
+
         try:
-            int(objectpk) 
+            int(objectpk)
             print('es numero')
-            object = queryset.get(pk=objectpk)                          
+            object = queryset.get(pk=objectpk)
             display_text = ''
             for i, fild in enumerate(display_fields):
                 display_text += getattr(object, fild)
@@ -459,7 +468,7 @@ class MultipleSelectionAnswerForm(AnswerForm):
                     display_text += ' - '
             instance.display_text = display_text
             return instance
-        
+
         except:
             object_pks = literal_eval(instance.text)
             queryset = queryset.filter(pk__in=object_pks)
@@ -471,8 +480,6 @@ class MultipleSelectionAnswerForm(AnswerForm):
                         display_text += ' - '
                 if (o + 1) < len(queryset):
                     display_text += '\n'
-    
+
             instance.display_text = display_text
             return instance
-    
- 
