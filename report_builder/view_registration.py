@@ -4,6 +4,7 @@ from report_builder.Question.QuestionType.integer_question import IntegerQuestio
 from report_builder.Question.QuestionType.float_question import FloatQuestionViewAdmin
 from report_builder.Question.QuestionType.simple_text_question import SimpleTextQuestionViewAdmin
 from report_builder.Question.QuestionType.unique_selection_question import UniqueSelectionQuestionViewAdmin
+from report_builder.Question.QuestionType.table_question import TableQuestionViewAdmin
 
 def register_admin_views():
     admin_views = [
@@ -11,7 +12,8 @@ def register_admin_views():
         IntegerQuestionViewAdmin,
         FloatQuestionViewAdmin,
         SimpleTextQuestionViewAdmin,
-        UniqueSelectionQuestionViewAdmin
+        UniqueSelectionQuestionViewAdmin,
+        TableQuestionViewAdmin
     ]
 
     for view in admin_views:

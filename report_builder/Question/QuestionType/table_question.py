@@ -37,7 +37,7 @@ class TableQuestionViewAdmin(QuestionView.QuestionViewAdmin):
     minimal_representation = {
         'human_readable_name': _('Table question'),
         'help': _('Allows you to make table questions'),
-        'color': '#330065'
+        'color': '#FFA500'
     }
     
     def pre_save(self, object, request, form):

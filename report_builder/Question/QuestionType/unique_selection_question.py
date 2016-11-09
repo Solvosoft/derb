@@ -43,7 +43,7 @@ class UniqueSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
     minimal_representation = {
         'human_readable_name': _('Unique Selection Question'),
         'help': _('Allows you to make unique selection questions'),
-        'color': '#330065'
+        'color': '#fde95c'
     }
     widgets = (
         ('radiobox', 'Radio selection'),
