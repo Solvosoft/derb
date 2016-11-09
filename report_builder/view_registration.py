@@ -7,6 +7,7 @@ from report_builder.Question.QuestionType.unique_selection_question import Uniqu
 from report_builder.Question.QuestionType.table_question import TableQuestionViewAdmin
 from report_builder.Question.QuestionType.multiple_selection_question import MultipleSelectionQuestionViewAdmin
 from report_builder.Question.QuestionType.model_info import ModelInfoViewAdmin
+from report_builder.Question.QuestionType.question_model_info import QuestionModelInfoViewAdmin
 
 def register_admin_views():
     admin_views = [
@@ -17,7 +18,8 @@ def register_admin_views():
         UniqueSelectionQuestionViewAdmin,
         TableQuestionViewAdmin,
         MultipleSelectionQuestionViewAdmin,
-        ModelInfoViewAdmin
+        ModelInfoViewAdmin,
+        QuestionModelInfoViewAdmin
     ]
 
     for view in admin_views:

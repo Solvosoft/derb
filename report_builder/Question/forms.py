@@ -511,3 +511,21 @@ class ModelInfoQuestionForm(UniqueSelectionQuestionForm):
                 }
             )
         )
+
+
+class QuestionModelInfoQuestionForm(ModelInfoQuestionForm):
+    with_text = 'text'
+
+    class Meta:
+        model = Question
+        fields = ('text', 'help', 'id', 'required')
+        widgets = {
+            'text': CKEditorWidget(config_name='default'),
+            'help': CKEditorWidget(config_name='default')
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.post = args
+        if 'extra' in kwargs:
+            extra = kwargs.pop('extra')
+        super(QuestionModelInfoQuestionForm, self).__init__(*args, **kwargs)

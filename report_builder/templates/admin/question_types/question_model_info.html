@@ -1,0 +1,37 @@
+{% extends 'admin/question_types/unique_selection_question.html' %}
+{% load static %}
+
+{% block question_script %}
+  {% include 'admin/add_question.html' %}
+  <script>
+    var catalog_url = "{% url 'report_builder:get_catalog_display_fields' %}";
+    var m = "{{ question }}";
+    var answer_options_json = "{{ question.answer_options | escapejs }}";
+  </script>
+  <script src="{% static 'report_builder/js/derb_helpers.js' %}"></script>
+  <script
+      src="{% static 'report_builder/js/derb_subcomponents/question_types/unique_selection_question.js' %}"></script>
+{% endblock %}
+
+{% block form_footer %}{% endblock %}
+
+{% block extra_content %}
+  <div id="questions" class="well-sm">
+    <div class="well">
+      Insert your questions below
+    </div>
+
+    {% if children.questions %}
+      <ul class="sortable list-group">
+        {% for question in children.questions %}
+          <li class="list-group-item">{{ question | safe }}</li>
+        {% endfor %}
+        <li class="list-group-item">
+          Drag and drop your questions here
+        </li>
+      </ul>
+    {% else %}
+      {% include 'admin/sortable_body.html' %}
+    {% endif %}
+  </div>
+{% endblock %}
