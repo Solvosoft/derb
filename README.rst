@@ -1,10 +1,12 @@
 Derb: Django Enterprise Report Builder 
 ===========================================
 
+|build-status| |license| |djangoversion| |pyversion| |developby| 
+
+This software is in development state, it's not stable yet 
+
 Documentation
 ---------------------
-
-|build-status| |license| |wheel| |pyversion| |pyimp|
 
 See Documentation_.
 
@@ -57,3 +59,26 @@ Then run in the other terminal
 .. code:: bash
 
 	python manage.py runserver
+
+
+.. |build-status| image:: https://api.travis-ci.org/solvo/derb.png?branch=development
+    :alt: Build status
+    :target: https://travis-ci.org/solvo/derb
+
+.. |license| image:: https://img.shields.io/badge/license-GPLv3-green.svg
+    :alt: GPL v3
+    :target: https://www.gnu.org/licenses/gpl-3.0.en.html
+
+.. |djangoversion| image:: https://img.shields.io/badge/Django-v1.10-blue.svg
+    :alt: Django vesion 1.10
+    :target: https://docs.djangoproject.com/en/1.10/
+
+.. |pyversion| image:: https://img.shields.io/badge/Python-v3.4,3.5-green.svg
+    :alt: Supported Python versions.
+    :target: #
+
+.. |developby| image:: https://img.shields.io/badge/Develop%20by-Solvo-orange.svg
+    :alt: Supported Python versions.
+    :target: https://solvosoft.com
+
+
