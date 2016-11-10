@@ -1,4 +1,4 @@
-Derb: Django enterprice report builder 
+Derb: Django Enterprise Report Builder 
 ===========================================
 
 Documentation
