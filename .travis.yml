@@ -19,4 +19,5 @@ services:
 services:
   - memcached
 
-
+addons:
+  postgresql: "9.4"
