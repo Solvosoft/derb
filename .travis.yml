@@ -1,0 +1,25 @@
+language: python
+python:
+  - "3.4"
+  - "3.5"
+  - "3.5-dev" # 3.5 development branch
+  - "3.6-dev" # 3.6 development branch
+  - "nightly" # currently points to 3.7-dev
+# command to install dependencies
+install: 
+  - pip install -r requirements.txt
+  - pip install -q Django==$DJANGO_VERSION
+# command to run tests
+script: python manage.py test --settings=derb.test_settings
+
+env:
+  - DJANGO_VERSION=1.9.12
+  - DJANGO_VERSION=1.10.4
+
+services:
+  - postgresql
+
+before_script:
+  - psql -c 'create database test_derb;' -U postgres
+
+
