@@ -31,7 +31,7 @@ def get_manager(current):
     return manager
 
 
-def get_reports_by_user(user, type=RESPONSABLE, report_type=None, current=False):
+def get_reports_by_user(user, _type=RESPONSABLE, report_type=None, current=False):
     '''
         TODO: docstring
     :return:
@@ -45,17 +45,24 @@ def get_reports_by_user(user, type=RESPONSABLE, report_type=None, current=False)
     if report_type is None:
         report_type = ReportType.objects.all()
 
-    if type == ADVISOR:
+    if _type == ADVISOR:
         manager = ReportByProject.objects
     else:
         manager = get_manager(current)
 
     for rtype in report_type:
-        project = ContentType.objects.get(app_label=rtype.app_name, model=rtype.model)
+        try:
+            project = ContentType.objects.get(
+                app_label=rtype.app_name, model=rtype.name)
+        except:
+            continue
+
         project = project.model_class()()
         if type == RESPONSABLE:
-            proj_responsable = project.get_project_by_responsable(user, responsable=True)
-            proj_collaborator = project.get_project_by_responsable(user, responsable=False)
+            proj_responsable = project.get_project_by_responsable(
+                user, responsable=True)
+            proj_collaborator = project.get_project_by_responsable(
+                user, responsable=False)
 
             return_value['responsable'] += list(
                 manager.filter(report_type=rtype, project__object_id__in=proj_responsable))
@@ -63,7 +70,8 @@ def get_reports_by_user(user, type=RESPONSABLE, report_type=None, current=False)
                 manager.filter(report_type=rtype, project__object_id__in=proj_collaborator))
         else:
             projects_pks = project.get_project_by_advisor(user)
-            result = manager.filter(report__type=rtype, project__object_id__in=projects_pks)
+            result = manager.filter(
+                report__type=rtype, project__object_id__in=projects_pks)
             ordered_result = result.order_by('-submit_date', 'project')
             result = []
             today = date.today()
@@ -83,11 +91,13 @@ def report_conflict(project_pk, report_type, start_date, submit_date, exclude=No
     conflict = False
 
     query = Q(start_date__gte=start_date, submit_date__lte=submit_date) | \
-            Q(start_date__gte=start_date, start_date__lte=submit_date, submit_date__gte=submit_date) | \
-            Q(Q(submit_date__gte=start_date), start_date__lte=start_date, submit_data__gte=submit_date) | \
-            Q(start_date__lte=start_date, submit_date__gte=start_date, submit_date__lte=submit_date)
+        Q(start_date__gte=start_date, start_date__lte=submit_date, submit_date__gte=submit_date) | \
+        Q(Q(submit_date__gte=start_date), start_date__lte=start_date, submit_data__gte=submit_date) | \
+        Q(start_date__lte=start_date, submit_date__gte=start_date,
+          submit_date__lte=submit_date)
 
-    reportbyproj = ReportByProject.objects.filter(query, project__object_id=project_pk, report__type=report_type)
+    reportbyproj = ReportByProject.objects.filter(
+        query, project__object_id=project_pk, report__type=report_type)
 
     if exclude:
         reportbyproj = reportbyproj.exclude(pk=exclude)

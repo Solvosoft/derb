@@ -17,7 +17,7 @@
                 <div class="alert alert-info">Please select the template you want to use to create a new one</div>
                 Report:
                 <select class="form-control" id="modal_select_new"
-                        onchange="new_report_template('{% url "report_builder:new_report_template" 0 %}');">
+                        onchange="new_report_template('{% url "report_builder:new_report_from_template" 0 %}');">
                     {% for report in object_list %}
                         <option value="{{ report.0.pk }}">{{ report.0.name }}</option>
                     {% endfor %}
@@ -25,9 +25,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
-                <a type="button" href="
-
-                        {% if object_list %}{% url 'report_builder:new_report_template' object_list.0.0.pk %}{% else %}#{% endif %}"
+                <a type="button" href="{% if object_list %}{% url 'report_builder:new_report_from_template' object_list.0.0.pk %}{% else %}#{% endif %}"
                    class="btn btn-primary" id="new_report_template">Accept</a>
             </div>
         </div>
@@ -53,7 +51,7 @@
                     <td>{{ report.0.opening_date }}</td>
                     <td>
                         {% if report.1 %}
-                            <a href="{% url 'report_builder:report_admin' report.0.pk %}">Edit</a>
+                            <a href="{% url 'report_builder:admin_report' report.0.pk %}">Edit</a>
                         {% else %}
                             <a href="#accordion" onclick="$('#message').removeClass('hide');">Edit</a>
                         {% endif %}
@@ -67,7 +65,7 @@
     <button class="btn btn-default text-center" onclick="$('#new_with_template').modal();">
         Create new report from existing template
     </button>
-    <a class="btn btn-default text-center" href="{% url 'report_builder:new_empty_report' %}">
+    <a class="btn btn-default text-center" href="{% url 'report_builder:new_report' %}">
         Create new empty report
     </a>
 </div>

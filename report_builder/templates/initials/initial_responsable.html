@@ -36,7 +36,7 @@
                             </div>
                         </a>
                     </td>
-                    {% if element.report.state != 1 amd element.report.state != 4 %}
+                    {% if element.report.state != 1 and element.report.state != 4 %}
                         {% if element.type == 'responsable' %}
                             <td><a href="{% url 'report_builder:report_responsable' %}">Go to report</a></td>
                         {% else %}

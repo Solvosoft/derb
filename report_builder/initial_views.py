@@ -9,11 +9,11 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 
+from report_builder import registry
 from report_builder.Report import get_reports_by_user, RESPONSABLE
 from report_builder.models import RES_SUPPORTED, Report
+from report_builder.registry import register_initial_view
 from report_builder.shortcuts import get_reviewers_by_user, get_reviewers_by_report, copy_report
-
-from report_builder import registry
 
 
 class InitialIndexView(LoginRequiredMixin, TemplateView):
@@ -65,7 +65,8 @@ class InitialReviewerView(LoginRequiredMixin, ListView):
         reports = []
         if len(reviewers) > 0:
             for reviewer in reviewers:
-                reviewer.report.review_percentage = calculate_reviewer_list_porcentage(reviewer.report)
+                reviewer.report.review_percentage = calculate_reviewer_list_porcentage(
+                    reviewer.report)
                 reports.append(reviewer.report)
         return reports
 
@@ -107,15 +108,18 @@ class InitialTemplateAdminView(LoginRequiredMixin, ListView):
         '''
             TODO: docstring
         '''
-        context = super(InitialTemplateAdminView, self).get_context_data(**kwargs)
+        context = super(
+            InitialTemplateAdminView, self).get_context_data(**kwargs)
         new_object_list = []
         for report in context['object_list']:
-            open_reports = (report, report.opening_date > datetime.datetime.now().date())
+            open_reports = (
+                report, report.opening_date > datetime.datetime.now().date())
             new_object_list.append(open_reports)
         context['object_list'] = new_object_list
         return context
 
 
+# FIXME: Move to other file
 class NewReportView(LoginRequiredMixin, CreateView):
     '''
         View that allows a new report (template) creation.
@@ -133,6 +137,7 @@ class NewReportView(LoginRequiredMixin, CreateView):
         return reverse('report_builder:admin_report', args=[self.object.id])
 
 
+# FIXME: Move to other file
 @login_required
 def NewReportTemplate(request, pk):
     '''
@@ -152,14 +157,16 @@ def assign_type_porcentage_to_reports(reports):
     if len(reports) > 0:
         for report in reports['responsable']:
             report_and_type = {}
-            report.review_percentage = calculate_reviewer_list_porcentage(report)
+            report.review_percentage = calculate_reviewer_list_porcentage(
+                report)
             report_and_type['type'] = 'responsable'
             report_and_type['report'] = report
             reps.append(report_and_type)
 
         for report in reports['collaborator']:
             report_and_type = {}
-            report.review_percentage = calculate_reviewer_list_porcentage(report)
+            report.review_percentage = calculate_reviewer_list_porcentage(
+                report)
             report_and_type['type'] = 'collaborator'
             report_and_type['report'] = report
             reps.append(report_and_type)
@@ -180,11 +187,21 @@ class InitialResponsableView(LoginRequiredMixin, ListView):
             Returns the current reports assigned to the responsable user. Plus, returns the permission and
             review porcentage added with the function :func: `assign_type_porcentage_to_reports`
         '''
-        current_reports = get_reports_by_user(self.request.user, RESPONSABLE, None, True)
+        current_reports = get_reports_by_user(
+            self.request.user, RESPONSABLE, None, True)
         return assign_type_porcentage_to_reports(current_reports)
 
     def get_context_data(self, **kwargs):
-        context = super(InitialResponsableView, self).get_context_data(**kwargs)
+        context = super(
+            InitialResponsableView, self).get_context_data(**kwargs)
         context['all_reports'] = self.all_reports
         context['resp'] = True
         return context
+
+
+register_initial_view(
+    InitialTemplateAdminView.as_view(), "Admin", 0, lambda x: True)
+register_initial_view(
+    InitialResponsableView.as_view(), "Responsable", 1, lambda x: True)
+register_initial_view(
+    InitialReviewerView.as_view(), "Review reports", 2, lambda x: True)

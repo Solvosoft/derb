@@ -1,22 +1,23 @@
-from django.conf.urls import url
 from django.conf.urls import include
+from django.conf.urls import url
 
-from report_builder import views
 from report_builder import initial_views as init
-from report_builder.Question.question_loader import process_question
+from report_builder import views
 from report_builder.Question import QuestionView
-from report_builder.Question.QuestionType import table_question
-from report_builder.Question.QuestionType import simple_text_question
-from report_builder.Question.QuestionType import multiple_selection_question
-from report_builder.Question.QuestionType import boolean_question
-from report_builder.Question.QuestionType import integer_question
-from report_builder.Question.QuestionType import float_question
-from report_builder.Question.QuestionType import unique_selection_question
-from report_builder.Question.QuestionType import model_info
-from report_builder.Question.QuestionType import question_model_info
-from report_builder.Question.QuestionType.unique_selection_question import get_catalog_display_fields
-from report_builder.views import Report
+from report_builder.Question.QuestionType import (table_question,
+                                                  simple_text_question,
+                                                  multiple_selection_question,
+                                                  boolean_question,
+                                                  integer_question,
+                                                  float_question,
+                                                  unique_selection_question,
+                                                  model_info,
+                                                  question_model_info)
 from report_builder.Question.QuestionType.simple_text_question import submit_new_observation
+from report_builder.Question.QuestionType.unique_selection_question import get_catalog_display_fields
+from report_builder.Question.question_loader import process_question
+from report_builder.views import Report
+
 
 # Boolean question
 # Integer question
@@ -29,6 +30,7 @@ from report_builder.Question.QuestionType.simple_text_question import submit_new
 question_types_urls = [
     url(r'base/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', QuestionView.QuestionViewAdmin.as_view(),
         name='base_question_admin'),
+
     url(r'boolean/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', boolean_question.BooleanQuestionViewAdmin.as_view(),
         name='boolean_question_admin'),
     url(r'boolean/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', boolean_question.BooleanQuestionViewResp.as_view(),
@@ -136,9 +138,11 @@ question_types_urls = [
 # Report views
 report_views_urls = [
     url(r'^new/$', init.NewReportView.as_view(), name='new_report'),
-    url(r'^new/(?P<pk>\d+)$', init.NewReportTemplate, name='new_report_from_template'),
+    url(r'^new/(?P<pk>\d+)$', init.NewReportTemplate,
+        name='new_report_from_template'),
     url(r'^admin/template/(?P<pk>\d+)$', Report.admin, name='admin_report'),
-    url(r'^admin/template/(?P<pk>\d+)/save$', Report.save_admin, name='admin_save_report'),
+    url(r'^admin/template/(?P<pk>\d+)/save$',
+        Report.save_admin, name='admin_save_report'),
 ]
 
 # Question processing
@@ -153,11 +157,14 @@ question_process_urls = [
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^js/ckeditor_config.js', views.get_js_editor, name='js_ckeditor_config'),
+    url(r'^js/ckeditor_config.js', views.get_js_editor,
+        name='js_ckeditor_config'),
     url(r'^init$', init.InitialIndexView.as_view(), name='init'),
     url(r'^question_types/', include(question_types_urls)),
     url(r'^report/', include(report_views_urls)),
     url(r'^question_processing/', include(question_process_urls)),
-    url(r"^get_catalog_display_fields", get_catalog_display_fields, name='get_catalog_display_fields'),
-    url(r"^submit_new_observation$", submit_new_observation, name='submit_new_observation')
+    url(r"^get_catalog_display_fields", get_catalog_display_fields,
+        name='get_catalog_display_fields'),
+    url(r"^submit_new_observation$", submit_new_observation,
+        name='submit_new_observation')
 ]

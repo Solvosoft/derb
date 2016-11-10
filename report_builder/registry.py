@@ -1,8 +1,12 @@
+from functools import cmp_to_key
 import types
+
 from django.utils.html import mark_safe
+
 from report_builder.Project_Wrapper import get_filtered_project
 from report_builder.encoding import _st
 from report_builder.html_parser import KeyHandler
+
 
 models = []
 view_list = []
@@ -21,7 +25,8 @@ def get_fields(model, count=0, prefix='', exclude=None):
 
         for field in fields:
             if field.name != 'id' and not field.name in exclude and not prefix + str(field.name) in exclude:
-                return_fields.append((prefix + str(field.name), field.verbose_name))
+                return_fields.append(
+                    (prefix + str(field.name), field.verbose_name))
                 if hasattr(field, 'related'):
                     exclude.append(field.name)
                     try:
@@ -65,7 +70,8 @@ def register(model, name=None, human_name=None, fields=None, exclude=None, type=
     if human_name is None:
         human_name = model._meta.verbose_name
 
-    models.append((query, name, human_name, fields, type, func, filters, derb_type))
+    models.append(
+        (query, name, human_name, fields, type, func, filters, derb_type))
 
 
 def get_properties_by_name(name, type='select'):
@@ -214,7 +220,8 @@ def get_field_types(options, catalog, type='select'):
             model = properties[0].model
             field = model._meta.get_field_by_name(name)[0]
             if attr != '':
-                field = field.related.parent_model._meta.get_field_by_name(attr)[0]
+                field = field.related.parent_model._meta.get_field_by_name(
+                    attr)[0]
             klass = field.__class__.__name__
             display_name = field.verbose_name
             help = field.help_text
@@ -244,4 +251,6 @@ def get_model_list(type, derb_type='__ALL__'):
 
 def register_initial_view(view, title, order, validator):
     view_list.append((view, title, order, validator))
-    view_list.sort(cmp=lambda x,y: cmp(x[2], y[2]))
+    view_list.sort(key=cmp_to_key(lambda x, y:
+                                  (x[2] > y[2]) - (x[2] < y[2])
+                                  ))
