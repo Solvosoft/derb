@@ -1,35 +1,44 @@
-# Derb #
+Derb: Django Enterprise Report Builder 
+===========================================
 
-### Work in progress ###
+Documentation
+---------------------
 
-## Installation 
+See Documentation_.
+
+.. _Documentation: http://derb.readthedocs.io/en/latest/
+
+Installation 
+---------------
 
 * clone the repository
 
-.. code: bash
+.. code:: bash
 
-	git clone https://github.com/solvo/derb.git
-	cd derb
+    git clone https://github.com/solvo/derb.git
+    cd derb
 
 * Set up postgres database (require libpq-dev for psycopg2 compillation)
 
-Postgres is a requirement, because we use [JSONField](https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#django.contrib.postgres.fields.JSONField)
+Postgres is a requirement, because we use JSONField_
+
+.. _JSONField: https://docs.djangoproject.com/en/1.10/ref/contrib/postgres/fields/#django.contrib.postgres.fields.JSONField
 
 * Install requirements (require python3-dev for compilation)
 
 Install rabbitmq-server for send emails notifications
 
-.. code: bash
+.. code:: bash
 
 	apt-get install rabbitmq-server
 
-.. code: bash
+.. code:: bash
 	
 	pip install -r requirements.txt
 
 * Run migrations
 
-.. code: bash
+.. code:: bash
 	
 	python manage.py migrate
 
@@ -37,12 +46,12 @@ Install rabbitmq-server for send emails notifications
 
 First run in separated terminal an email client 
 
-.. code: bash
+.. code:: bash
 
 	python -m smtpd -n -c DebuggingServer localhost:1025
 
 Then run in the other terminal 
 
-.. code: bash
+.. code:: bash
 
 	python manage.py runserver
