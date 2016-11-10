@@ -10,7 +10,7 @@ install:
 script: python manage.py test --settings=derb.test_settings
 
 env:
-  - DJANGO_VERSION=1.9.11
+#  - DJANGO_VERSION=1.9.11
   - DJANGO_VERSION=1.10.3
 
 services:
