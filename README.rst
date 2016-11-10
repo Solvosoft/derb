@@ -4,6 +4,8 @@ Derb: Django Enterprise Report Builder
 Documentation
 ---------------------
 
+|build-status| |license| |wheel| |pyversion| |pyimp|
+
 See Documentation_.
 
 .. _Documentation: http://derb.readthedocs.io/en/latest/
