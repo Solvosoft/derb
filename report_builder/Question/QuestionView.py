@@ -16,8 +16,6 @@ from django.utils.datastructures import OrderedDict
 from django.template import Context
 from weasyprint import HTML
 from io import StringIO
-#from savReaderWriter import SavWriter
-from tempfile import NamedTemporaryFile
 from django.conf import settings
 from report_builder.Observation.ObservationView import ObservationView
 from report_builder.Question.question_loader import process_questions
@@ -26,6 +24,7 @@ from report_builder.Question.forms import QuestionForm, AnswerForm, ObservationF
 from report_builder.report_shortcuts import get_question_permission
 from report_builder.shortcuts import transform_request_to_get, get_children, get_reportbyproj_question_answer
 from report_builder.Question import question_loader
+from django.http.request import QueryDict
 
 
 class Question(LoginRequiredMixin, View):
@@ -242,16 +241,22 @@ class QuestionViewAdmin(Question):
         question_pk = kwargs.get('question_pk', False)
         report_pk = kwargs.get('report_pk', False)
 
+        question_data_json = request.POST.get('question_data')
+        question_data = json.loads(question_data_json)
+        post_data = QueryDict('', mutable=True)
+        post_data.update(question_data)
+        print(post_data)
+
+
         if question_pk and question_pk != '':
             self.question = get_object_or_404(QuestionModel, pk=question_pk)
-            redirection_needed = False
 
         if report_pk and report_pk != '':
             self.report = get_object_or_404(Report, pk=report_pk)
 
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        form = self.get_form(request.POST, instance=self.question)
+        form = self.get_form(post_data, instance=self.question)
 
         if form.is_valid():
             question = form.save(False)
