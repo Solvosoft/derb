@@ -17,6 +17,7 @@ var question_change = {};
  * Functions
  */
 function submit_report_form() {
+    console.log(categories);
     var form = $('#report_form');
     form.find('#id_template').val(JSON.stringify(categories, null, 2));
 
@@ -85,7 +86,7 @@ function get_question_from_id(id) {
     return question;
 }
 
-function add_category(name, human_name) {
+function add_category_to_categories(name, human_name) {
     categories[categories.length] = {
         'name': name,
         'order': categories_len,
@@ -96,7 +97,7 @@ function add_category(name, human_name) {
     categories_len -= 1;
 }
 
-function add_subcategory(category, name, human_name) {
+function add_subcategory_to_categories(category, name, human_name) {
     var subcategories_len = categories[category].subcategories_len;
     categories[category].subcategories[subcategories_len] = {
         'name': name,
@@ -115,9 +116,9 @@ function find_categories() {
 
     var category_li = $('#ul_categories')[0].children;
     for (var x = 0; x < category_li.length; x++) {
-        var category = $(category_li[x]).find('.category_admin');
+        var category = $(category_li[x]).find('.admin_category');
         if (category.length != 0) {
-            add_category($(category).attr('id').replace('categ_', ''), $(category).attr('title'));
+            add_category_to_categories($(category).attr('id').replace('categ_', ''), $(category).attr('title'));
         }
     }
 }
@@ -126,10 +127,11 @@ function find_subcategories() {
     for (var x = 0; x < categories.length; x++) {
         var subcategory_div = $('#' + categories[x].name);
         var subcategory = subcategory_div.find('#ul_subcategories')[0].children;
+        console.log(subcategory);
         for (var y = 0; y < subcategory.length; y++) {
-            var category = $(subcategory[y]).find('.subcategory_admin')
+            var category = $(subcategory[y]).find('.admin_subcategory');
             if (category.length != 0) {
-                add_subcategory(x, category.attr('id').replace('categ_', ''), category.attr('title'));
+                add_subcategory_to_categories(x, category.attr('id').replace('categ_', ''), category.attr('title'));
             }
         }
     }

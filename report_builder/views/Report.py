@@ -87,7 +87,7 @@ def save_admin(request, pk):
 
                 # Delete repeated questions
                 # Build report object
-                
+
                 return HttpResponse('1')
             else:
                 return render(request, 'admin/report_form.html', {'form': form, 'report': report})

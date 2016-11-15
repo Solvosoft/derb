@@ -62,7 +62,7 @@ function delete_alert(self) {
 }
 
 function clean_queue(id) {
-    var queue = $('$message_queue');
+    var queue = $('#message_queue');
     queue.find(id).remove();
 }
 
