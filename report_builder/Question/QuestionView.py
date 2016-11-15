@@ -245,8 +245,6 @@ class QuestionViewAdmin(Question):
         question_data = json.loads(question_data_json)
         post_data = QueryDict('', mutable=True)
         post_data.update(question_data)
-        print(post_data)
-
 
         if question_pk and question_pk != '':
             self.question = get_object_or_404(QuestionModel, pk=question_pk)

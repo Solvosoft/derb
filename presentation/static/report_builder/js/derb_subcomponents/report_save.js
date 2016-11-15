@@ -216,6 +216,9 @@ function save_questions() {
             }
         }
     }
+    build_tree();
+    submit_report_form();
+    saving = false;
 }
 
 function save_all_questions() {

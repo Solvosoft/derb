@@ -1,5 +1,7 @@
 import json
 from datetime import datetime
+
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 
 from report_builder.Question.question_loader import process_questions, get_view_type
@@ -28,6 +30,7 @@ def process_template(request, report, view_type, reportbyproj=None):
             ii += 1
         i += 1
     return categories
+
 
 @gzip_page
 @login_required
@@ -78,6 +81,16 @@ def save_admin(request, pk):
             form = AdminReportForm(request.POST, instance=report)
 
             if form.is_valid():
-                rep = report.save(False)
+                rep = form.save(False)
                 rep.template = json.loads(form.cleaned_data['template'])
                 rep.save()
+
+                # Delete repeated questions
+                # Build report object
+                
+                return HttpResponse('1')
+            else:
+                return render(request, 'admin/report_form.html', {'form': form, 'report': report})
+
+        else:
+            return render(request, 'global/permission_denied.html')
