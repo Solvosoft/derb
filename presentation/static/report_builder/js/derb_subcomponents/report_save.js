@@ -112,9 +112,10 @@ function find_categories() {
     delete category;
 
     category = [];
-    var category_li = $('#categories_ul')[0].children;
+
+    var category_li = $('#ul_categories')[0].children;
     for (var x = 0; x < category_li.length; x++) {
-        var category = $(li_category[x]).find('.category_admin')
+        var category = $(category_li[x]).find('.category_admin');
         if (category.length != 0) {
             add_category($(category).attr('id').replace('categ_', ''), $(category).attr('title'));
         }
@@ -223,8 +224,8 @@ function save_all_questions() {
     save_ckeditor();
 
     var save_inmediatly = true;
-    for (var q = 0; q < question_pool.length; q++) {
-        question_pool[q].saving = true;
+    for (var qu = 0; qu < question_pool.length; qu++) {
+        question_pool[qu].saving = true;
     }
 
     for (var q = 0; q < question_pool.length; q++) {

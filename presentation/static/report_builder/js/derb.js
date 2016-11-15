@@ -51,7 +51,7 @@ function _alert(type, message, append) {
             '<div class="alert_body">' + message + '</div></div></li>';
 
         queue.append(m);
-        setTimeout("clean_queue('#" + lid + "')", 15000);
+        setTimeout("clean_queue('#" + li_id + "')", 15000);
     } else {
         $(children[max_length - 1]).find('.alert_body').append('<br>' + message);
     }
@@ -123,6 +123,7 @@ function save_form(question_id, async, display_alert) {
             django_ajax_alert(jqXHR);
         },
         success: function (data) {
+            console.log(data);
             if ($.isNumeric(data)) {
                 if (question_pool[question].pk == -1) {
                     form.find('#id_question').attr('value', data);

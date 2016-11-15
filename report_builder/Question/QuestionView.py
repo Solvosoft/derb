@@ -263,6 +263,7 @@ class QuestionViewAdmin(Question):
 
             return HttpResponse(question.pk, status=200)
         else:
+            print(form.errors)
             messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
 
         parameters = {
@@ -278,7 +279,7 @@ class QuestionViewAdmin(Question):
         if extra:
             parameters.update(extra)
 
-        return render(request, template_name=self.template_name, context=parameters, status=302)
+        return render(request, template_name=self.template_name, context=parameters)
 
     def process_children(self, request, parameters, arguments, include=None):
         '''

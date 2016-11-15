@@ -63,7 +63,7 @@ class AnswerForm(forms.ModelForm):
 
 
 class AdminReportForm(forms.ModelForm):
-    template = forms.CharField(widget=forms.HiddenInput, max_length=1024**3, initial=' ')
+    template = forms.CharField(widget=forms.HiddenInput, max_length=1024 ** 3, initial=' ')
     order = forms.CharField(widget=forms.HiddenInput, max_length=10, initial='-1')
 
     class Meta:

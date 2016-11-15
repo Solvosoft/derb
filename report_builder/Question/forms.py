@@ -11,7 +11,7 @@ from report_builder.registry import models
 from ast import literal_eval
 
 class QuestionForm(forms.ModelForm):
-    children = forms.CharField(widget=forms.HiddenInput, max_length=1024 ** 3, initial=' ')
+    children = forms.CharField(widget=forms.HiddenInput, required=False)
 
     class Meta:
         model = Question
