@@ -17,7 +17,8 @@ var question_change = {};
  * Functions
  */
 function submit_report_form() {
-    console.log(categories);
+    find_categories();
+    find_subcategories();
     var form = $('#report_form');
     form.find('#id_template').val(JSON.stringify(categories, null, 2));
 
