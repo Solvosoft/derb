@@ -97,7 +97,7 @@ function get_cookie(name) {
     return cookie_value;
 }
 
-function save_form(question_id, async, display_alert) {
+function save_form(question_id, json_data, async, display_alert) {
     if (async == undefined) async = true;
     if (display_alert == undefined) display_alert = true;
 
@@ -114,16 +114,20 @@ function save_form(question_id, async, display_alert) {
         url += question_pool[question].pk
     }
 
+    var data = {
+        csrfmiddlewaretoken: form.find('[name="csrfmiddlewaretoken"]').val(),
+        question_data: JSON.stringify(json_data)
+    };
+
     $.ajax({
         type: 'POST',
         async: async,
         url: url,
-        data: form.serialize(),
+        data: data,
         error: function (jqXHR, textStatus, errorThrown) {
             django_ajax_alert(jqXHR);
         },
         success: function (data) {
-            console.log(data);
             if ($.isNumeric(data)) {
                 if (question_pool[question].pk == -1) {
                     form.find('#id_question').attr('value', data);

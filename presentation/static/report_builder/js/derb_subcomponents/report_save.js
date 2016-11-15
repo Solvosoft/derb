@@ -222,6 +222,7 @@ function save_all_questions() {
     saving = true;
     categories = [];
     save_ckeditor();
+    var json_data;
 
     var save_inmediatly = true;
     for (var qu = 0; qu < question_pool.length; qu++) {
@@ -233,7 +234,8 @@ function save_all_questions() {
             if (question_pool[q].state == 0 || question_pool[q].pk == -1) {
                 if ($('#' + question_pool[q].html_id).length != 0) {
                     save_inmediatly = false;
-                    save_form(question_pool[q].html_id, true, false);
+                    json_data = get_json_from_form(question_pool[q].html_id);
+                    save_form(question_pool[q].html_id, json_data, true, false);
                 } else {
                     remove(question_pool[q].html_id);
                 }
@@ -243,6 +245,17 @@ function save_all_questions() {
     if (save_inmediatly) {
         save_questions();
     }
+}
+
+function get_json_from_form(question_id) {
+    var json_object = {};
+    var question_div = $('#' + question_id);
+    var question_form = question_div.find('form');
+    var question_form_data = question_form.serializeArray();
+    for (var i = 0; i < question_form_data.length; i++){
+        json_object[question_form_data[i].name] = question_form_data[i].value;
+    }
+    return json_object;
 }
 
 function set_modified_question(id) {
