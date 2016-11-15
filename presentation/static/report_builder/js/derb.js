@@ -361,7 +361,7 @@ function edit_subcategory_text(li) {
 
 function add_category() {
     fill_names('', '', 'category', '');
-    $('#categories_modal').find('#categories_modal').text('Add category');
+    $('#categories_modal').find('.modal-title').text('Add category');
     modal.modal();
 }
 
@@ -369,7 +369,7 @@ function add_subcategory(li) {
     var div = $(li).closest('div');
     var category = div.attr('id');
     fill_names('', '', 'subcategory', category);
-    $('#categories_modal').find('#categories_modal').text('Add subcategory');
+    $('#categories_modal').find('.modal-title').text('Add subcategory');
     modal.modal();
 }
 

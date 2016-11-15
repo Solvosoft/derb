@@ -88,6 +88,8 @@ function get_question_from_id(id) {
 }
 
 function add_category_to_categories(name, human_name) {
+    console.log(name);
+    console.log(human_name);
     categories[categories.length] = {
         'name': name,
         'order': categories_len,
@@ -111,17 +113,18 @@ function add_subcategory_to_categories(category, name, human_name) {
 }
 
 function find_categories() {
-    delete category;
-
-    category = [];
+    categories = [];
 
     var category_li = $('#ul_categories')[0].children;
     for (var x = 0; x < category_li.length; x++) {
         var category = $(category_li[x]).find('.admin_category');
+        console.log(category);
         if (category.length != 0) {
             add_category_to_categories($(category).attr('id').replace('categ_', ''), $(category).attr('title'));
         }
     }
+
+    find_subcategories();
 }
 
 function find_subcategories() {
@@ -205,6 +208,7 @@ function build_tree() {
 function save_questions() {
     find_categories();
     find_subcategories();
+    console.log(categories);
     for (var x = 0; x < categories.length; x++) {
         for (var y = 0; y < categories[x].subcategories.length; y++) {
             var name = categories[x].subcategories[x].name;
