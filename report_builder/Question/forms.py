@@ -491,6 +491,14 @@ class ModelInfoQuestionForm(UniqueSelectionQuestionForm):
         'text': CKEditorWidget(config_name='default'),
     }
 
+    class Meta:
+        model = Question
+        fields = ('text', 'help', 'id')
+        widgets = {
+            'text': CKEditorWidget(config_name='default'),
+            'help': CKEditorWidget(config_name='default')
+        }
+
     def __init__(self, *args, **kwargs):
         self.post = args
         on_modal = False
@@ -499,6 +507,8 @@ class ModelInfoQuestionForm(UniqueSelectionQuestionForm):
             on_modal = extra['on_modal']
 
         super(ModelInfoQuestionForm, self).__init__(*args, **kwargs)
+
+        del self.fields['widget']
 
         self.fields['on_modal'] = forms.BooleanField(
             label='See on modal',

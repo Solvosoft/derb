@@ -1,18 +1,9 @@
-import random
-
-from django.http import HttpResponse
-from django.template import Context
-from django.template.loader import get_template
-from django.utils import timezone
 from django.utils.translation import ugettext as _
-from weasyprint import HTML
-
 from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewReviewer, QuestionViewCSV, \
     QuestionViewJSON, QuestionViewSPSS
 from report_builder.Question.QuestionView import QuestionViewResp
 from report_builder.Question.QuestionView import QuestionViewPDF
 from report_builder.Question.forms import BooleanAnswerForm
-from report_builder.models import Question, Answer
 from report_builder.shortcuts import get_children
 
 
@@ -29,7 +20,6 @@ class BooleanQuestionViewAdmin(QuestionViewAdmin):
         children = get_children(form)
         object.answer_options = repr({'children': children})
         return object
-
 
     def additional_template_parameters(self, **kwargs):
         parameters = self.get_question_answer_options()

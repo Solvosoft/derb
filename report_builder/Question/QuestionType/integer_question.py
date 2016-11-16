@@ -2,12 +2,12 @@
 Created on 14/9/2016
 @author: natalia
 '''
+import json
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django_ajax.decorators import ajax
 from django.template.loader import render_to_string
 
-import json
 from report_builder.shortcuts import get_children
 from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF, QuestionViewReviewer, QuestionViewCSV, QuestionViewJSON
 from report_builder.Question.forms import IntegerQuestionForm, IntegerAnswerForm

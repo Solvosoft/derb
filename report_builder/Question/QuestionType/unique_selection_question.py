@@ -71,7 +71,7 @@ class UniqueSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
         # Widget
         widget = None
         if 'widget' in form_data:
-            widget = form_data['']
+            widget = form_data['widget']
 
         # Schema
         schema = ''
