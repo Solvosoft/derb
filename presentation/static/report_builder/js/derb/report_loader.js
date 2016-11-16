@@ -4,20 +4,20 @@
 
 function save_question_sinchronously(question_id) {
     json_data = get_json_from_form(question_id);
-    save_form(question_pool[q].html_id, json_data, false, false);
+    save_form(question_id, json_data, false, false);
     var pool_id = get_question_from_pool(question_id);
-    console.log(pool_id);
 
     if (pool_id == undefined) {
         pool_id = get_question_from_pool(question_change[question_id]);
     }
 
-    var result = parseInt(question_pool[question_id].pk);
+    var result = parseInt(question_pool[pool_id].pk);
+
     if (result == -1) {
         throw new Error('Unanswered question');
-    } else {
-        return result;
     }
+
+    return result;
 }
 
 function load_questions_id(list) {
@@ -39,7 +39,9 @@ function load_questions_id(list) {
             } else {
                 var question = question_id.closest('.question_panel').attr('id');
                 qnumber = save_question_sinchronously(question);
+                console.log('qnumber', qnumber);
                 qid = get_question_from_id(qnumber);
+                console.log('qid', qid);
                 txt.push(qnumber);
             }
             question_list.push(question_pool[qid]);
@@ -111,6 +113,7 @@ function load_subquestions(form, html_id) {
     var type = form.find('#name').val();
     var content = form.closest('.question_panel').find('#questions');
     var children = get_question_children_id(content, type, html_id);
+    console.log(children);
     form.find('#id_children').val(children);
 }
 
