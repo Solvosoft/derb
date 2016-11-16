@@ -3,9 +3,10 @@
  */
 
 function save_question_sinchronously(question_id) {
-    save_form(question_id, false, false);
-
+    json_data = get_json_from_form(question_id);
+    save_form(question_pool[q].html_id, json_data, false, false);
     var pool_id = get_question_from_pool(question_id);
+    console.log(pool_id);
 
     if (pool_id == undefined) {
         pool_id = get_question_from_pool(question_change[question_id]);
@@ -27,7 +28,7 @@ function load_questions_id(list) {
     var qnumber = -1;
 
     for (var x = 0; x < list.length; x++) {
-        question_id = $($(list[0]).find('.question_panel')[0]);
+        question_id = $($(list[x]).find('.question_panel')[0]);
         if (question_id.length > 0) {
             question_id = $($(question_id[0]).find('#question_id')[0]);
 
@@ -55,7 +56,25 @@ function load_simple_text_question(content, html_id) {
 }
 
 function load_boolean_question(content, html_id) {
-    /* TODO */
+    var target_question = get_question_from_pool(html_id);
+    question_pool[target_question].children = {};
+
+    var question_id = content.closest('.question_panel').attr('id');
+    var yes_list = load_questions_id($(content.find('#' + question_id + '_yes ul')[0]).children());
+    var no_list = load_questions_id($(content.find('#' + question_id + '_no ul')[0]).children());
+    var nr_list = load_questions_id($(content.find('#' + question_id + '_nr ul')[0]).children());
+
+    question_pool[target_question].children['yes'] = yes_list.question_list;
+    question_pool[target_question].children['no'] = no_list.question_list;
+    question_pool[target_question].children['nr'] = nr_list.question_list;
+
+    var result = {
+        'yes': yes_list.txt,
+        'no': no_list.txt,
+        'nr': nr_list.txt
+    };
+
+    return JSON.stringify(result, null, 2);
 }
 
 function load_model_selection_question(content, html_id) {
@@ -96,7 +115,7 @@ function load_subquestions(form, html_id) {
 }
 
 function find_html_children(question_id) {
-    var form = $($('#' + question_id + '_form')[0]);
+    var form = $($('#' + question_id + ' form')[0]);
     load_subquestions(form, question_id);
 }
 

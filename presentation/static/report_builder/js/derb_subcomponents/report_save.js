@@ -201,7 +201,6 @@ function build_tree() {
 
 function save_questions() {
     find_categories();
-    find_subcategories();
     for (var x = 0; x < categories.length; x++) {
         for (var y = 0; y < categories[x].subcategories.length; y++) {
             var name = categories[x].subcategories[x].name;
