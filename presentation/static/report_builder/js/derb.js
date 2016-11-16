@@ -110,6 +110,7 @@ function save_form(question_id, json_data, async, display_alert) {
 
     var question = get_question_from_pool(question_id);
     var url = form.attr('action');
+
     if (question_pool[question].pk != -1) {
         url += question_pool[question].pk
     }
@@ -308,7 +309,6 @@ function delete_question_table_row(element, url, form_number) {
 
 function see_hide(button) {
     panel = $(button).closest('.question_panel');
-    console.log(panel);
     body = panel.find('.panel-body');
     content = panel.find('#content');
 

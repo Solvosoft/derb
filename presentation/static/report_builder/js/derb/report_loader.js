@@ -39,9 +39,7 @@ function load_questions_id(list) {
             } else {
                 var question = question_id.closest('.question_panel').attr('id');
                 qnumber = save_question_sinchronously(question);
-                console.log('qnumber', qnumber);
                 qid = get_question_from_id(qnumber);
-                console.log('qid', qid);
                 txt.push(qnumber);
             }
             question_list.push(question_pool[qid]);
@@ -113,7 +111,6 @@ function load_subquestions(form, html_id) {
     var type = form.find('#name').val();
     var content = form.closest('.question_panel').find('#questions');
     var children = get_question_children_id(content, type, html_id);
-    console.log(children);
     form.find('#id_children').val(children);
 }
 

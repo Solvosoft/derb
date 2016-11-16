@@ -147,8 +147,6 @@ function do_sortable() {
         receive: function (event, ui) {
             if (ui.item.hasClass('palette_item')) {
                 new_item = ui.item.clone();
-                console.log(new_item);
-                console.log(ui.item);
                 ui.item.removeClass('palette_item');
                 ui.item.load(ui.item.attr('url'));
                 ui.item.attr('id', '');
@@ -310,7 +308,6 @@ function add_update_category() {
             cat.html(text);
             cat.attr('title', help);
         } else {
-            console.log(type_value);
             var div = $('#' + type_value);
             cat = $($(div.find('.active')[0]).find('a')[0]);
             cat.html(text);

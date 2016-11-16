@@ -2,8 +2,7 @@
  * Created by mau on 26/10/16.
  */
 $(document).ready(function() {
-    //console.log(observation_url);
-    //submit_observation();
+
 });
 
 function submit_observation() {

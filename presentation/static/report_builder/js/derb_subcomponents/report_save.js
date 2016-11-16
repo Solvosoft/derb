@@ -210,14 +210,21 @@ function save_questions() {
             for (var z = 0; z < question_li.length; z++) {
                 var question_div = $(question_li[z]).find('.question_panel')[0];
                 if (question_div != undefined) {
+                    var key = $(question_div).attr('id');
+                    var question_id = get_question_from_pool(key);
 
+                    if (question_id != undefined){
+                        categories[x].subcategories[y].questions.push(
+                            parseInt(question_pool[question_id].pk)
+                        );
+                    }
                 }
             }
         }
     }
-    build_tree();
-    submit_report_form();
-    saving = false;
+    //build_tree();
+    //submit_report_form();
+    //saving = false;
 }
 
 function save_all_questions() {
@@ -244,6 +251,7 @@ function save_all_questions() {
             }
         }
     }
+
     if (save_inmediatly) {
         save_questions();
     }
