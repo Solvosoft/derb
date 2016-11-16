@@ -14,9 +14,38 @@ from report_builder.models import Answer, Observation, Reviewer
 
 
 class SimpleTextQuestionViewAdmin(QuestionViewAdmin):
-    form_class = SimpleTextQuestionForm
-    template_name = 'admin/question_types/simple_text_question.html'
-    name = 'simple_text_question'
+    '''
+        SimpleTextQuestionViewAdmin class represents the implementation of the template administrator view for a question object
+        This view is built to be extended from the different question types of the Derb system
+        By itself, this view provides the functionality for ordering and deletion of question, and a form with question
+        text and help
+        
+        This class be extended using an implementation like this:
+
+        .. code:: python
+
+            from report_builder.Question.QuestionView import QuestionViewAdmin
+            class MyQuestion(QuestionViewAdmin):
+                template_name = 'path/to/the/template'
+                name = 'my_question'
+
+        The extended methods can be overridden to adjust the functionality of the extended class. For instance:
+
+        .. code:: python
+
+            def additional_template_parameters(self, **kwargs):
+                some_dict = {
+                    'something': some_variable
+                }
+                return some_dict
+
+        .. note::
+            *kwargs* is a dict that contains the Question attributes 'form', 'report', 'question' and 'name'
+            You don't have to append the kwargs content in the return value, only the additional elements
+    '''
+    form_class = SimpleTextQuestionForm #: Default form for the class
+    template_name = 'admin/question_types/simple_text_question.html' #: Specifies which template to load
+    name = 'simple_text_question' #: Class reference name
     minimal_representation = {
         'human_readable_name': 'Simple text question',
         'help': 'Allows you to make simple text questions',
@@ -47,20 +76,20 @@ class SimpleTextQuestionViewAdmin(QuestionViewAdmin):
 
 # class SimpleTextQuestionResp(QuestionViewResp):
 class SimpleQuestionViewResp(QuestionViewResp):
-    name = 'simple_text_question'
-    template_name = 'responsable/simple_text_question.html'
-    form_class = SimpleTextAnswerForm
+    name = 'simple_text_question' #: Class reference name
+    template_name = 'responsable/simple_text_question.html' #: Specifies which template to load
+    form_class = SimpleTextAnswerForm #: Default form for the class
 
 
 # class SimpleTextQuestionPDF(QuestionViewPDF):
 class SimpleTextQuestionViewPDF(QuestionViewPDF):
-    name = 'simple_text_question'
-    template_name = 'pdf/simple_text_question.html'
+    name = 'simple_text_question' #: Class reference name
+    template_name = 'pdf/simple_text_question.html' #: Specifies which template to load
     
 
 class SimpleTextQuestionViewReviewer(QuestionViewReviewer):
-    name = 'simple_text_question'
-    template_name = 'revisor/simple_text_question.html'
+    name = 'simple_text_question' #: Class reference name
+    template_name = 'revisor/simple_text_question.html' #: Specifies which template to load
     
 
 @ajax
@@ -93,9 +122,9 @@ def submit_new_observation(request):
     return HttpResponse(0)
 
 class SimpleQuestionViewCSV(QuestionViewCSV):
-    name = 'simple_text_question'
+    name = 'simple_text_question' #: Class reference name
     
 
 class SimpleQuestionViewJSON(QuestionViewJSON):
-    name = 'simple_text_question'
+    name = 'simple_text_question' #: Class reference name
     
