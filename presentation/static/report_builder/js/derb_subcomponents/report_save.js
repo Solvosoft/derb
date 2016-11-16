@@ -18,7 +18,6 @@ var question_change = {};
  */
 function submit_report_form() {
     find_categories();
-    find_subcategories();
     var form = $('#report_form');
     form.find('#id_template').val(JSON.stringify(categories, null, 2));
 
@@ -88,8 +87,6 @@ function get_question_from_id(id) {
 }
 
 function add_category_to_categories(name, human_name) {
-    console.log(name);
-    console.log(human_name);
     categories[categories.length] = {
         'name': name,
         'order': categories_len,
@@ -118,12 +115,10 @@ function find_categories() {
     var category_li = $('#ul_categories')[0].children;
     for (var x = 0; x < category_li.length; x++) {
         var category = $(category_li[x]).find('.admin_category');
-        console.log(category);
         if (category.length != 0) {
             add_category_to_categories($(category).attr('id').replace('categ_', ''), $(category).attr('title'));
         }
     }
-
     find_subcategories();
 }
 
@@ -131,7 +126,6 @@ function find_subcategories() {
     for (var x = 0; x < categories.length; x++) {
         var subcategory_div = $('#' + categories[x].name);
         var subcategory = subcategory_div.find('#ul_subcategories')[0].children;
-        console.log(subcategory);
         for (var y = 0; y < subcategory.length; y++) {
             var category = $(subcategory[y]).find('.admin_subcategory');
             if (category.length != 0) {
@@ -208,7 +202,6 @@ function build_tree() {
 function save_questions() {
     find_categories();
     find_subcategories();
-    console.log(categories);
     for (var x = 0; x < categories.length; x++) {
         for (var y = 0; y < categories[x].subcategories.length; y++) {
             var name = categories[x].subcategories[x].name;
