@@ -12,11 +12,7 @@ Contents:
    :maxdepth: 2
 
    installation
-   wysiwyg_installation
-   database_configuration
-   pdf_generation
-   internationalization
-   celery_tasks
+   development_tips
    models
    question_type
 
