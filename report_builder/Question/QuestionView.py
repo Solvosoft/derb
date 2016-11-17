@@ -1,67 +1,70 @@
 import csv
+from io import StringIO
 import json
 import random
-import reversion
+from tempfile import NamedTemporaryFile
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.utils import timezone
 from django.http import HttpResponse
-from django.template.loader import get_template
 from django.shortcuts import render, get_object_or_404, redirect
+from django.template import Context
+from django.template.loader import get_template
+from django.utils import timezone
+from django.utils.datastructures import OrderedDict
 from django.views.defaults import bad_request
 from django.views.generic.base import View
-from django.utils.datastructures import OrderedDict
-from django.template import Context
+import reversion
 from weasyprint import HTML
-from io import StringIO
-#from savReaderWriter import SavWriter
-from tempfile import NamedTemporaryFile
-from django.conf import settings
+
 from report_builder.Observation.ObservationView import ObservationView
+from report_builder.Question import question_loader
+from report_builder.Question.forms import QuestionForm, AnswerForm, ObservationForm
 from report_builder.Question.question_loader import process_questions
 from report_builder.models import Question as QuestionModel, Answer, Report, ReportByProject
-from report_builder.Question.forms import QuestionForm, AnswerForm, ObservationForm
 from report_builder.report_shortcuts import get_question_permission
 from report_builder.shortcuts import transform_request_to_get, get_children, get_reportbyproj_question_answer
-from report_builder.Question import question_loader
 
 
+#from savReaderWriter import SavWriter
 class Question(LoginRequiredMixin, View):
     """
-        Question class contains the general functionality for a question object, and sets the base for the different
-        question types of the Derb system.
+    Question class contains the general functionality for a question object, and sets the base for the different
+    question types of the Derb system.
 
-        Until now, this are the question types that can be created based on Question:
+    Until now, this are the question types that can be created based on Question:
 
-            - simple_text_question
-            - boolean_question
-            - integer_question
-            - float_question
-            - unique_selection_question
+        - simple_text_question
+        - boolean_question
+        - integer_question
+        - float_question
+        - unique_selection_question
 
-        The Question class also provides the way to extend the functionality of a question object. For instance:
+    The Question class also provides the way to extend the functionality of a question object. For instance:
 
-            * Define additional answer options to the question object
-            * Define additional context attributes to the question template
-            * Modify question form parameters
+        * Define additional answer options to the question object
+        * Define additional context attributes to the question template
+        * Modify question form parameters
     """
     template_name = 'admin/base_question.html'  #: Specifies which template to load
     form_class = QuestionForm  #: Default form for the class
-    base_model = QuestionModel  #: Base model for the form (:mod:`report_builder.models.Question`)
+    #: Base model for the form (:mod:`report_builder.models.Question`)
+    base_model = QuestionModel
     name = 'simple_question'  #: Class reference name
     question = None  #: Question instance
     answer = None  #: Answer reference (if it exists)
     start_number = 500  #: Random start value for the question template
     end_number = 10000  #: Random end value  for the question template
     form_number = 0  #: Unique value for the view
-    view_type = 'admin'  #: View type to load, it can be: admin, responsable, revisor, pdf, csv, json
+    #: View type to load, it can be: admin, responsable, revisor, pdf, csv, json
+    view_type = 'admin'
     request = None  #: Copy of the request provided by the view (GET or POST)
 
     def get_question_answer_options(self):
         """
-            Returns a dict with extra options for the question. It uses JSON parsing to unpack the answer options
+        Returns a dict with extra options for the question. It uses JSON parsing to unpack the answer options
         """
         results = None
         if self.question is not None and self.question.answer_options:
@@ -70,36 +73,36 @@ class Question(LoginRequiredMixin, View):
 
     def additional_template_parameters(self, **kwargs):
         """
-            Allows to add extra entries to the template context.
-            It receives a copy of the context and must return only the extra parameters (answer_options)
+        Allows to add extra entries to the template context.
+        It receives a copy of the context and must return only the extra parameters (answer_options)
 
-            .. note:: This method is called before the templated is rendered
+        .. note:: This method is called before the templated is rendered
         """
         return self.get_question_answer_options()
 
     def pre_save(self, object, request, form):
         """
-            It allows add or set attributes to the question object.
-            The data can be extracted directly from the request (POST) or the form provided.
-            It returns the instance of the object with the modifications applied
+        It allows add or set attributes to the question object.
+        The data can be extracted directly from the request (POST) or the form provided.
+        It returns the instance of the object with the modifications applied
         """
         return object
 
     def get_form(self, post=None, instance=None, extra=None):
         """
-            It allows to add or set attributes to the question form.
-            *extra* is a a dictionary tha is passed to the form constructor
-            If you want to override this method in a class that extends from Question, you have to do it like this:
+        It allows to add or set attributes to the question form.
+        *extra* is a a dictionary tha is passed to the form constructor
+        If you want to override this method in a class that extends from Question, you have to do it like this:
 
-            .. code:: python
+        .. code:: python
 
-                class ExampleClass(Question):
+            class ExampleClass(Question):
 
-                    def get_form(self, post=None, instance=None, extra=None):
-                        extra = {
-                            'extra_value': data
-                        }
-                        return super(ExampleClass, self).get_form(post=post, instance=instance, extra=extra)
+                def get_form(self, post=None, instance=None, extra=None):
+                    extra = {
+                        'extra_value': data
+                    }
+                    return super(ExampleClass, self).get_form(post=post, instance=instance, extra=extra)
         """
         form = None
         if extra is None:
@@ -114,7 +117,7 @@ class Question(LoginRequiredMixin, View):
 
     def get_observations(self, request, *args, **kwargs):
         '''
-            Returns the observations rendered template for the question object (to allow to see, allow and add observations)
+        Returns the observations rendered template for the question object (to allow to see, allow and add observations)
         '''
         request = transform_request_to_get(request=request)
         observation_view = ObservationView.as_view()
@@ -149,33 +152,33 @@ class Question(LoginRequiredMixin, View):
 
 class QuestionViewAdmin(Question):
     '''
-        QuestionViewAdmin class represents the implementation of the template administrator view for a question object
-        This view is built to be extended from the different question types of the Derb system
-        By itself, this view provides the functionality for ordering and deletion of question, and a form with question
-        text and help
+    QuestionViewAdmin class represents the implementation of the template administrator view for a question object
+    This view is built to be extended from the different question types of the Derb system
+    By itself, this view provides the functionality for ordering and deletion of question, and a form with question
+    text and help
 
-        This class be extended using an implementation like this:
+    This class be extended using an implementation like this:
 
-        .. code:: python
+    .. code:: python
 
-            from report_builder.Question.QuestionView import QuestionViewAdmin
-            class MyQuestion(QuestionViewAdmin):
-                template_name = 'path/to/the/template'
-                name = 'my_question'
+        from report_builder.Question.QuestionView import QuestionViewAdmin
+        class MyQuestion(QuestionViewAdmin):
+            template_name = 'path/to/the/template'
+            name = 'my_question'
 
-        The extended methods can be overridden to adjust the functionality of the extended class. For instance:
+    The extended methods can be overridden to adjust the functionality of the extended class. For instance:
 
-        .. code:: python
+    .. code:: python
 
-            def additional_template_parameters(self, **kwargs):
-                some_dict = {
-                    'something': some_variable
-                }
-                return some_dict
+        def additional_template_parameters(self, **kwargs):
+            some_dict = {
+                'something': some_variable
+            }
+            return some_dict
 
-        .. note::
-            *kwargs* is a dict that contains the Question attributes 'form', 'report', 'question' and 'name'
-            You don't have to append the kwargs content in the return value, only the additional elements
+    .. note::
+        *kwargs* is a dict that contains the Question attributes 'form', 'report', 'question' and 'name'
+        You don't have to append the kwargs content in the return value, only the additional elements
     '''
     template_name = 'admin/base_question.html'
     name = 'simple_question'
@@ -188,15 +191,15 @@ class QuestionViewAdmin(Question):
 
     def get(self, request, *args, **kwargs):
         '''
-            Handles the requests using the *GET* HTTP verb triggered by the template administrator
-            The context passed to the template contains (at least) the next elements:
-                - form
-                - report
-                - question
-                - name
-                - form_number
-                - minimal_representation
-            Returns the rendered template for the question
+        Handles the requests using the *GET* HTTP verb triggered by the template administrator
+        The context passed to the template contains (at least) the next elements:
+            - form
+            - report
+            - question
+            - name
+            - form_number
+            - minimal_representation
+        Returns the rendered template for the question
         '''
         question_pk = kwargs.get('question_pk', False)
         report_pk = kwargs.get('report_pk', False)
@@ -228,16 +231,16 @@ class QuestionViewAdmin(Question):
 
     def post(self, request, *args, **kwargs):
         '''
-            Handles the requests using the *POST* HTTP verb triggered by the template administrator
-            The context passed to the template contains (at least) the next elements:
-                - form
-                - report
-                - question
-                - name
-                - form_number
-                - minimal_representation
-            Returns the question pk when the POST request is processed correctly
-            Return the rendered template (with errors) when the form presents errors
+        Handles the requests using the *POST* HTTP verb triggered by the template administrator
+        The context passed to the template contains (at least) the next elements:
+            - form
+            - report
+            - question
+            - name
+            - form_number
+            - minimal_representation
+        Returns the question pk when the POST request is processed correctly
+        Return the rendered template (with errors) when the form presents errors
         '''
         question_pk = kwargs.get('question_pk', False)
         report_pk = kwargs.get('report_pk', False)
@@ -259,11 +262,13 @@ class QuestionViewAdmin(Question):
             question.report = self.report
             question = self.pre_save(question, request, form)
             question.save()
-            messages.add_message(request, messages.SUCCESS, 'Question saved successfully')
+            messages.add_message(
+                request, messages.SUCCESS, 'Question saved successfully')
 
             return HttpResponse(question.pk, status=200)
         else:
-            messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
+            messages.add_message(
+                request, messages.ERROR, 'An error ocurred while creating the question')
 
         parameters = {
             'form': form,
@@ -282,12 +287,12 @@ class QuestionViewAdmin(Question):
 
     def process_children(self, request, parameters, arguments, include=None):
         '''
-            Gets the rendered template (HTML code) for every child question of the current question
+        Gets the rendered template (HTML code) for every child question of the current question
 
-            :param request:
-            :param dict parameters: context parameters passed to the template, generally self.question.answer_options
-            :param dict arguments: parameters passed to the function additional_template_parameters
-            :return: list of string with the rendered templates for the child questions
+        :param request:
+        :param dict parameters: context parameters passed to the template, generally self.question.answer_options
+        :param dict arguments: parameters passed to the function additional_template_parameters
+        :return: list of string with the rendered templates for the child questions
         '''
 
         if include is None:
@@ -300,21 +305,22 @@ class QuestionViewAdmin(Question):
             children = parameters['children']
         if children:
             for child in children:
-                return_value[child] = process_questions(request, report.pk, children[child], view_type=self.view_type)
+                return_value[child] = process_questions(
+                    request, report.pk, children[child], view_type=self.view_type)
         return return_value
 
 
 class QuestionViewResp(Question):
     """
-        QuestionViewResp class represents the implementation of the template administrator view for a question object
-        This view is built to be extended from the different question types of the Derb system
-        By itself, this view shows the simple question created by the template administrator, including the question text and help
-        set by the user. Additionally, it provides a form two fields, a text area for the user to answer the question and a text area
-        to add annotations for the reviewers. Plus, when a reviewer user has applied observations to the question, it shows such observations.
+    QuestionViewResp class represents the implementation of the template administrator view for a question object
+    This view is built to be extended from the different question types of the Derb system
+    By itself, this view shows the simple question created by the template administrator, including the question text and help
+    set by the user. Additionally, it provides a form two fields, a text area for the user to answer the question and a text area
+    to add annotations for the reviewers. Plus, when a reviewer user has applied observations to the question, it shows such observations.
 
-        .. note::
-            * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
-            you can find it in :mod:`report_builder.Question.QuestionView.Question`
+    .. note::
+        * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
+        you can find it in :mod:`report_builder.Question.QuestionView.Question`
     """
     template_name = 'responsable/simple_question.html'
     form_class = AnswerForm
@@ -325,25 +331,28 @@ class QuestionViewResp(Question):
 
     def get(self, request, *args, **kwargs):
         '''
-             Handles the requests using the *GET* HTTP verb triggered by the responsable
-             The context passed to the template contains (at least) the next elements:
-                - name
-                - form
-                - question
-                - question_number
-                - answer
-                - reportbyproj
-                - form_number
-                - observations
-                - requirement
+        Handles the requests using the *GET* HTTP verb triggered by the responsable
+        The context passed to the template contains (at least) the next elements:
+            - name
+            - form
+            - question
+            - question_number
+            - answer
+            - reportbyproj
+            - form_number
+            - observations
+            - requirement
         '''
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
-        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        self.question = get_object_or_404(
+            QuestionModel, pk=kwargs['question_pk'])
+        reportbyproj = get_object_or_404(
+            ReportByProject, pk=kwargs['report_pk'])
 
         if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
-            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
+            self.answer = Answer.objects.get(
+                report=reportbyproj, question=self.question)
 
         form = self.get_form(instance=self.answer)
 
@@ -364,26 +373,29 @@ class QuestionViewResp(Question):
 
     def post(self, request, *args, **kwargs):
         '''
-            Handles the requests using the *POST* HTTP verb triggered by the responsable
-            The context passed to the template contains (at least) the next elements:
-               - name
-               - form
-               - question
-               - question_number
-               - answer
-               - reportbyproj
-               - form_number
-               - observations
-               - requirement
-            Returns the answer pk when the POST request is processed correctly
-            Return the rendered template (with errors) when the form presents errors
+        Handles the requests using the *POST* HTTP verb triggered by the responsable
+        The context passed to the template contains (at least) the next elements:
+           - name
+           - form
+           - question
+           - question_number
+           - answer
+           - reportbyproj
+           - form_number
+           - observations
+           - requirement
+        Returns the answer pk when the POST request is processed correctly
+        Return the rendered template (with errors) when the form presents errors
        '''
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
-        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        self.question = get_object_or_404(
+            QuestionModel, pk=kwargs['question_pk'])
+        reportbyproj = get_object_or_404(
+            ReportByProject, pk=kwargs['report_pk'])
         if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
-            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
+            self.answer = Answer.objects.get(
+                report=reportbyproj, question=self.question)
 
         if self.answer is None:
             self.answer = Answer()
@@ -427,10 +439,10 @@ class QuestionViewResp(Question):
 
     def is_valid_question(self, reportbyproj_pk, question_pk, answer_pk):
         '''
-            Checks if the question has been answered correctly
-            Used when checking if the report is complete before to submit for revision or when the user request the report status
+        Checks if the question has been answered correctly
+        Used when checking if the report is complete before to submit for revision or when the user request the report status
 
-            In the case that the question has not been answered correctly or answered at all, returns the error info
+        In the case that the question has not been answered correctly or answered at all, returns the error info
         '''
         question = None
         try:
@@ -477,16 +489,16 @@ class QuestionViewResp(Question):
 
 class QuestionViewPDF(Question):
     """
-        QuestionViewPDF class represents the implementation of exporting a question object to a PDF document
-        This view is built to be extended from the different question types of the Derb system
-        By itself, this view saves in the PDF the simple question created by the template administrator, including
-        the question text and help set by the user. Additionally, if a responsable user has answered the question,
-        it shows the answer text and annotations provided. Finally, if one or more reviewer users applied
-        observations to the question, it shows such observations.
+    QuestionViewPDF class represents the implementation of exporting a question object to a PDF document
+    This view is built to be extended from the different question types of the Derb system
+    By itself, this view saves in the PDF the simple question created by the template administrator, including
+    the question text and help set by the user. Additionally, if a responsable user has answered the question,
+    it shows the answer text and annotations provided. Finally, if one or more reviewer users applied
+    observations to the question, it shows such observations.
 
-        .. note::
-            * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
-            you can find it in :mod:`report_builder.Question.QuestionView.Question`
+    .. note::
+        * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
+        you can find it in :mod:`report_builder.Question.QuestionView.Question`
     """
     template_name = "pdf/simple_question.html"
     form_class = None
@@ -504,24 +516,27 @@ class QuestionViewPDF(Question):
 
     def get(self, request, *args, **kwargs):
         """
-             Handles the requests using the *GET* HTTP verb triggered by a user to export a question to a PDF document
-             The context passed to the template contains (at least) the next elements:
-                - name
-                - form
-                - question
-                - question_number
-                - answer
-                - reportbyproj
-                - form_number
-                - observations
-                - requirement
+        Handles the requests using the *GET* HTTP verb triggered by a user to export a question to a PDF document
+        The context passed to the template contains (at least) the next elements:
+           - name
+           - form
+           - question
+           - question_number
+           - answer
+           - reportbyproj
+           - form_number
+           - observations
+           - requirement
         """
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
-        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        self.question = get_object_or_404(
+            QuestionModel, pk=kwargs['question_pk'])
+        reportbyproj = get_object_or_404(
+            ReportByProject, pk=kwargs['report_pk'])
         if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
-            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
+            self.answer = Answer.objects.get(
+                report=reportbyproj, question=self.question)
 
         parameters = {
             'name': self.name,
@@ -550,16 +565,16 @@ class QuestionViewPDF(Question):
 
 class QuestionViewReviewer(Question):
     """
-        QuestionViewReviewer class represents the implementation of the reviewer view for a question object
-        This view is built to be extended from the different question types of the Derb system
-        By itself, this view shows the simple question created by the template administrator, including
-        the question text and help set by the user. Additionally, if a responsable user has answered the question,
-        it shows the answer text and annotations provided. Finally, if one or more reviewer users applied
-        observations to the question, it shows such observations.
+    QuestionViewReviewer class represents the implementation of the reviewer view for a question object
+    This view is built to be extended from the different question types of the Derb system
+    By itself, this view shows the simple question created by the template administrator, including
+    the question text and help set by the user. Additionally, if a responsable user has answered the question,
+    it shows the answer text and annotations provided. Finally, if one or more reviewer users applied
+    observations to the question, it shows such observations.
 
-        .. note::
-            * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
-            you can find it in :mod:`report_builder.Question.QuestionView.Question`
+    .. note::
+        * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
+        you can find it in :mod:`report_builder.Question.QuestionView.Question`
     """
     template_name = 'reviewer/simple_question.html'
     view_type = 'reviewer'
@@ -573,10 +588,13 @@ class QuestionViewReviewer(Question):
     def get(self, request, *args, **kwargs):
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
-        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        self.question = get_object_or_404(
+            QuestionModel, pk=kwargs['question_pk'])
+        reportbyproj = get_object_or_404(
+            ReportByProject, pk=kwargs['report_pk'])
         if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
-            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
+            self.answer = Answer.objects.get(
+                report=reportbyproj, question=self.question)
 
         form = self.get_form()
 
@@ -594,16 +612,16 @@ class QuestionViewReviewer(Question):
 
 class QuestionViewCSV(Question):
     """
-        QuestionViewJSON class represents the implementation of exporting a question object to a CSV formatted string
-        This view is built to be extended from the different question types of the Derb system
-        By itself, this view saves in the CSV string the simple question created by the template administrator, including
-        the question text and help set by the user. Additionally, if a responsable user has answered the question,
-        it saves the answer text and annotations provided. Finally, if one or more reviewer users applied
-        observations to the question, it saves such observations.
+    QuestionViewJSON class represents the implementation of exporting a question object to a CSV formatted string
+    This view is built to be extended from the different question types of the Derb system
+    By itself, this view saves in the CSV string the simple question created by the template administrator, including
+    the question text and help set by the user. Additionally, if a responsable user has answered the question,
+    it saves the answer text and annotations provided. Finally, if one or more reviewer users applied
+    observations to the question, it saves such observations.
 
-        .. note::
-            * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
-            you can find it in :mod:`report_builder.Question.QuestionView.Question`
+    .. note::
+        * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
+        you can find it in :mod:`report_builder.Question.QuestionView.Question`
     """
     name = 'simple_question'
     view_type = 'csv'
@@ -637,24 +655,27 @@ class QuestionViewCSV(Question):
 
     def get(self, request, *args, **kwargs):
         """
-            Handles the requests using the *GET* HTTP verb triggered by a user to export a question to a CSV string
-            The context passed to the template contains (at least) the next elements:
-               - name
-               - form
-               - question
-               - question_number
-               - answer
-               - reportbyproj
-               - form_number
-               - observations
-               - requirement
+        Handles the requests using the *GET* HTTP verb triggered by a user to export a question to a CSV string
+        The context passed to the template contains (at least) the next elements:
+           - name
+           - form
+           - question
+           - question_number
+           - answer
+           - reportbyproj
+           - form_number
+           - observations
+           - requirement
        """
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
-        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        self.question = get_object_or_404(
+            QuestionModel, pk=kwargs['question_pk'])
+        reportbyproj = get_object_or_404(
+            ReportByProject, pk=kwargs['report_pk'])
         if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
-            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
+            self.answer = Answer.objects.get(
+                report=reportbyproj, question=self.question)
 
         data = self.get_question_data(self.question, reportbyproj, self.answer)
 
@@ -667,24 +688,24 @@ class QuestionViewCSV(Question):
 
     def post(self, request, *args, **kwargs):
         """
-            This view can be handled only using the GET verb
-            For security reasons, when a request is sent using the POST verb, the 403 exception is raised
+        This view can be handled only using the GET verb
+        For security reasons, when a request is sent using the POST verb, the 403 exception is raised
         """
         return bad_request(request)
 
 
 class QuestionViewJSON(Question):
     """
-        QuestionViewJSON class represents the implementation of exporting a question object to a JSON formatted string
-        This view is built to be extended from the different question types of the Derb system
-        By itself, this view saves in the JSON string the simple question created by the template administrator, including
-        the question text and help set by the user. Additionally, if a responsable user has answered the question,
-        it saves the answer text and annotations provided. Finally, if one or more reviewer users applied
-        observations to the question, it saves such observations.
+    QuestionViewJSON class represents the implementation of exporting a question object to a JSON formatted string
+    This view is built to be extended from the different question types of the Derb system
+    By itself, this view saves in the JSON string the simple question created by the template administrator, including
+    the question text and help set by the user. Additionally, if a responsable user has answered the question,
+    it saves the answer text and annotations provided. Finally, if one or more reviewer users applied
+    observations to the question, it saves such observations.
 
-        .. note::
-            * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
-            you can find it in :mod:`report_builder.Question.QuestionView.Question`
+    .. note::
+        * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
+        you can find it in :mod:`report_builder.Question.QuestionView.Question`
     """
     name = 'simple_question'
     view_type = 'json'
@@ -692,7 +713,7 @@ class QuestionViewJSON(Question):
 
     def get_question_data(self, question, report, answer=None):
         """
-            Recovers the question data, according to its definition and related objects (report, answer, observations)
+        Recovers the question data, according to its definition and related objects (report, answer, observations)
         """
         data = {}
 
@@ -715,24 +736,27 @@ class QuestionViewJSON(Question):
 
     def get(self, request, *args, **kwargs):
         '''
-            Handles the requests using the *GET* HTTP verb triggered by a user to export a question to a PDF document
-            The context passed to the template contains (at least) the next elements:
-               - name
-               - form
-               - question
-               - question_number
-               - answer
-               - reportbyproj
-               - form_number
-               - observations
-               - requirement
+        Handles the requests using the *GET* HTTP verb triggered by a user to export a question to a PDF document
+        The context passed to the template contains (at least) the next elements:
+           - name
+           - form
+           - question
+           - question_number
+           - answer
+           - reportbyproj
+           - form_number
+           - observations
+           - requirement
        '''
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
-        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        self.question = get_object_or_404(
+            QuestionModel, pk=kwargs['question_pk'])
+        reportbyproj = get_object_or_404(
+            ReportByProject, pk=kwargs['report_pk'])
         if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
-            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
+            self.answer = Answer.objects.get(
+                report=reportbyproj, question=self.question)
 
         data = self.get_question_data(self.question, reportbyproj, self.answer)
 
@@ -742,8 +766,8 @@ class QuestionViewJSON(Question):
 
     def post(self, request, *args, **kwargs):
         """
-            This view can be handled only using the GET verb
-            For security reasons, when a request is sent using the POST verb, the 403 exception is raised
+        This view can be handled only using the GET verb
+        For security reasons, when a request is sent using the POST verb, the 403 exception is raised
         """
         return bad_request(request)
 
@@ -785,7 +809,9 @@ class QuestionViewSPSS(Question):
         record = record + [question.pk, report.pk, question.text, question.help, question.required,
                            question.order]
         if answer:
-            record = record + [answer.pk, answer.text, answer.annotation, answer.display_text]
+            record = record + \
+                [answer.pk, answer.text,
+                    answer.annotation, answer.display_text]
         else:
             record = record + ['', '', '', '']
 
@@ -794,17 +820,21 @@ class QuestionViewSPSS(Question):
     def get(self, request, *args, **kwargs):
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
-        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        self.question = get_object_or_404(
+            QuestionModel, pk=kwargs['question_pk'])
+        reportbyproj = get_object_or_404(
+            ReportByProject, pk=kwargs['report_pk'])
         if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
-            self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
+            self.answer = Answer.objects.get(
+                report=reportbyproj, question=self.question)
 
-        varNames, varTypes, record = self.get_question_data(self.question, reportbyproj, self.answer)
+        varNames, varTypes, record = self.get_question_data(
+            self.question, reportbyproj, self.answer)
 
         spss_output = settings.MEDIA_ROOT + 'question.sav'
 
-        #with SavWriter(spss_output, varNames, varTypes) as writer:
-         #   writer.writerow(record)
+        # with SavWriter(spss_output, varNames, varTypes) as writer:
+        #   writer.writerow(record)
 
         return HttpResponse(0)
 
