@@ -1,10 +1,10 @@
 Wysiwyg installation with CKEditor
-##############################
+#####################################
 
 Follow this steps for installation of Wysiwyg files with CKEditor.
 
 Dependencies
-============
+==============
 
 * Install packages: Via pip, you must install your platform’s packages (Linux, Debian/Ubuntu).
 
@@ -23,7 +23,7 @@ Dependencies
     )
 
 Using the CKEditor
-====
+====================
 
 * If you wish to use CKEditor set the flavor in settings.py:
 
@@ -100,7 +100,7 @@ Using the CKEditor
 
 
 Code
-====
+=======
 
 * You need to define a HTML template ("example_wysiwyg.html"). 
 
