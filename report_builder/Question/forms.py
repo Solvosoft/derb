@@ -11,7 +11,30 @@ from report_builder.registry import models
 from ast import literal_eval
 
 class QuestionForm(forms.ModelForm):
-    children = forms.CharField(widget=forms.HiddenInput, max_length=1024 ** 3, initial=' ')
+    '''
+        Form for creating and updating a simple text question
+
+        This implementation is meant to be used or extended for all the different types of questions
+        offered by the system
+
+        This class be extended using an implementation like this:
+
+        ..  code:: python
+
+            from report_builder.forms import QuestionForm
+
+            class MyQuestionForm(QuestionForm):
+                my_new_field = forms.CharField(max_length=100)
+
+                # Override the constructor
+                def __init__(self, *args, **kwargs):
+                    # retrieve extra arguments for the form creation
+                    if 'extra' in kwargs:
+                        extra = kwargs.pop('extra')
+                    super(MyQuestionForm, self)._-init__(*args, **kwargs)
+                    # additional code
+    '''
+    children = forms.CharField(widget=forms.HiddenInput, required=False)
 
     class Meta:
         model = Question
@@ -33,10 +56,29 @@ class QuestionForm(forms.ModelForm):
 
 
 class AnswerForm(forms.ModelForm):
-    """
-        TODO: docstring
-    """
+    '''
+        Form for creating and updating an answer to a question
 
+        This implementation to be used is meant to be used or extended for all different question types related answers,
+        especially the processing of question's answer options for displaying and submitting such answer correctly.
+
+        This class can be extended with an implementation like this:
+
+        .. code:: python
+
+            from report_builder.forms import AnswerForm
+
+            class MyAnswerForm(AnswerForm):
+                my_new_field = forms.CharField(max_length=100)
+
+                # Override the constructor
+                def __init__(self, *args, **kwargs):
+                    # retrieve extra arguments for the form creation
+                    if 'extra' in kwargs:
+                        extra = kwargs.pop('extra')
+                    super(MyAnswerForm, self)._-init__(*args, **kwargs)
+                    # additional code
+    '''
     def clean_text(self):
         text = self.cleaned_data['text']
         # required = get_question_permission(self.instance.question)
@@ -63,6 +105,7 @@ class AnswerForm(forms.ModelForm):
         }
 
     def save(self, db_use):
+        '''Saves the additional attributes for the answer instance'''
         instance = super(AnswerForm, self).save(db_use)
         instance.display_text = instance.text
         return instance
