@@ -46,10 +46,6 @@ class IntegerQuestionViewAdmin(QuestionViewAdmin):
         parameters['children'] = self.process_children(self.request, parameters, kwargs)
         return parameters
 
-    def get_form(self, post=None, instance=None, extra=None):
-        extra = self.get_question_answer_options()
-        return super(IntegerQuestionViewAdmin, self).get_form(post=post, instance=instance, extra=extra)
-
 
 class IntegerQuestionViewResp(QuestionViewResp):
     template_name = 'responsable/integer_question.html'
