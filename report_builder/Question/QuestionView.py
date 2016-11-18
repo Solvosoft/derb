@@ -28,7 +28,6 @@ from report_builder.report_shortcuts import get_question_permission
 from report_builder.shortcuts import transform_request_to_get, get_children, get_reportbyproj_question_answer
 
 
-#from savReaderWriter import SavWriter
 class Question(LoginRequiredMixin, View):
     """
     Question class contains the general functionality for a question object, and sets the base for the different
@@ -159,6 +158,7 @@ class QuestionViewAdmin(Question):
 
     This class be extended using an implementation like this:
 
+
     .. code:: python
 
         from report_builder.Question.QuestionView import QuestionViewAdmin
@@ -166,7 +166,9 @@ class QuestionViewAdmin(Question):
             template_name = 'path/to/the/template'
             name = 'my_question'
 
+
     The extended methods can be overridden to adjust the functionality of the extended class. For instance:
+
 
     .. code:: python
 
@@ -175,6 +177,7 @@ class QuestionViewAdmin(Question):
                 'something': some_variable
             }
             return some_dict
+
 
     .. note::
         *kwargs* is a dict that contains the Question attributes 'form', 'report', 'question' and 'name'

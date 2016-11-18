@@ -1,10 +1,10 @@
 Wysiwyg installation with CKEditor
-#####################################
+##################################
 
 Follow this steps for installation of Wysiwyg files with CKEditor.
 
 Dependencies
-==============
+============
 
 * Install packages: Via pip, you must install your platform’s packages (Linux, Debian/Ubuntu).
 
@@ -23,7 +23,7 @@ Dependencies
     )
 
 Using the CKEditor
-====================
+==================
 
 * If you wish to use CKEditor set the flavor in settings.py:
 
@@ -57,40 +57,40 @@ Using the CKEditor
    CKEDITOR_UPLOAD_PATH = "media/"
    
    CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'Full',
-        'height': 300,
-        'width': '100%',
-    },
-    'basic': {
-        'width': '100%',
-        'toolbar': 'Basic',
-        "toolbar_Basic": [['Source', '-', 'Save', 'NewPage', 'DocProps', 'Preview', 'Print', '-', 'Templates'],
-                          ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],
-                          ['Find', 'Replace', '-', 'SelectAll', '-', 'SpellChecker', 'Scayt'],
-                          ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
-                           'HiddenField'],
-                          ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
-                          ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv',
-                           '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr',
-                           'BidiRtl'],
-                          ['Link', 'Unlink', 'Anchor'],
-                          ['Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],
-                          ['Styles', 'Format', 'Font', 'FontSize'],
-                          ['TextColor', 'BGColor'],
-                          ['Maximize', 'ShowBlocks', '-', 'About']],
-        "language": "en",
-        "skin": "moono",
-    },
-    'empty': {
-        'toolbar': 'Basic',
-        'height': 200,
-        'width': 500,
-        "toolbar_Basic": [],
-        "language": "en",
-        "skin": "moono",
+        'default': {
+            'toolbar': 'Full',
+            'height': 300,
+            'width': '100%',
+        },
+        'basic': {
+            'width': '100%',
+            'toolbar': 'Basic',
+            "toolbar_Basic": [['Source', '-', 'Save', 'NewPage', 'DocProps', 'Preview', 'Print', '-', 'Templates'],
+                              ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],
+                              ['Find', 'Replace', '-', 'SelectAll', '-', 'SpellChecker', 'Scayt'],
+                              ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
+                               'HiddenField'],
+                              ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
+                              ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv',
+                               '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr',
+                               'BidiRtl'],
+                              ['Link', 'Unlink', 'Anchor'],
+                              ['Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],
+                              ['Styles', 'Format', 'Font', 'FontSize'],
+                              ['TextColor', 'BGColor'],
+                              ['Maximize', 'ShowBlocks', '-', 'About']],
+            "language": "en",
+            "skin": "moono",
+        },
+        'empty': {
+            'toolbar': 'Basic',
+            'height': 200,
+            'width': 500,
+            "toolbar_Basic": [],
+            "language": "en",
+            "skin": "moono",
+        }
     }
-}
 
 * Install the collecstatic management command: Via pip.
 
@@ -100,7 +100,7 @@ Using the CKEditor
 
 
 Code
-=======
+====
 
 * You need to define a HTML template ("example_wysiwyg.html"). 
 
@@ -109,6 +109,6 @@ Code
     {% load wysiwyg %}
     {% wysiwyg_setup %}
 
-	<textarea id="foo"></textarea>
+    <textarea id="foo"></textarea>
 
     {% wysiwyg_editor "foo" %}
