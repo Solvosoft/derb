@@ -57,6 +57,7 @@ def admin(request, pk=None):
             palette[name] = value.minimal_representation
 
         categories = process_template(request, report, view_type='admin', reportbyproj=None)
+
         form = AdminReportForm(instance=report)
         context = {
             'report': report,

@@ -266,7 +266,6 @@ class QuestionViewAdmin(Question):
 
             return HttpResponse(question.pk, status=200)
         else:
-            print(form.errors)
             messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
 
         parameters = {

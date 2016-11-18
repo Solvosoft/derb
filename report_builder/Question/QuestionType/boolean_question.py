@@ -1,3 +1,5 @@
+import json
+
 from django.utils.translation import ugettext as _
 from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewReviewer, QuestionViewCSV, \
     QuestionViewJSON, QuestionViewSPSS
@@ -18,7 +20,8 @@ class BooleanQuestionViewAdmin(QuestionViewAdmin):
 
     def pre_save(self, object, request, form):
         children = get_children(form)
-        object.answer_options = repr({'children': children})
+        if children is not None:
+            object.answer_options = json.dumps({"children": children})
         return object
 
     def additional_template_parameters(self, **kwargs):
