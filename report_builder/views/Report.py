@@ -81,6 +81,7 @@ def save_admin(request, pk):
             form = AdminReportForm(request.POST, instance=report)
 
             if form.is_valid():
+                print(form.cleaned_data['template'])
                 rep = form.save(False)
                 rep.template = json.loads(form.cleaned_data['template'])
                 rep.save()

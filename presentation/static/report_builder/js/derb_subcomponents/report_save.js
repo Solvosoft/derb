@@ -17,7 +17,6 @@ var question_change = {};
  * Functions
  */
 function submit_report_form() {
-    find_categories();
     var form = $('#report_form');
     form.find('#id_template').val(JSON.stringify(categories, null, 2));
 
@@ -36,7 +35,6 @@ function submit_report_form() {
             _alert('alert-warning', 'Code-related error: ' + jqXHR.status)
         }
     });
-    console.log('submit_report_form');
 }
 
 function save_ckeditor() {
@@ -136,7 +134,6 @@ function find_subcategories() {
     }
 }
 
-
 function get_children(html_id) {
     find_html_children(html_id);
     return $($('#' + html_id + 'form')[0]).find('#id_children').val();
@@ -224,6 +221,7 @@ function save_questions() {
             }
         }
     }
+    console.log(categories);
     build_tree();
     submit_report_form();
     saving = false;
