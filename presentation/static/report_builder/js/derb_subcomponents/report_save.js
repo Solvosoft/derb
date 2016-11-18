@@ -36,6 +36,7 @@ function submit_report_form() {
             _alert('alert-warning', 'Code-related error: ' + jqXHR.status)
         }
     });
+    console.log('submit_report_form');
 }
 
 function save_ckeditor() {
@@ -169,13 +170,15 @@ function put_question_number() {
     var counter = 1;
     for (var x = 0; x < categories.length; x++) {
         for (var y = 0; y < categories[x].subcategories.length; y++) {
-            for (var z = 0; z < categories[x].subcategories[y].question.length; z++) {
-                process_question(categories[x].subcategories[y].question[z], counter);
+            for (var z = 0; z < categories[x].subcategories[y].questions.length; z++) {
+
+                process_question(categories[x].subcategories[y].questions[z], counter);
 
                 if (categories[x].subcategories[y].questions[z].type != 'simple_text' &&
                     categories[x].subcategories[y].questions[z].type != 'model_info') {
                     counter += 1;
                 }
+
             }
         }
     }
@@ -188,11 +191,10 @@ function build_tree() {
     }
 
     for (var y = 0; y < categories.length; y++) {
-        for (var z = 0; z < categories[y].subcategories.lenth; z++) {
-            for (var w = 0; w < categories[y].subcategories[x].questions.length; w++) {
-                categories[y].subcategories[z].question.push(
-                    question_pool[get_question_from_id(categories[y].subcategories[z].questions[w])]
-                );
+        for (var z = 0; z < categories[y].subcategories.length; z++) {
+            for (var w = 0; w < categories[y].subcategories[z].questions.length; w++) {
+                var pool_id = get_question_from_id(categories[y].subcategories[z].questions[w]);
+                categories[y].subcategories[z].question.push(question_pool[pool_id]);
             }
         }
     }
@@ -222,9 +224,9 @@ function save_questions() {
             }
         }
     }
-    //build_tree();
-    //submit_report_form();
-    //saving = false;
+    build_tree();
+    submit_report_form();
+    saving = false;
 }
 
 function save_all_questions() {
