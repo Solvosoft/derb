@@ -52,6 +52,7 @@
 {% block question_script %}
   {% include 'admin/add_question.html' %}
   <script>
+    var question_id = "#question_{{ form_number }}";
     var catalog_url = "{% url 'report_builder:get_catalog_display_fields' %}";
     var m = "{{ question }}";
     var answer_options_json = "{{ question.answer_options | escapejs }}";

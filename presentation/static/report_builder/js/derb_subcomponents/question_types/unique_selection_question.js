@@ -4,7 +4,7 @@
 $(document).ready(function () {
     update_combo();
 
-    $("#id_catalog").change(function () {
+    $(question_id + " #id_catalog").change(function () {
         update_combo();
     });
 
@@ -12,7 +12,7 @@ $(document).ready(function () {
 });
 
 function update_combo() {
-    $("#id_catalog").find("option:selected").each(function () {
+    $(question_id + " #id_catalog").find("option:selected").each(function () {
         $('#catalog_name').html($(this).text());
         var catalog_id = $(this).val();
         $.ajax({
@@ -45,13 +45,13 @@ function initial_values() {
             var catalog = answer_options.catalog;
             var display_fields = answer_options.display_fields;
 
-            $('#id_catalog').val(catalog);
+            $(question_id + " #id_catalog").val(catalog);
             update_combo();
 
-            window.setTimeout(function() {
-            	for (var i=0; i < display_fields.length; i++){
-            		$('#id_display_fields_'+display_fields[i]+'').prop('checked', true);
-            	}
+            window.setTimeout(function () {
+                for (var i = 0; i < display_fields.length; i++) {
+                    $('#id_display_fields_' + display_fields[i] + '').prop('checked', true);
+                }
             }, 100);
 
         }, 100);
