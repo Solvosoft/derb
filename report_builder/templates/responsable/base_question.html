@@ -1,0 +1,61 @@
+<div id="question_{{ form_number }}" class="panel">
+  {% if required %}
+    <p class="label label-warning">Required</p>
+  {% else %}
+    <p class="label label-info">Optional</p>
+  {% endif %}
+
+  <form method="post" id="question_{{ report.pk }}_{{ question.pk }}_{{ answer.pk }}"
+        {% if answer.pk %}
+        action="{% url 'report_builder:process_responsable' 'responsable' name report.pk question.pk answer.pk %}"
+        {% else %}
+        action="{% url 'report_builder:process_responsable' 'responsable' name report.pk question.pk %}"
+        {% endif %}
+        onchange="save_answer(this);" onsubmit="return false;">
+    {% csrf_token %}
+    <input type="hidden" id="id_question" value="{{ question.pk }}" />
+
+    <div id="question_{{ question.pk }}" class="panel-heading">
+      <div class="row">
+        <div class="col-md-9">
+          {% if question.help %}
+            <div class="well well-sm" style="text-align: center;">
+              {{ question.help }}
+            </div>
+          {% endif %}
+          <div class="panel-info">
+            <div class="panel-heading">
+              <h6 class="panel-title text-justify">
+                {{ question_number }} - {{ question.text | linebreaksbr }}
+              </h6>
+            </div>
+            <div class="panel-body text-justify">
+              {% block answer %}
+                {{ form.text }}
+                {% if form.text.errors %}
+                  <div class="alert alert-warning alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <strong>Warning:</strong> {{ form.text.errors }}
+                  </div>
+                {% endif %}
+                {% if form.help %}
+                  <div class="alert alert-info">{{ form.help | safe }}</div>
+                {% endif %}
+              {% endblock %}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          {% block annotation %}
+            {{ form.annotation }}
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+  </form>
+  {% block observations %}
+    <div class="panel-body text-center">{{ observations | safe }}</div>
+  {% endblock %}
+  {% block related_questions %}{% endblock %}
+  {% block scripts %}{% endblock %}
+</div>

@@ -316,7 +316,7 @@ class QuestionViewResp(Question):
             * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
             you can find it in :mod:`report_builder.Question.QuestionView.Question`
     """
-    template_name = 'responsable/simple_question.html'
+    template_name = 'responsable/base_question.html'
     form_class = AnswerForm
     name = 'simple_question'
     answer = None
@@ -353,7 +353,7 @@ class QuestionViewResp(Question):
             'question': self.question,
             'question_number': self.question.order,
             'answer': self.answer,
-            'reportbyproj': reportbyproj,
+            'report': reportbyproj,
             'form_number': str(self.form_number)
         }
         extra = self.additional_template_parameters(**parameters)
@@ -387,6 +387,7 @@ class QuestionViewResp(Question):
 
         if self.answer is None:
             self.answer = Answer()
+
         self.answer.question = self.question
         self.answer.user = request.user
 
@@ -408,17 +409,16 @@ class QuestionViewResp(Question):
             'name': self.name,
             'form': form,
             'question': self.question,
-            'reportbyproj': reportbyproj,
+            'report': reportbyproj,
             'question_number': self.question.order,
             'answer': self.answer,
             'form_number': str(self.form_number),
-            # 'observations': self.get_observations(request, args, kwargs),
             'required': get_question_permission(self.question)
         }
         extra = self.additional_template_parameters(**parameters)
         if extra:
             parameters.update(extra)
-        return render(request, self.template_name, parameters)
+        return render(request, self.template_name, parameters, status=302)
 
     def save(self, klass):
         with transaction.atomic(), reversion.create_revision():
