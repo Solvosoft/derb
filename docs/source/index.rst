@@ -15,6 +15,7 @@ Contents:
    development_tips
    models
    question_type
+   testing
 
 
 Indices and tables
