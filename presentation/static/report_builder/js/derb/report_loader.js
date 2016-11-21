@@ -108,10 +108,10 @@ function get_question_children_id(content, type, html_id) {
 }
 
 function load_subquestions(form, html_id) {
-    var type = form.find('#name').val();
-    var content = form.closest('.question_panel').find('#questions');
-    var children = get_question_children_id(content, type, html_id);
-    form.find('#id_children').val(children);
+    var question_type = form.find('#name').val();
+    var question_content = form.closest('.question_panel').find('#questions');
+    var question_children = get_question_children_id(question_content, question_type, html_id);
+    form.find('#id_children').val(question_children);
 }
 
 function find_html_children(question_id) {

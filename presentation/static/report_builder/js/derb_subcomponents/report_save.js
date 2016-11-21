@@ -136,7 +136,7 @@ function find_subcategories() {
 
 function get_children(html_id) {
     find_html_children(html_id);
-    return $($('#' + html_id + 'form')[0]).find('#id_children').val();
+    return $($('#' + html_id + ' form')[0]).find('#id_children').val();
 }
 
 function process_question(question, prefix) {
@@ -183,6 +183,7 @@ function put_question_number() {
 
 function build_tree() {
     var children = undefined;
+
     for (var x = 0; x < question_pool.length; x++) {
         children = get_children(question_pool[x].html_id);
     }
@@ -221,7 +222,6 @@ function save_questions() {
             }
         }
     }
-    console.log(categories);
     build_tree();
     submit_report_form();
     saving = false;

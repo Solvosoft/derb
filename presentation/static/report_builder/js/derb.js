@@ -131,7 +131,7 @@ function save_form(question_id, json_data, async, display_alert) {
         success: function (data) {
             if ($.isNumeric(data)) {
                 if (question_pool[question].pk == -1) {
-                    form.find('#id_question').attr('value', data);
+                    form.find('#question_id').attr('value', data);
                     if (display_alert) {
                         _alert('alert-success', 'Question saved successfully');
                     }
