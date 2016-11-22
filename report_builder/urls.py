@@ -30,6 +30,8 @@ from report_builder.views import Report
 question_types_urls = [
     url(r'base/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', QuestionView.QuestionViewAdmin.as_view(),
         name='base_question_admin'),
+    url(r'base/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', QuestionView.QuestionViewResp.as_view(),
+        name='base_question_resp'),
 
     url(r'boolean/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', boolean_question.BooleanQuestionViewAdmin.as_view(),
         name='boolean_question_admin'),

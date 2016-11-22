@@ -4,9 +4,11 @@ from async_notifications.models import EmailTemplate
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
+from django.urls.exceptions import NoReverseMatch
 
 from report_builder.forms import QuestionForm
-from report_builder.models import Report, ReportType, Question
+from report_builder.models import Report, ReportType, Question, ReportByProject, Project, Answer
+from django.contrib.contenttypes.models import ContentType
 
 
 class QuestionViewAdminTest(TestCase):
@@ -226,6 +228,300 @@ class QuestionViewAdminTest(TestCase):
             'help': 'NEW QUESTION HELP',
             'required': 1,
             'children': 'test'
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+
+        self.assertEqual(resp.status_code, 302)
+
+
+class QuestionViewRespTest(TestCase):
+    url = 'report_builder:base_question_resp'
+
+    def setUp(self):
+        User.objects.create_user(username='test', password='test')
+        report_type = ReportType.objects.create(
+            type='test_type',
+            name='test_name',
+            app_name='test.app',
+            action_ok=EmailTemplate.objects.create(code='ok_report_type_test', subject='', message=''),
+            revision_turn=EmailTemplate.objects.create(code='turn_report_type_test', subject='', message=''),
+            responsable_change=EmailTemplate.objects.create(code='change_report_type_test', subject='', message=''),
+            report_start=EmailTemplate.objects.create(code='start_report_type_test', subject='', message=''),
+            report_end=EmailTemplate.objects.create(code='end_report_type_test', subject='', message='')
+        )
+        report = Report.objects.create(type=report_type, name='Test report', opening_date=datetime.date.today())
+        question = Question.objects.create(
+            report=report,
+            class_to_load='derb',
+            text='Test question text',
+            answer_options={},
+            required=Question.OPTIONAL
+        )
+        report.question_set.add(question)
+        project = Project.objects.create(
+            description='Test Project',
+            content_type=ContentType.objects.first(),
+            object_id=0
+        )
+        ReportByProject.objects.create(
+            report=report,
+            start_date=datetime.date.today(),
+            submit_date=datetime.date.today() + datetime.timedelta(days=30),
+            project=project
+        )
+
+    def test_get_without_arguments_without_login(self):
+        resp = None
+        try:
+            url = reverse(self.url)
+            resp = self.client.get(url)
+        except NoReverseMatch:
+            url = None
+
+        self.assertEqual(url, None)
+        self.assertEqual(resp, None)
+
+    def test_get_with_report_pk_without_login(self):
+        report = Report.objects.first()
+        try:
+            url = reverse(self.url, kwargs={
+                'report_pk': report.pk
+            })
+            resp = self.client.get(url)
+        except NoReverseMatch:
+            url = None
+
+        self.assertEqual(url, None)
+
+    def test_get_with_report_question_pk_without_login(self):
+        report = Report.objects.first()
+        question = Question.objects.first()
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+        resp = self.client.get(url)
+
+        self.assertEqual(resp.status_code, 302)
+
+    def test_get_without_arguments_with_login(self):
+        user = User.objects.first()
+        resp = None
+        try:
+            url = reverse(self.url)
+            self.client.login(username=user.username, password='test')
+            resp = self.client.get(url)
+        except NoReverseMatch:
+            url = None
+
+        self.assertEqual(url, None)
+        self.assertEqual(resp, None)
+
+    def test_get_with_report_pk_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        try:
+            url = reverse(self.url, kwargs={
+                'report_pk': report.pk
+            })
+            self.client.login(username=user.username, password='test')
+            resp = self.client.get(url)
+        except NoReverseMatch:
+            url = None
+
+        self.assertEqual(url, None)
+
+    def test_get_with_report_question_pk_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = report.question_set.first()
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+        self.client.login(username=user.username, password='test')
+        resp = self.client.get(url)
+
+        self.assertEqual(resp.status_code, 200)
+
+    def test_post_without_arguments_without_login(self):
+        report = Report.objects.first()
+        question = Question.objects.first()
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+
+        resp = self.client.post(url)
+
+        self.assertEqual(resp.status_code, 302)
+
+    # here
+    def test_post_with_null_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url)
+
+        self.assertEqual(resp.status_code, 302)
+
+    def test_post_create_with_correct_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+
+        data = {
+            'text': 'Answer test text',
+            'annotation': 'Answer test annotation'
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+
+        new_answer = Answer.objects.last()
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(int(resp.content), int(new_answer.pk))
+        self.assertEqual(new_answer.text, 'Answer test text')
+        self.assertEqual(new_answer.annotation, 'Answer test annotation')
+
+    def test_post_update_with_correct_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+        reportbyproj = ReportByProject.objects.first()
+        answer = Answer.objects.create(
+            user=user,
+            report=reportbyproj,
+            question=question,
+            annotation='test annotation',
+            text='test text',
+            display_text='test display text'
+        )
+
+
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+        data = {
+            'text': 'New answer test text',
+            'annotation': 'New answer test annotation'
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+
+        new_answer = Answer.objects.last()
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(answer.pk, new_answer.pk)
+        self.assertEqual(int(resp.content), int(new_answer.pk))
+        self.assertEqual(new_answer.text, 'New answer test text')
+        self.assertEqual(new_answer.annotation, 'New answer test annotation')
+
+
+    def test_post_create_with_incorrect_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+
+        data = {
+            'text': '',
+            'annotation': 'Answer test annotation'
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+
+        self.assertEqual(resp.status_code, 302)
+
+    def test_post_update_with_incorrect_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+        reportbyproj = ReportByProject.objects.first()
+        answer = Answer.objects.create(
+            user=user,
+            report=reportbyproj,
+            question=question,
+            annotation='test annotation',
+            text='test text',
+            display_text='test display text'
+        )
+
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+        data = {
+            'text': '',
+            'annotation': 'New answer test annotation'
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+
+        self.assertEqual(resp.status_code, 302)
+
+
+
+    def test_post_create_with_incomplete_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+
+        data = {
+            'text': '',
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+
+        self.assertEqual(resp.status_code, 302)
+
+    def test_post_update_with_incomplete_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+        reportbyproj = ReportByProject.objects.first()
+        answer = Answer.objects.create(
+            user=user,
+            report=reportbyproj,
+            question=question,
+            annotation='test annotation',
+            text='test text',
+            display_text='test display text'
+        )
+
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+        data = {
+            'text': '',
         }
 
         self.client.login(username=user.username, password='test')
