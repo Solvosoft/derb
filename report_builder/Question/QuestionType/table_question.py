@@ -28,7 +28,7 @@ def get_catalog_values(queryset, display_fields):
 
 def get_catalog_choices(catalog, display):
     '''
-    This function receives two values.
+    This function receives two values, "catalog" and "display".
     The "catalog" is used to define the value of the list "models" that will be used.
     Both data, will be sent to be used in the method "get_catalog_values".  
     '''
@@ -73,7 +73,7 @@ class TableQuestionViewAdmin(QuestionView.QuestionViewAdmin):
     
     def pre_save(self, object, request, form):
         '''
-        It allows sort and save the headers and display_fields obtained from the form, through lists.
+        It allows sort and save the headers and display_fields obtained from the form, using lists.
         '''
         form_data = dict(form.data)
         headers = []
@@ -146,8 +146,8 @@ class TableQuestionViewResp(QuestionView.QuestionViewResp):
     
     def get_form(self, post=None, instance=None, extra=None):
         '''
-        Use the data in "answer_options" to extract specific information in the database, and passes this
-        information to the form of the class.
+        Use the function "get_catalog_choices and the data in "answer_options" to extract specific information in the database, 
+        and passes this information to the form of the class.
         '''
         answer_options = json.loads(self.question.answer_options)
         headers = answer_options['headers']
@@ -193,7 +193,7 @@ class TableQuestionViewPDF(QuestionView.QuestionViewPDF):
 
 class TableQuestionViewCSV(QuestionView.QuestionViewCSV):
     '''
-    TableQuestionViewCSV class represents the implementation of exporting a question object to a CSV formatted string.
+    TableQuestionViewCSV class represents the implementation of exporting a table question to a CSV formatted string.
     
     This class extends from another class, using an implemention like this:
     
@@ -208,7 +208,7 @@ class TableQuestionViewCSV(QuestionView.QuestionViewCSV):
 
 class TableQuestionViewJSON(QuestionView.QuestionViewJSON):
     '''
-    TableQuestionViewJSON class represents the implementation of exporting a question object to a JSON formatted string.
+    TableQuestionViewJSON class represents the implementation of exporting a table question to a JSON formatted string.
     
     This class extends from another class, using an implemention like this:
     

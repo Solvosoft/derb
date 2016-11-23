@@ -167,6 +167,10 @@ class UniqueSelectionQuestionViewResp(QuestionView.QuestionViewResp):
     form_class = UniqueSelectionAnswerForm
 
     def get_form(self, post=None, instance=None, extra=None):
+        '''
+        Use the function "get_catalog_choices" to extract specific information in the database, and passes this
+        information to the form of the class.
+        '''
         catalog_choices = get_catalog_choices(self.question.answer_options)
         if post is not None:
             form = self.form_class(post, instance=instance, extra=catalog_choices)
@@ -196,7 +200,7 @@ class UniqueSelectionQuestionViewPDF(QuestionView.QuestionViewPDF):
 @ajax
 def get_catalog_display_fields(request):
     '''
-    This function return the fields of an specific model.
+    This function returns the fields of an specific model.
     '''
     if request.method == 'GET':
         if request.is_ajax():
@@ -244,8 +248,30 @@ def submit_new_observation(request):
 
 
 class UniqueQuestionViewCSV(QuestionView.QuestionViewCSV):
+    '''
+    UniqueQuestionViewCSV class represents the implementation of exporting a unique selection question to a CSV formatted string.
+    
+    This class extends from another class, using an implemention like this:
+    
+    .. code:: python
+
+        from report_builder.Question import QuestionView
+        class UniqueQuestionViewCSV(QuestionView.QuestionViewCSV):
+            name = 'unique_selection_question'
+    '''
     name = 'unique_selection_question'
     
 
 class UniqueQuestionViewJSON(QuestionView.QuestionViewJSON):
+    '''
+    UniqueQuestionViewJSON class represents the implementation of exporting a unique selection question to a JSON formatted string.
+    
+    This class extends from another class, using an implemention like this:
+    
+    .. code:: python
+
+        from report_builder.Question import QuestionView
+        class UniqueQuestionViewJSON(QuestionView.QuestionViewJSON):
+            name = 'unique_selection_question'
+    '''
     name = 'unique_selection_question'
