@@ -100,7 +100,7 @@ class SimpleTextAnswerForm(AnswerForm):
 class SimpleTextQuestionForm(QuestionForm):
     class Meta:
         model = Question
-        fields = ('text', 'help', 'id', 'required')
+        fields = ('text', 'help', 'id')
         widgets = {
             'text': CKEditorWidget(config_name='default'),
             'help': CKEditorWidget(config_name='default')
