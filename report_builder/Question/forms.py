@@ -251,7 +251,9 @@ class UniqueSelectionQuestionForm(QuestionForm):
         # Catalog
         catalog_choices = ((index, model[1].capitalize()) for index, model in enumerate(models))
         self.fields['catalog'].choices = catalog_choices
-        initial_widget = self.extra['answer_options']['widget'][0]
+        initial_widget = None
+        if 'answer_options' in self.extra and self.extra['answer_options'] is not None:
+            initial_widget = self.extra['answer_options']['widget'][0]
 
         # Widget
         if widgets_choices is not None:
