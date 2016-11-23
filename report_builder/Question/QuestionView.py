@@ -22,7 +22,7 @@ from report_builder.Question.question_loader import process_questions
 from report_builder.models import Question as QuestionModel, Answer, Report, ReportByProject
 from report_builder.Question.forms import QuestionForm, AnswerForm, ObservationForm
 from report_builder.report_shortcuts import get_question_permission
-from report_builder.shortcuts import transform_request_to_get, get_children, get_reportbyproj_question_answer
+from report_builder.shortcuts import transform_request_to_get, get_children, get_report_question
 from report_builder.Question import question_loader
 from django.http.request import QueryDict
 
@@ -197,29 +197,20 @@ class QuestionViewAdmin(Question):
                 - minimal_representation
             Returns the rendered template for the question
         '''
-        question_pk = kwargs.get('question_pk', False)
-        report_pk = kwargs.get('report_pk', False)
-
-        if question_pk and question_pk != '':
-            self.question = get_object_or_404(QuestionModel, pk=question_pk)
-            question_pk = self.question.pk
-        else:
-            question_pk = ''
-
-        self.report = get_object_or_404(Report, pk=report_pk)
-
+        self.report, self.question = get_report_question(kwargs['report_pk'], kwargs['question_pk'])
         self.form_number = random.randint(self.start_number, self.end_number)
         self.request = request
         form = self.get_form(instance=self.question)
+
         parameters = {
             'form': form,
             'question': self.question,
             'report': self.report,
             'name': self.name,
             'form_number': str(self.form_number),
-            'minimal_representation': self.minimal_representation,
-            'question_pk': question_pk
+            'minimal_representation': self.minimal_representation
         }
+
         extra = self.additional_template_parameters(**parameters)
         if extra:
             parameters.update(extra)
@@ -238,23 +229,11 @@ class QuestionViewAdmin(Question):
             Returns the question pk when the POST request is processed correctly
             Return the rendered template (with errors) when the form presents errors
         '''
-        question_pk = kwargs.get('question_pk', False)
-        report_pk = kwargs.get('report_pk', False)
-
-        question_data_json = request.POST.get('question_data')
-        question_data = json.loads(question_data_json)
-        post_data = QueryDict('', mutable=True)
-        post_data.update(question_data)
-
-        if question_pk and question_pk != '':
-            self.question = get_object_or_404(QuestionModel, pk=question_pk)
-
-        if report_pk and report_pk != '':
-            self.report = get_object_or_404(Report, pk=report_pk)
-
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
-        form = self.get_form(post_data, instance=self.question)
+        self.report, self.question = get_report_question(kwargs['report_pk'], kwargs['question_pk'])
+
+        form = self.get_form(request.POST, instance=self.question)
 
         if form.is_valid():
             question = form.save(False)
@@ -262,11 +241,8 @@ class QuestionViewAdmin(Question):
             question.report = self.report
             question = self.pre_save(question, request, form)
             question.save()
-            messages.add_message(request, messages.SUCCESS, 'Question saved successfully')
 
             return HttpResponse(question.pk, status=200)
-        else:
-            messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
 
         parameters = {
             'form': form,
@@ -274,8 +250,7 @@ class QuestionViewAdmin(Question):
             'question': self.question,
             'name': self.name,
             'form_number': str(self.form_number),
-            'minimal_representation': self.minimal_representation,
-            'question_pk': question_pk
+            'minimal_representation': self.minimal_representation
         }
         extra = self.additional_template_parameters(**parameters)
         if extra:
@@ -806,8 +781,8 @@ class QuestionViewSPSS(Question):
 
         spss_output = settings.MEDIA_ROOT + 'question.sav'
 
-        #with SavWriter(spss_output, varNames, varTypes) as writer:
-         #   writer.writerow(record)
+        # with SavWriter(spss_output, varNames, varTypes) as writer:
+        #   writer.writerow(record)
 
         return HttpResponse(0)
 

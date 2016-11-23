@@ -213,7 +213,7 @@ function save_questions() {
                     var key = $(question_div).attr('id');
                     var question_id = get_question_from_pool(key);
 
-                    if (question_id != undefined){
+                    if (question_id != undefined) {
                         categories[x].subcategories[y].questions.push(
                             parseInt(question_pool[question_id].pk)
                         );
@@ -240,14 +240,11 @@ function save_all_questions() {
 
     for (var q = 0; q < question_pool.length; q++) {
         if (question_pool[q].saving) {
-            if (question_pool[q].state == 0 || question_pool[q].pk == -1) {
-                if ($('#' + question_pool[q].html_id).length != 0) {
-                    save_inmediatly = false;
-                    json_data = get_json_from_form(question_pool[q].html_id);
-                    save_form(question_pool[q].html_id, json_data, true, false);
-                } else {
-                    remove(question_pool[q].html_id);
-                }
+            if ($('#' + question_pool[q].html_id).length != 0) {
+                save_inmediatly = false;
+                save_form(question_pool[q].html_id, true, false);
+            } else {
+                remove(question_pool[q].html_id);
             }
         }
     }
@@ -262,7 +259,7 @@ function get_json_from_form(question_id) {
     var question_div = $('#' + question_id);
     var question_form = question_div.find('form');
     var question_form_data = question_form.serializeArray();
-    for (var i = 0; i < question_form_data.length; i++){
+    for (var i = 0; i < question_form_data.length; i++) {
         json_object[question_form_data[i].name] = question_form_data[i].value;
     }
     return json_object;
@@ -301,7 +298,7 @@ function remove(id) {
     if (question_id != undefined) {
         question_pool.splice(question_id, 1);
         var children = $('#' + id).find('.question_panel');
-        for (var c = 0; c < children.length; c++){
+        for (var c = 0; c < children.length; c++) {
             remove($(children[c].attr(id)));
         }
     }

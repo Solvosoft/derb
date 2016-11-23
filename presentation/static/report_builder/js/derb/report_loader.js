@@ -3,8 +3,7 @@
  */
 
 function save_question_sinchronously(question_id) {
-    json_data = get_json_from_form(question_id);
-    save_form(question_id, json_data, false, false);
+    save_form(question_id, false, false);
     var pool_id = get_question_from_pool(question_id);
 
     if (pool_id == undefined) {
