@@ -68,7 +68,7 @@ function take_me_to(id) {
     var subcategory = $('#categ_' + subcategory_div);
     var category_div = $(subcategory.closest('.category_class')[0]).attr('id');
     var categor = $('#categ_' + category_div);
-    category.click()
+    category.click();
     subcategory.click();
 }
 

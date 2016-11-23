@@ -251,6 +251,7 @@ class UniqueSelectionQuestionForm(QuestionForm):
         # Catalog
         catalog_choices = ((index, model[1].capitalize()) for index, model in enumerate(models))
         self.fields['catalog'].choices = catalog_choices
+        initial_widget = self.extra['answer_options']['widget'][0]
 
         # Widget
         if widgets_choices is not None:
@@ -259,7 +260,8 @@ class UniqueSelectionQuestionForm(QuestionForm):
                     'id': str(random.randint(50, 10000)) + '_select'
                 }),
                 required=True,
-                choices=widgets_choices
+                choices=widgets_choices,
+                initial=initial_widget
             )
 
 

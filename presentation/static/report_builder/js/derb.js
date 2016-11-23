@@ -146,7 +146,7 @@ function save_form(question_id, async, display_alert) {
                     queued = true;
                 }
                 question_change[question_id] = new_question;
-                _alert('alert-warning', 'Error saving the question. For more details, click <a onclick="takemeto(\'' + new_question + '\');" href="#' + new_question + '">here</a>')
+                _alert('alert-warning', 'Error saving the question. For more details, click <a onclick="take_me_to(\'' + new_question + '\');" href="#' + new_question + '">here</a>')
             }
         }
     });
