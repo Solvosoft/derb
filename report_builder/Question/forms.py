@@ -124,7 +124,7 @@ class SimpleTextQuestionForm(QuestionForm):
             initial=on_modal,
             widget=forms.CheckboxInput(
                 attrs={
-                    'onchange': 'get_button_name_info(this);'
+                    'onchange': 'request_name_button_info(this);'
                 }
             )
         )

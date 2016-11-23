@@ -2,6 +2,7 @@
 Created on 15/9/2016
 @author: nashyra
 '''
+import json
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django_ajax.decorators import ajax
@@ -37,7 +38,7 @@ class SimpleTextQuestionViewAdmin(QuestionViewAdmin):
 
     def pre_save(self, object, request, form):
         object.text = form.cleaned_data['text']
-        object.answer_options = repr(form.cleaned_data['on_modal'])
+        object.answer_options = json.dumps({'on_modal': form.cleaned_data['on_modal']})
         object.required = Question.OPTIONAL
         return object
 

@@ -63,7 +63,7 @@ class Question(LoginRequiredMixin, View):
             Returns a dict with extra options for the question. It uses JSON parsing to unpack the answer options
         """
         results = None
-        if self.question is not None and self.question.answer_options != 'False':
+        if self.question is not None and self.question.answer_options:
             results = json.loads(self.question.answer_options)
         return results
 
