@@ -73,7 +73,7 @@ class TableQuestionViewAdmin(QuestionView.QuestionViewAdmin):
     
     def pre_save(self, object, request, form):
         '''
-        It allows sort and save the headers and display_fields obtained from the form, using lists.
+        It allows sort and save the headers and display_fields obtained from the form, through lists.
         '''
         form_data = dict(form.data)
         headers = []

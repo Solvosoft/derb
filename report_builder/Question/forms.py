@@ -256,6 +256,16 @@ class FloatAnswerForm(IntegerAnswerForm):
 
 
 class UniqueSelectionQuestionForm(QuestionForm):
+    '''
+    Form for creating and updating a unique selection question.
+        
+    This class extends from QuestionForm, using an implemention like this:
+    
+    .. code:: python
+        
+        class UniqueSelectionQuestionForm(QuestionForm):
+
+    '''
     catalog = forms.ChoiceField()
     display_fields = forms.Field(required=False)
 
@@ -282,6 +292,10 @@ class UniqueSelectionQuestionForm(QuestionForm):
         }
 
     def __init__(self, *args, **kwargs):
+        '''
+        It allows to init the principal data in the form, through the values in "extra".
+        "Extra" is provided from "UniqueSelectionQuestionViewAdmin".
+        '''
         if 'extra' in kwargs:
             self.extra = kwargs.pop('extra')
         super(UniqueSelectionQuestionForm, self).__init__(*args, **kwargs)
@@ -307,9 +321,23 @@ class UniqueSelectionQuestionForm(QuestionForm):
 
 
 class UniqueSelectionAnswerForm(AnswerForm):
+    '''
+    Form for creating and updating an answer to a unique selection question.
+        
+    This class extends from AnswerForm, using an implemention like this:
+    
+    .. code:: python
+        
+        class UniqueSelectionAnswerForm(AnswerForm):
+
+    '''
     text = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}))
 
     def __init__(self, *args, **kwargs):
+        '''
+        It allows to init the principal data in the form, through the values in "extra".
+        "Extra" is provided from "UniqueSelectionQuestionViewResp".
+        '''
         if 'extra' in kwargs:
             catalog = kwargs.pop('extra')
             super(UniqueSelectionAnswerForm, self).__init__(*args, **kwargs)
@@ -318,6 +346,9 @@ class UniqueSelectionAnswerForm(AnswerForm):
             super(UniqueSelectionAnswerForm, self).__init__(*args, **kwargs)
 
     def save(self, db_use):
+        '''
+        It allows to save the answer of the unique selection question given from the user.
+        '''
         instance = super(AnswerForm, self).save(db_use)
         object_pk = instance.text
         answer_options_json = instance.question.answer_options
@@ -343,11 +374,25 @@ class UniqueSelectionAnswerForm(AnswerForm):
 
 # Table_Question
 class TableQuestionForm(QuestionForm):
+    '''
+    Form for creating and updating a table question.
+        
+    This class extends from QuestionForm, using an implemention like this:
+    
+    .. code:: python
+        
+        class TableQuestionForm(QuestionForm):
+
+    '''
     catalog = forms.ChoiceField()
     header_0 = forms.CharField(max_length=100)
     display_field_0 = forms.ChoiceField()
 
     def __init__(self, *args, **kwargs):
+        '''
+        It allows to init the principal data in the form, through the values in "extra".
+        "Extra" is provided from "TableQuestionViewAdmin".
+        '''
         count = kwargs.pop('extra')
         super(TableQuestionForm, self).__init__(*args, **kwargs)
 
@@ -386,7 +431,21 @@ class TableQuestionForm(QuestionForm):
 
 
 class TableQuestionAnswerForm(AnswerForm):
+    '''
+    Form for creating and updating an answer to a table question.
+        
+    This class extends from AnswerForm, using an implemention like this:
+    
+    .. code:: python
+        
+        class TableQuestionAnswerForm(AnswerForm):
+
+    '''
     def __init__(self, *args, **kwargs):
+        '''
+        It allows to init the principal data in the form, through the values in "extra".
+        "Extra" is provided from "TableQuestionViewResp".
+        '''
         extra = kwargs.pop('extra')
         catalog = extra['catalog_choices']
         headers = extra['headers']
@@ -403,6 +462,9 @@ class TableQuestionAnswerForm(AnswerForm):
             self.fields['display_field_%d' % i].choices = catalog[i]
 
     def save(self, db_use):
+        '''
+        It allows to save the answer of the table question given from the user.
+        '''
         instance = super(AnswerForm, self).save(db_use)
         instance.text = str(sorted(self.cleaned_data.items()))
 
