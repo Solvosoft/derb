@@ -491,17 +491,10 @@ class MultipleSelectionAnswerForm(AnswerForm):
 
 class ModelInfoQuestionForm(UniqueSelectionQuestionForm):
     with_text = 'text'
-    widgets = {
-        'text': CKEditorWidget(config_name='default'),
-    }
 
     class Meta:
         model = Question
         fields = ('text', 'help', 'id')
-        widgets = {
-            'text': CKEditorWidget(config_name='default'),
-            'help': CKEditorWidget(config_name='default')
-        }
 
     def __init__(self, *args, **kwargs):
         self.post = args
@@ -532,10 +525,6 @@ class QuestionModelInfoQuestionForm(ModelInfoQuestionForm):
     class Meta:
         model = Question
         fields = ('text', 'help', 'id', 'required')
-        widgets = {
-            'text': CKEditorWidget(config_name='default'),
-            'help': CKEditorWidget(config_name='default')
-        }
 
     def __init__(self, *args, **kwargs):
         self.post = args
