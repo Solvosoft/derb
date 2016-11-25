@@ -12,10 +12,10 @@ Contents:
    :maxdepth: 2
 
    installation
-   database_configuration
-   pdf_generation
-   internationalization
-   celery_tasks
+   development_tips
+   models
+   question_type
+   testing
 
 
 Indices and tables

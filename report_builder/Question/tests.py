@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
-from report_builder.forms import QuestionForm
+from report_builder.Question.forms import QuestionForm
 from report_builder.models import Report, ReportType, Question
 
 

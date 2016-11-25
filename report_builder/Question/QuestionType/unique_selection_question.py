@@ -17,6 +17,10 @@ from report_builder.models import Answer, Observation, Reviewer
 
 
 def get_catalog_values(queryset, display_fields):
+    '''
+    This function returns a generator whit the values found in the database,
+    according whit the fields ("display_fields") of each corresponding model ("queryset").
+    '''
     for object in queryset:
         text = ""
         value = object.pk
@@ -31,6 +35,11 @@ def get_catalog_values(queryset, display_fields):
 
 
 def get_catalog_choices(json_field):
+    '''
+    This function uses a JSON file to extract specific information, which are the "catalog" and the "display_fields".
+    The "catalog" is used to define the value of the list "models" that will be used.
+    Both data, will be sent to be used in the method "get_catalog_values".  
+    '''
     answer_options = json.loads(json_field)
     catalog = int(answer_options['catalog'][0])
     display_fields = answer_options['display_fields']
@@ -40,6 +49,29 @@ def get_catalog_choices(json_field):
 
 
 class UniqueSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
+    '''
+    UniqueSelectionQuestionViewAdmin class represents the implementation of the template administrator view 
+    for a unique selection question.
+    By itself, this view provides the functionality for create, edit and delete the question.
+    
+    This class extends from another class, using an implemention like this:
+    
+    .. code:: python
+
+        from report_builder.Question import QuestionView
+        class UniqueSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
+            template_name = 'admin/question_types/unique_selection_question.html'
+            name = 'unique_selection_question'
+    
+    This class overrides functions of the Question class (report_builder/Question/QuestionView):
+    
+    .. code:: python
+        
+        def additional_template_parameters(self, **kwargs)
+        def pre_save(self, object, request, form)
+        def get_form(self, post=None, instance=None, extra=None)
+    '''
+    
     form_class = UniqueSelectionQuestionForm
     template_name = 'admin/question_types/unique_selection_question.html'
     name = 'unique_selection_question'
@@ -108,11 +140,37 @@ class UniqueSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
 
 
 class UniqueSelectionQuestionViewResp(QuestionView.QuestionViewResp):
+    '''
+    UniqueSelectionQuestionViewResp class represents the implementation of the template responsable view 
+    for a unique selection question.
+    By itself, this view shows the unique selection question created by the template administrator and 
+    it allows the user to answer the question.
+    
+    This class extends from another class, using an implemention like this:
+    
+    .. code:: python
+
+        from report_builder.Question import QuestionView
+        class UniqueSelectionQuestionViewResp(QuestionView.QuestionViewResp):
+            template_name = 'responsable/unique_selection_question.html'
+            name = 'unique_selection_question'
+            
+    This class override one function of the Question class (report_builder/Question/QuestionView):
+    
+    .. code:: python
+        
+        def get_form(self, post=None, instance=None, extra=None)
+    '''
+    
     template_name = 'responsable/unique_selection_question.html'
     name = 'unique_selection_question'
     form_class = UniqueSelectionAnswerForm
 
     def get_form(self, post=None, instance=None, extra=None):
+        '''
+        Use the function "get_catalog_choices" to extract specific information in the database, and passes this
+        information to the form of the class.
+        '''
         catalog_choices = get_catalog_choices(self.question.answer_options)
         if post is not None:
             form = self.form_class(post, instance=instance, extra=catalog_choices)
@@ -122,12 +180,28 @@ class UniqueSelectionQuestionViewResp(QuestionView.QuestionViewResp):
 
 
 class UniqueSelectionQuestionViewPDF(QuestionView.QuestionViewPDF):
+    '''
+    UniqueSelectionQuestionViewPDF class represents the implementation of exporting a unique selection question
+    to a PDF document.
+    
+    This class extends from another class, using an implemention like this:
+    
+    .. code:: python
+
+        from report_builder.Question import QuestionView
+        class UniqueSelectionQuestionViewPDF(QuestionView.QuestionViewPDF):
+            template_name = 'pdf/unique_selection_question.html'
+            name = 'unique_selection_question'
+    '''
     name = 'unique_selection_question'
     template_name = 'pdf/unique_selection_question.html'
 
 
 @ajax
 def get_catalog_display_fields(request):
+    '''
+    This function returns the fields of an specific model.
+    '''
     if request.method == 'GET':
         if request.is_ajax():
             catalog_id = request.GET.get('catalog_id', False)
@@ -174,8 +248,30 @@ def submit_new_observation(request):
 
 
 class UniqueQuestionViewCSV(QuestionView.QuestionViewCSV):
+    '''
+    UniqueQuestionViewCSV class represents the implementation of exporting a unique selection question to a CSV formatted string.
+    
+    This class extends from another class, using an implemention like this:
+    
+    .. code:: python
+
+        from report_builder.Question import QuestionView
+        class UniqueQuestionViewCSV(QuestionView.QuestionViewCSV):
+            name = 'unique_selection_question'
+    '''
     name = 'unique_selection_question'
     
 
 class UniqueQuestionViewJSON(QuestionView.QuestionViewJSON):
+    '''
+    UniqueQuestionViewJSON class represents the implementation of exporting a unique selection question to a JSON formatted string.
+    
+    This class extends from another class, using an implemention like this:
+    
+    .. code:: python
+
+        from report_builder.Question import QuestionView
+        class UniqueQuestionViewJSON(QuestionView.QuestionViewJSON):
+            name = 'unique_selection_question'
+    '''
     name = 'unique_selection_question'

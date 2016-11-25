@@ -1,6 +1,10 @@
 /**
  * Created by jaquer on 10/10/16.
  */
+
+/**
+ * Checks the html view and implements the functions.
+ */
 $(document).ready(function () {
     update_combo();
 
@@ -11,6 +15,13 @@ $(document).ready(function () {
     initial_values();
 });
 
+/**
+ * @function update_combo
+ * Using Ajax, according whit the option selected in the catalog choice, the display fields shown to the user will
+ * be updated.
+ * @param {number} catalog_id The catalog value.
+ * @param {object} display_fields Values obtained whit ajax.
+ */
 function update_combo() {
     $("#id_catalog").find("option:selected").each(function () {
         $('#catalog_name').html($(this).text());
@@ -38,6 +49,10 @@ function update_combo() {
     });
 }
 
+/**
+ * @function initial_values
+ * If the question exists, the data in answer_options_json will be used to define the form data.
+ */
 function initial_values() {
     if (answer_options_json != '') {
         window.setTimeout(function () {
