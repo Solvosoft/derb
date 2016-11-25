@@ -131,8 +131,8 @@ class SimpleTextQuestionViewReviewer(QuestionViewReviewer):
 @csrf_exempt
 def submit_new_observation(request):
     """
-            Handles the requests using the *GET* HTTP verb triggered by a user to save an observation and refresh the page using ajax code
-            The context passed to the template contains (at least) the next elements:
+        This function handles the requests using the *GET* HTTP verb triggered by a user to save an observation and refresh the page using ajax code
+        The context passed to the template contains (at least) the next elements:
                - question
                - question_number
                - answer
