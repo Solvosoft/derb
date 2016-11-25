@@ -1,10 +1,14 @@
-/** 
- * Created by mau on 26/10/16.
- */
+
 $(document).ready(function() {
-    //console.log(observation_url);
-    //submit_observation();
 });
+
+/**
+ * function submit_observation
+ * Using ajax, this function allow the user(revisor) to make observations about 
+ * an answer provided by another user, refreshing the page automatically to show 
+ * the observation made by the user(revisor)
+ * @param {text} data: The constraints to make an observation.
+ */
 
 function submit_observation() {
     var data = {
