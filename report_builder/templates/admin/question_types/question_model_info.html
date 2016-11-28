@@ -9,9 +9,9 @@
       Insert your questions below
     </div>
 
-    {% if children.questions %}
+    {% if questions.children %}
       <ul class="sortable list-group">
-        {% for question in children.questions %}
+        {% for question in questions.children %}
           <li class="list-group-item">{{ question | safe }}</li>
         {% endfor %}
         <li class="list-group-item">

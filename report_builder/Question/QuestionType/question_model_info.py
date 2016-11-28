@@ -17,6 +17,6 @@ class QuestionModelInfoViewAdmin(ModelInfoViewAdmin):
     def additional_template_parameters(self, **kwargs):
         parameters = super(QuestionModelInfoViewAdmin, self).additional_template_parameters(**kwargs)
         if not parameters: parameters = {}
-        parameters['children'] = self.process_children(self.request, parameters, kwargs)
+        parameters['questions'] = self.process_children(self.request, parameters, kwargs)
         parameters['is_info'] = True
         return parameters
