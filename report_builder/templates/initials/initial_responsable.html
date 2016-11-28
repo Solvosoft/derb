@@ -52,8 +52,7 @@
     </div>
     <br><br><br>
     {% if not all_reports %}
-        <a class="btn btn-default btn-all-current" data-loading-text="Loading all reports..."
-           onclick="show_reports('{% url "report_builder:previous_reports_responsable" %}');">Show all reports</a>
+        <a class="btn btn-default btn-all-current" data-loading-text="Loading all reports...">Show all reports</a>
     {% else %}
         <a class="btn btn-default" data-loading-text="Loading current reports..." onclick="show_reports('{% url "report_builder:initial_responsable" %}');">Show only current reports</a>
     {% endif %}

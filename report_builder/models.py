@@ -134,7 +134,9 @@ class Report(models.Model):
         return '%s' % self.name
 
     class Meta:
-        # TODO: permissions
+        permissions = (
+            ('template_admin', 'Can create and edit report templates'),
+        )
         verbose_name = _('Report')
         verbose_name_plural = _('Reports')
 

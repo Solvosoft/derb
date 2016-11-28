@@ -138,6 +138,7 @@ class SimpleTextQuestionForm(QuestionForm):
                 }
             )
         )
+        print(self.fields['help'])
 
 
 # Boolean answer form
