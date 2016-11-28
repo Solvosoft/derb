@@ -5,6 +5,7 @@
  * Created by jaquer on 10/10/16.
  */
 catalog_url = '/get_catalog_display_fields';
+
 function handle_catalog_question_load(question_html_id){
 
     update_combo(question_html_id);
