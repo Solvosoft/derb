@@ -1,11 +1,15 @@
 import json
 from django.http.response import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.conf import settings
+from django.urls import reverse
 
 
 def index(request):
-    return render(request, 'derb/index.html')
+    if request.user.is_authenticated():
+        return redirect(reverse('report_builder:init'))
+    else:
+        return render(request, 'derb/index.html')
 
 
 def get_js_editor(request):
