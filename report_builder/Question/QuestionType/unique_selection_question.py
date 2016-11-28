@@ -85,7 +85,9 @@ class UniqueSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
             'catalog': form_data.get('catalog'),
             'display_fields': form_data.get('display_fields'),
             'widget': widget,
-            'children': children,
+            'children': {
+                'children': children
+            },
             'schema': schema
         }
         object.answer_options = json.dumps(answer_options)

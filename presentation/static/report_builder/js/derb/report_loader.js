@@ -91,8 +91,18 @@ function load_numeric_question(content, html_id) {
 }
 
 function load_question_info(content, html_id) {
-    /* TODO */
-    return '';
+    var target_question = get_question_from_pool(html_id);
+
+    if (content.html() != undefined) {
+        console.log('xxxx');
+        var children = load_questions_id($(content.find('ul')[0]).children());
+        question_pool[target_question].children = {
+            'children': children.question_list
+        };
+        return JSON.stringify(children.txt, null, 2);
+    }else{
+        return '';
+    }
 }
 
 function get_question_children_id(content, type, html_id) {
@@ -109,7 +119,6 @@ function get_question_children_id(content, type, html_id) {
     } else if (type == 'question_model_info' || type == 'model_info') {
         answer = load_question_info(content, html_id);
     }
-
     return answer;
 }
 
