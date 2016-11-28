@@ -31,6 +31,7 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
         self.assertEqual(new_question.text, 'NEW UNIQUE QUESTION')
         self.assertEqual(new_question.help, 'NEW UNIQUE QUESTION HELP')
         self.assertEqual(new_question.required, 0)
+        self.assertEqual(new_question.answer_options,'{\"display_fields\": [\"name\"], \"catalog\": [\"1\"]}')
 
     def test_post_update_with_correct_arguments_with_login(self):
         user = User.objects.first()
@@ -57,6 +58,7 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
         self.assertEqual(new_question.text, 'NEW UNIQUE QUESTION')
         self.assertEqual(new_question.help, 'NEW UNIQUE QUESTION HELP')
         self.assertEqual(new_question.required, 0)
+        self.assertEqual(new_question.answer_options,'{\"display_fields\": [\"name\", \"capital\"], \"catalog\": [\"1\"]}')
 
     def test_post_create_with_incorrect_arguments_with_login(self):
         user = User.objects.first()
@@ -126,7 +128,7 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
         data = {
             'text': 'NEW UNIQUE QUESTION',
             'help': 'NEW UNIQUE QUESTION HELP',
-            'answer_options': '{\"display_fields\": [\"name\", \"capital\"], \"catalog\": [\"1\"]}',
+            'required': 0,
             'children': 'test'
         }
 
@@ -159,8 +161,9 @@ class UniqueSelectionQuestionViewRespTest(QuestionViewRespTest):
 
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(int(resp.content), int(new_answer.pk))
-        self.assertEqual(new_answer.text, '0')
+        self.assertEqual(new_answer.text, '1')
         self.assertEqual(new_answer.annotation, 'Answer test annotation')
+        self.assertEqual(new_answer.display_text, 'Costa Rica')
 
     def test_post_update_with_correct_arguments_with_login(self):
         user = User.objects.first()
@@ -197,9 +200,12 @@ class UniqueSelectionQuestionViewRespTest(QuestionViewRespTest):
         self.assertEqual(int(resp.content), int(new_answer.pk))
         self.assertEqual(new_answer.text, '1')
         self.assertEqual(new_answer.annotation, 'New answer test annotation')
-
+        self.assertEqual(new_answer.display_text, 'Costa Rica')
 
     def test_post_create_with_incorrect_arguments_with_login(self):
+        '''
+        It is incorrrect, because "text :1" does not correspond to "España"
+        '''
         user = User.objects.first()
         report = Report.objects.first()
         question = Question.objects.first()
@@ -221,6 +227,9 @@ class UniqueSelectionQuestionViewRespTest(QuestionViewRespTest):
         self.assertEqual(resp.status_code, 302)
 
     def test_post_update_with_incorrect_arguments_with_login(self):
+        '''
+        It is incorrrect, because "text :0" does not correspond to "Costa Rica"
+        '''
         user = User.objects.first()
         report = Report.objects.first()
         question = Question.objects.first()
@@ -248,8 +257,6 @@ class UniqueSelectionQuestionViewRespTest(QuestionViewRespTest):
         resp = self.client.post(url, data=data)
 
         self.assertEqual(resp.status_code, 302)
-
-
 
     def test_post_create_with_incomplete_arguments_with_login(self):
         user = User.objects.first()
