@@ -506,6 +506,20 @@ class ModelInfoQuestionForm(UniqueSelectionQuestionForm):
     class Meta:
         model = Question
         fields = ('text', 'help', 'id')
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'rows': 6,
+                'placeholder': _('Write your question here'),
+                'class': 'form-control'
+            }),
+            'help': forms.Textarea(attrs={
+                'cols': 80,
+                'rows': 5,
+                'placeholder': _('A little help never hurts'),
+                'class': 'form-control'
+            })
+        }
+
 
     def __init__(self, *args, **kwargs):
         self.post = args
@@ -536,6 +550,22 @@ class QuestionModelInfoQuestionForm(ModelInfoQuestionForm):
     class Meta:
         model = Question
         fields = ('text', 'help', 'id', 'required')
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'rows': 6,
+                'placeholder': _('Write your question here'),
+                'class': 'form-control'
+            }),
+            'help': forms.Textarea(attrs={
+                'cols': 80,
+                'rows': 5,
+                'placeholder': _('A little help never hurts'),
+                'class': 'form-control'
+            }),
+            'required': forms.Select(attrs={
+                'class': 'form-control'
+            })
+        }
 
     def __init__(self, *args, **kwargs):
         self.post = args
