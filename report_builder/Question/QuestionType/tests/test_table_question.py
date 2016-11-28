@@ -42,8 +42,8 @@ class TableQuestionViewAdminTest(QuestionViewAdminTest):
             'question_pk': question.pk
         })
         data = {
-            'text': 'NEW UNIQUE QUESTION',
-            'help': 'NEW UNIQUE QUESTION HELP',
+            'text': 'NEW TABLE QUESTION',
+            'help': 'NEW TABLE QUESTION HELP',
             'required': 1,
             'answer_options': '{\"catalog\": [\"0\"], \"displays\": [\"code\", \"name\", \"location\", \"code\"], \"headers\": [\"Code of your city?\", \"Name of your city?\", \"Where is located?\", \"Repeat code\"]}',
             'children': 'test'
@@ -70,8 +70,8 @@ class TableQuestionViewAdminTest(QuestionViewAdminTest):
             'report_pk': report.pk
         })
         data = {
-            'text': 'NEW UNIQUE QUESTION',
-            'help': 'NEW UNIQUE QUESTION HELP',
+            'text': 'NEW TABLE QUESTION',
+            'help': 'NEW TABLE QUESTION HELP',
             'required': 0,
             'answer_options': '{\"catalog\": [\"0\"], \"displays\": [\"capital\"], \"headers\": [\"Code of your city?\"]}',
             'children': 'test'
@@ -91,8 +91,8 @@ class TableQuestionViewAdminTest(QuestionViewAdminTest):
             'question_pk': question.pk
         })
         data = {
-            'text': 'NEW UNIQUE QUESTION',
-            'help': 'NEW UNIQUE QUESTION HELP',
+            'text': 'NEW TABLE QUESTION',
+            'help': 'NEW TABLE QUESTION HELP',
             'required': 5,
             'answer_options': '{\"catalog\": [\"0\"], \"displays\": [\"code\", \"name\", \"location\", \"code\"], \"headers\": [\"Code of your city?\", \"Name of your city?\", \"Where is located?\", \"Repeat code\"]}',
             'children': 'test'
@@ -110,8 +110,8 @@ class TableQuestionViewAdminTest(QuestionViewAdminTest):
             'report_pk': report.pk
         })
         data = {
-            'text': 'NEW UNIQUE QUESTION',
-            'help': 'NEW UNIQUE QUESTION HELP',
+            'text': 'NEW TABLE QUESTION',
+            'help': 'NEW TABLE QUESTION HELP',
             'answer_options': '{\"catalog\": [\"0\"], \"displays\": [\"code\", \"name\", \"location\"], \"headers\": [\"Code of your city?\", \"Name of your city?\", \"Where is located?\"]}',
             'children': 'test'
         }
@@ -130,8 +130,8 @@ class TableQuestionViewAdminTest(QuestionViewAdminTest):
             'question_pk': question.pk
         })
         data = {
-            'text': 'NEW UNIQUE QUESTION',
-            'help': 'NEW UNIQUE QUESTION HELP',
+            'text': 'NEW TABLE QUESTION',
+            'help': 'NEW TABLE QUESTION HELP',
             'required': 0,
             'children': 'test'
         }
