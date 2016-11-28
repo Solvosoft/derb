@@ -61,6 +61,9 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
         self.assertEqual(new_question.answer_options,'{\"display_fields\": [\"name\", \"capital\"], \"catalog\": [\"1\"]}')
 
     def test_post_create_with_incorrect_arguments_with_login(self):
+        '''
+        It is incorrect, because "capital" is not a display_field for the catalog "0"
+        '''
         user = User.objects.first()
         report = Report.objects.first()
         url = reverse(self.url, kwargs={
@@ -69,7 +72,7 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
         data = {
             'text': 'NEW UNIQUE QUESTION',
             'help': 'NEW UNIQUE QUESTION HELP',
-            'required': 5,
+            'required': 0,
             'answer_options': '{\"display_fields\": [\"name\", \"capital\"], \"catalog\": [\"0\"]}',
             'children': 'test'
         }
@@ -90,8 +93,8 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
         data = {
             'text': 'NEW UNIQUE QUESTION',
             'help': 'NEW UNIQUE QUESTION HELP',
-            'required': 0,
-            'answer_options': '{\"display_fields\": [\"name\", \"location\"], \"catalog\": [\"1\"]}',
+            'required': 5,
+            'answer_options': '{\"display_fields\": [\"name\", \"capital\"], \"catalog\": [\"1\"]}',
             'children': 'test'
         }
 
