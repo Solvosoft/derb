@@ -165,11 +165,7 @@ def copy_report(report):
         if report.questions[x]['parent'] != -1:
             new.questions[new_pk]['parent'] = questions[report.questions[x]['parent']]
 
-    new_template = []
-    for template in report.template:
-        new_template.append(process_dict(template, new))
-
-    new.template = new_template
+    new.template = report.template
     return new
 
 
