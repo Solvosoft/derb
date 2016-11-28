@@ -1,20 +1,26 @@
 /**
  * Created by jaquer on 10/10/16.
  */
-$(document).ready(function () {
-    update_combo();
+catalog_url = '/get_catalog_display_fields';
+function handle_catalog_question_load(question_html_id){
 
-    $(question_id + " #id_catalog").change(function () {
-        update_combo();
+    update_combo(question_html_id);
+
+    $(question_html_id + " #id_catalog").change(function () {
+        update_combo(question_html_id);
     });
 
-    initial_values();
-});
+    initial_values(question_html_id);
+}
 
-function update_combo() {
-    $(question_id + " #id_catalog").find("option:selected").each(function () {
-        $('#catalog_name').html($(this).text());
+function update_combo(question_html_id) {
+    if (question_html_id == undefined){
+        question_html_id = question_id;
+    }
+    $(question_html_id + " #id_catalog").find("option:selected").each(function () {
+        $(question_html_id + ' #catalog_name').html($(this).text());
         var catalog_id = $(this).val();
+
         $.ajax({
             url: catalog_url,
             type: 'GET',
@@ -22,7 +28,7 @@ function update_combo() {
                 catalog_id: catalog_id
             },
             success: function (data) {
-                var df_selector = $('#display_fields');
+                var df_selector = $(question_html_id + ' #display_fields');
                 df_selector.html('');
 
                 var display_fields = data.content;
@@ -38,19 +44,23 @@ function update_combo() {
     });
 }
 
-function initial_values() {
+function initial_values(question_html_id) {
+    if (question_html_id == undefined){
+        question_html_id = question_id;
+    }
+    console.log(question_html_id);
     if (answer_options_json != '') {
         window.setTimeout(function () {
             var answer_options = JSON.parse(answer_options_json);
             var catalog = answer_options.catalog;
             var display_fields = answer_options.display_fields;
 
-            $(question_id + " #id_catalog").val(catalog);
-            update_combo();
+            $(question_html_id + " #id_catalog").val(catalog);
+            update_combo(question_html_id);
 
             window.setTimeout(function () {
                 for (var i = 0; i < display_fields.length; i++) {
-                    $('#id_display_fields_' + display_fields[i] + '').prop('checked', true);
+                    $(question_html_id + ' #id_display_fields_' + display_fields[i] + '').prop('checked', true);
                 }
             }, 100);
 

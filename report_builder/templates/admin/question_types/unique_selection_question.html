@@ -51,13 +51,13 @@
 
 {% block question_script %}
   {% include 'admin/add_question.html' %}
+  <script
+      src="{% static 'report_builder/js/derb_subcomponents/question_types/unique_selection_question.js' %}"></script>
   <script>
-    var question_id = "#question_{{ form_number }}";
+    handle_catalog_question_load("#question_{{ form_number }}");
     var catalog_url = "{% url 'report_builder:get_catalog_display_fields' %}";
     var m = "{{ question }}";
     var answer_options_json = "{{ question.answer_options | escapejs }}";
   </script>
   <script src="{% static 'report_builder/js/derb_helpers.js' %}"></script>
-  <script
-      src="{% static 'report_builder/js/derb_subcomponents/question_types/unique_selection_question.js' %}"></script>
 {% endblock %}
