@@ -51,7 +51,11 @@ function load_questions_id(list) {
 }
 
 function load_simple_text_question(content, html_id) {
-    /* TODO */
+    var div = $('#' + html_id);
+    var text = $(div.find('textarea[name=text]')[0]);
+    content = $(div.find('iframe')[0].contentWindow.document.body).html();
+    text.val(content);
+    return '';
 }
 
 function load_boolean_question(content, html_id) {
@@ -78,20 +82,23 @@ function load_boolean_question(content, html_id) {
 
 function load_model_selection_question(content, html_id) {
     /* TODO */
+    return '';
 }
 
 function load_numeric_question(content, html_id) {
     /* TODO */
+    return '';
 }
 
 function load_question_info(content, html_id) {
     /* TODO */
+    return '';
 }
 
 function get_question_children_id(content, type, html_id) {
     var answer = "";
 
-    if (type == 'conditional_model') {
+    if (type == 'multiple_selection_question' || type == 'unique_selection_question') {
         answer = load_model_selection_question(content, html_id);
     } else if (type == 'boolean_question') {
         answer = load_boolean_question(content, html_id);
@@ -99,7 +106,7 @@ function get_question_children_id(content, type, html_id) {
         answer = load_numeric_question(content, html_id);
     } else if (type == 'simple_text_question') {
         answer = load_simple_text_question(content, html_id);
-    } else if (type == 'question_info') {
+    } else if (type == 'question_model_info' || type == 'model_info') {
         answer = load_question_info(content, html_id);
     }
 
