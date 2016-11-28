@@ -10,6 +10,7 @@ from ckeditor.widgets import CKEditorWidget
 from report_builder.registry import models
 from ast import literal_eval
 
+
 class QuestionForm(forms.ModelForm):
     children = forms.CharField(widget=forms.HiddenInput, required=False)
 
@@ -66,7 +67,7 @@ class AnswerForm(forms.ModelForm):
         instance = super(AnswerForm, self).save(db_use)
         instance.display_text = instance.text
         return instance
-    
+
 
 class ObservationForm(forms.ModelForm):
     class Meta:
@@ -79,7 +80,7 @@ class ObservationForm(forms.ModelForm):
                 'class': 'form-control'
             })
         }
-        
+
 
 class SimpleTextAnswerForm(AnswerForm):
     class Meta:
@@ -102,8 +103,11 @@ class SimpleTextQuestionForm(QuestionForm):
         model = Question
         fields = ('text', 'help', 'id')
         widgets = {
-            'text': CKEditorWidget(config_name='default'),
-            'help': CKEditorWidget(config_name='default')
+            'help': forms.Textarea(attrs={
+                'rows': 1,
+                'placeholder': 'Nombre para el Botón que muestra la información',
+                'class': 'form-control'
+            })
         }
 
     def save(self, db_use):
@@ -113,10 +117,16 @@ class SimpleTextQuestionForm(QuestionForm):
 
     def __init__(self, *args, **kwargs):
         on_modal = False
+        form_number = 'id'
         if 'extra' in kwargs:
             extra = kwargs.pop('extra')
             on_modal = extra['on_modal']
+            form_number = extra['form_number']
         super(SimpleTextQuestionForm, self).__init__(*args, **kwargs)
+
+        self.fields['text'] = forms.CharField(widget=CKEditorWidget(config_name='default', attrs={
+            'id': '%s_text' % str(form_number)
+        }))
 
         self.fields['on_modal'] = forms.BooleanField(
             label='See on modal',
