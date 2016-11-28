@@ -203,7 +203,7 @@ function save_questions() {
     find_categories();
     for (var x = 0; x < categories.length; x++) {
         for (var y = 0; y < categories[x].subcategories.length; y++) {
-            var name = categories[x].subcategories[x].name;
+            var name = categories[x].subcategories[y].name;
             var subcategory = $('#' + name);
             var question_li = subcategory[0].children[0].children;
             categories[x].subcategories[y].question = [];
