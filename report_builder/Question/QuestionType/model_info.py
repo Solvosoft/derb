@@ -33,7 +33,7 @@ class ModelInfoViewAdmin(UniqueSelectionQuestionViewAdmin):
 
         on_modal = form.cleaned_data['on_modal']
         answer_options['on_modal'] = on_modal
-        object.answer_options = answer_options
+        object.answer_options = json.dumps(answer_options)
         object.text = form.cleaned_data['text']
         return object
 

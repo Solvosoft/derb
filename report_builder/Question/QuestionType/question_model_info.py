@@ -14,9 +14,6 @@ class QuestionModelInfoViewAdmin(ModelInfoViewAdmin):
     }
     registry_type = 'question_information'
 
-    def pre_save(self, object, request, form):
-        return super(QuestionModelInfoViewAdmin, self).pre_save(object, request, form)
-
     def additional_template_parameters(self, **kwargs):
         parameters = super(QuestionModelInfoViewAdmin, self).additional_template_parameters(**kwargs)
         if not parameters: parameters = {}

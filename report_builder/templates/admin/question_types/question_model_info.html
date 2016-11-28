@@ -1,18 +1,6 @@
 {% extends 'admin/question_types/unique_selection_question.html' %}
 {% load static %}
 
-{% block question_script %}
-  {% include 'admin/add_question.html' %}
-  <script>
-    var catalog_url = "{% url 'report_builder:get_catalog_display_fields' %}";
-    var m = "{{ question }}";
-    var answer_options_json = "{{ question.answer_options | escapejs }}";
-  </script>
-  <script src="{% static 'report_builder/js/derb_helpers.js' %}"></script>
-  <script
-      src="{% static 'report_builder/js/derb_subcomponents/question_types/unique_selection_question.js' %}"></script>
-{% endblock %}
-
 {% block form_footer %}{% endblock %}
 
 {% block extra_content %}
