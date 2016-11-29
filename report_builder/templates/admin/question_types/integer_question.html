@@ -1,4 +1,5 @@
 {% extends 'admin/base_question.html' %}
+{% load jquery_tags %}
 
 {% block  catalog %}
   {# Minimum #}
@@ -40,10 +41,25 @@
 {% block extra_content %}
   <div id="questions">
     <ul class="nav nav-tabs" id="question_{{ form_number }}_nav">
+      {% for key in children.keys %}
+        <li class="{% if forloop.counter0 == 0 %}active{% endif %}"><a data-toggle="tab" href="#{{ key }}">{{ key | verbose_header }}</a></li>
+      {% endfor %}
       <li><a onclick="new_numerical_subquestion_section(this);" class="btn btn-primary">New subquestion section</a></li>
     </ul>
 
     <div class="tab-content" id="question_{{ form_number }}_tab_content">
+      {% for key, children_questions in children.items %}
+        <div class="tab-pane {% if forloop.counter0 == 0 %}active{% endif %}" id="{{ key }}">
+          <ul class="sortable list-group">
+            {% for question in children_questions %}
+              <li class="list-group-item">
+                {{ question | safe }}
+              </li>
+            {% endfor %}
+            <li class="list-group-item">Drag and drop your questions here</li>
+          </ul>
+        </div>
+      {% endfor %}
     </div>
   </div>
 
