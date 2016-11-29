@@ -86,20 +86,38 @@ function load_boolean_question(content, html_id) {
 }
 
 function load_model_selection_question(content, html_id) {
-    /* TODO */
     return '';
 }
 
 function load_numeric_question(content, html_id) {
-    /* TODO */
-    return '';
+    var result = {};
+
+    var target_question = get_question_from_pool(html_id);
+    question_pool[target_question].children = {};
+    var ids = [];
+    var children_lists = [];
+    var questions_div= $('#' + html_id).find('#questions');
+    var tab_content = $(questions_div).find('#' + html_id + '_tab_content').children();
+    for (var i = 0; i < tab_content.length; i++){
+        var div_id = $(tab_content[i]).attr('id');
+        var ul = $(tab_content[i]).children('ul');
+        var child_list = load_questions_id($(ul[0]).children());
+        children_lists.push(child_list);
+        ids.push(div_id);
+    }
+
+    for (var x = 0; x < ids.length; x++){
+        question_pool[target_question].children[ids[x]] = children_lists[x].question_list;
+        result[ids[x]] = children_lists[x].txt;
+    }
+
+    return JSON.stringify(result, null, 2);
 }
 
 function load_question_info(content, html_id) {
     var target_question = get_question_from_pool(html_id);
 
     if (content.html() != undefined) {
-        console.log('xxxx');
         var children = load_questions_id($(content.find('ul')[0]).children());
         question_pool[target_question].children = {
             'children': children.question_list
@@ -117,7 +135,7 @@ function get_question_children_id(content, type, html_id) {
         answer = load_model_selection_question(content, html_id);
     } else if (type == 'boolean_question') {
         answer = load_boolean_question(content, html_id);
-    } else if (type == 'float_question' || type == 'decimal_question') {
+    } else if (type == 'float_question' || type == 'integer_question') {
         answer = load_numeric_question(content, html_id);
     } else if (type == 'simple_text_question') {
         answer = load_simple_text_question(content, html_id);
