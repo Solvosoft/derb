@@ -27,7 +27,7 @@ def is_jquery_widget(field, prefix=''):
 
 @register.filter(name='verbose_header')
 def verbose_header(value):
-    desc, numb = value.split('_')
+    form_number, desc, numb = value.split('_')
     verbose_desc = ''
     for x in NumericalSubquestionForm.DESC_CHOICES:
         if x[0] == desc:

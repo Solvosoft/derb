@@ -169,14 +169,15 @@ function new_numerical_subquestion_section(li) {
 function add_numerical_subquestion_section(input) {
     var form = $(input).parent();
     var question_id = $(current_subquestion_ul.closest('.question_panel')[0]).attr('id');
+    var id = question_id.split('_')[1];
     var tab_content = $('#' + question_id).find('#' + question_id + '_tab_content');
     var desc = form.find('#id_description').val();
     var desc_verbose = form.find('#id_description option:selected').text();
     var num = form.find('#id_number').val();
-    var li_html = '<li><a data-toggle="tab" href="#' + desc + '_' + num + '">' + desc_verbose + ' ' + num + '</a></li>';
+    var li_html = '<li><a data-toggle="tab" href="#' + id  + '_' + desc + '_' + num + '">' + desc_verbose + ' ' + num + '</a></li>';
     current_subquestion_ul.prepend(li_html);
     $('#num_subquestion_modal').modal('hide');
-    var tab_div = '<div id="' + desc + '_' + num  + '" class="tab-pane">';
+    var tab_div = '<div id="' + id + '_' + desc + '_' + num  + '" class="tab-pane">';
     tab_div += sortable_html;
     tab_div += '</div>';
 
