@@ -8,6 +8,8 @@ from report_builder.models import Question, Answer, Report, ReportByProject
 
 
 class TableQuestionViewAdminTest(QuestionViewAdminTest):
+    url = 'report_builder:table_question_admin'
+    
     def test_post_create_with_correct_arguments_with_login(self):
         user = User.objects.first()
         report = Report.objects.first()
@@ -142,6 +144,8 @@ class TableQuestionViewAdminTest(QuestionViewAdminTest):
         self.assertEqual(resp.status_code, 302)
 
 class TableQuestionViewRespTest(QuestionViewRespTest):
+    url = 'report_builder:table_question_resp'
+    
     def test_post_create_with_correct_arguments_with_login(self):
         user = User.objects.first()
         report = Report.objects.first()

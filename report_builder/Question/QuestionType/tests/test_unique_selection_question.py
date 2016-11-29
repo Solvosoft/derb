@@ -8,6 +8,8 @@ from report_builder.models import Question, Answer, Report, ReportByProject
 
 
 class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
+    url = 'report_builder:unique_selection_admin'
+    
     def test_post_create_with_correct_arguments_with_login(self):
         user = User.objects.first()
         report = Report.objects.first()
@@ -141,6 +143,8 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
         self.assertEqual(resp.status_code, 302)
 
 class UniqueSelectionQuestionViewRespTest(QuestionViewRespTest):
+    url = 'report_builder:unique_selection_resp'
+    
     def test_post_create_with_correct_arguments_with_login(self):
         user = User.objects.first()
         report = Report.objects.first()
