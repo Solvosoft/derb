@@ -32,7 +32,7 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
             class_to_load='unique_selection_question',
             text='NEW UNIQUE QUESTION',
             help='NEW UNIQUE QUESTION HELP',
-            answer_options='{\"display_fields\": [\"name\"], \"catalog\": [\"0\"]}',
+            answer_options='{\"display_fields\": [\"name\"], \"catalog\": [\"0\"], \"widget\": [\"radiobox\"]}',
             required=Question.OPTIONAL
         )
     
@@ -47,6 +47,7 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
             'help': 'NEW UNIQUE QUESTION HELP',
             'required': 0,
             'catalog': 0,
+            'widget': 'radiobox',
             'display_fields': ['name'],
             'children': 'test'
         }
@@ -60,7 +61,7 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
         self.assertEqual(new_question.text, 'NEW UNIQUE QUESTION')
         self.assertEqual(new_question.help, 'NEW UNIQUE QUESTION HELP')
         self.assertEqual(new_question.required, 0)
-        self.assertEqual(new_question.answer_options,'{\"display_fields\": [\"name\"], \"catalog\": [\"0\"]}')
+        self.assertEqual(new_question.answer_options,'{\"display_fields\": [\"name\"], \"catalog\": [\"0\"], \"widget\": [\"radiobox\"]}')
 
     def test_post_update_with_correct_arguments_with_login(self):
         user = User.objects.first()
@@ -75,6 +76,7 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
             'help': 'NEW UNIQUE QUESTION HELP',
             'required': 0,
             'catalog': 0,
+            'widget': 'radiobox',
             'display_fields': ['name','location'],
             'children': 'test'
         }
@@ -88,7 +90,7 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
         self.assertEqual(new_question.text, 'NEW UNIQUE QUESTION')
         self.assertEqual(new_question.help, 'NEW UNIQUE QUESTION HELP')
         self.assertEqual(new_question.required, 0)
-        self.assertEqual(new_question.answer_options,'{\"display_fields\": [\"name\", \"location\"], \"catalog\": [\"0\"]}')
+        self.assertEqual(new_question.answer_options,'{\"display_fields\": [\"name\", \"location\"], \"catalog\": [\"0\"], \"widget\": [\"radiobox\"]}')
 
     def test_post_create_with_incorrect_arguments_with_login(self):
         '''
@@ -104,6 +106,7 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
             'help': 'NEW UNIQUE QUESTION HELP',
             'required': 0,
             'catalog': 0,
+            'widget': 'radiobox',
             'display_fields': ['capital'],
             'children': 'test'
         }
@@ -126,6 +129,7 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
             'help': 'NEW UNIQUE QUESTION HELP',
             'required': 5,
             'catalog': 0,
+            'widget': 'radiobox',
             'display_fields': ['name'],
             'children': 'test'
         }
@@ -144,6 +148,7 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
         data = {
             'text': 'NEW UNIQUE QUESTION',
             'help': 'NEW UNIQUE QUESTION HELP',
+            'required': 0,
             'catalog': 0,
             'display_fields': ['name'],
             'children': 'test'
@@ -166,6 +171,7 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
             'text': 'NEW UNIQUE QUESTION',
             'help': 'NEW UNIQUE QUESTION HELP',
             'required': 0,
+            'widget': 'radiobox',
             'display_fields': ['name'],
             'children': 'test'
         }
