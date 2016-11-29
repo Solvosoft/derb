@@ -39,40 +39,30 @@
 
 {% block extra_content %}
   <div id="questions">
-    {# Maximum not reached questions #}
-    <div id="question_{{ form_number }}_no_max" class="well-sm">
-      <div class="well">Questions when maximum value has not been reached</div>
-      {% if children.no_max %}
-        <ul class="sortable list-group">
-        {% for question in children.no_max %}
-          <li class="list-group-item">
-            {{ question | safe }}
-          </li>
-        {% empty %}
-          Drag and drop your questions here
-        {% endfor %}
-        </ul>
-      {% else %}
-        {% include 'admin/sortable_body.html' %}
-      {% endif %}
-    </div>
+    <ul class="nav nav-tabs" id="question_{{ form_number }}_nav">
+      <li><a onclick="new_numerical_subquestion_section(this);" class="btn btn-primary">New subquestion section</a></li>
+    </ul>
 
-    {# Maximum reached questions #}
-    <div id="question_{{ form_number }}_max" class="well-sm">
-      <div class="well">Questions when maximum value has been reached</div>
-      {% if children.max %}
-        <ul class="sortable list-group">
-        {% for question in children.max %}
-          <li class="list-group-item">
-            {{ question | safe }}
-          </li>
-        {% empty %}
-          Drag and drop your questions here
-        {% endfor %}
-        </ul>
-      {% else %}
-        {% include 'admin/sortable_body.html' %}
-      {% endif %}
+    <div class="tab-content" id="question_{{ form_number }}_tab_content">
+    </div>
+  </div>
+
+  <div class="modal fade" id="num_subquestion_modal" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">New subquestion section</h4>
+        </div>
+        <div class="modal-body">
+          <form>
+            {{ sub_form.as_p }}
+            <input class="btn btn-primary" type="button" onclick="add_numerical_subquestion_section(this);"
+                   value="Submit">
+          </form>
+        </div>
+      </div>
+
     </div>
   </div>
 {% endblock %}

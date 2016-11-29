@@ -1,6 +1,11 @@
 /**
  * Created by jaquer on 05/09/16.
  */
+var current_subquestion_ul;
+
+var sortable_html = '<ul class="sortable list-group">';
+sortable_html += '<li class="list-group-item">Drag and drop your questions here</li>';
+sortable_html += '</ul>';
 
 function save_question_sinchronously(question_id) {
     save_form(question_id, false, false);
@@ -100,7 +105,7 @@ function load_question_info(content, html_id) {
             'children': children.question_list
         };
         return JSON.stringify(children.txt, null, 2);
-    }else{
+    } else {
         return '';
     }
 }
@@ -136,4 +141,26 @@ function find_html_children(question_id) {
 
 function find_children_id(id) {
     find_html_children(get_question_from_id(id).html_id);
+}
+
+function new_numerical_subquestion_section(li) {
+    current_subquestion_ul = $(li).parent().parent();
+    $('#num_subquestion_modal').modal();
+}
+
+function add_numerical_subquestion_section(input) {
+    var form = $(input).parent();
+    var question_id = $(input).closest('.question_panel').attr('id');
+    var tab_content = $('#' + question_id).find('#' + question_id + '_tab_content');
+    var desc = form.find('#id_description').val();
+    var desc_verbose = form.find('#id_description option:selected').text();
+    var num = form.find('#id_number').val();
+    var li_html = '<li><a data-toggle="tab" href="#' + desc + '_' + num + '">' + desc_verbose + ' ' + num + '</a></li>';
+    current_subquestion_ul.prepend(li_html);
+    $('#num_subquestion_modal').modal('hide');
+    var tab_div = '<div id="' + desc + '_' + num  + '" class="tab-pane">';
+    tab_div += sortable_html;
+    tab_div += '</div>';
+    tab_content.append(tab_div);
+    do_sortable();
 }

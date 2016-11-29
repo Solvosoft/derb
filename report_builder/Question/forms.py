@@ -223,6 +223,19 @@ class FloatAnswerForm(IntegerAnswerForm):
     text = forms.DecimalField()
 
 
+class NumericalSubquestionForm(forms.Form):
+    DESC_CHOICES = (
+        ('gt', 'Greater than'),
+        ('gte', 'Greater or equal to'),
+        ('eq', 'Equal to'),
+        ('lt', 'Less than'),
+        ('lte', 'Less or equal to'),
+        ('neq', 'Not equal to')
+    )
+    description = forms.ChoiceField(choices=DESC_CHOICES)
+    number = forms.FloatField(initial=0)
+
+
 class UniqueSelectionQuestionForm(QuestionForm):
     catalog = forms.ChoiceField()
     display_fields = forms.Field(required=False)

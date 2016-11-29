@@ -11,6 +11,7 @@ from django.template.loader import render_to_string
 from report_builder.shortcuts import get_children
 from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF, QuestionViewReviewer, QuestionViewCSV, QuestionViewJSON
 from report_builder.Question.forms import IntegerQuestionForm, IntegerAnswerForm
+from report_builder.Question.forms import NumericalSubquestionForm
 from report_builder.models import Answer, Observation, Reviewer
 
 
@@ -44,6 +45,7 @@ class IntegerQuestionViewAdmin(QuestionViewAdmin):
         if not parameters:
             parameters = {}
         parameters['children'] = self.process_children(self.request, parameters, kwargs)
+        parameters['sub_form'] = NumericalSubquestionForm()
         return parameters
 
 
