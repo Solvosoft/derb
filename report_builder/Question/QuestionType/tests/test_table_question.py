@@ -1,14 +1,39 @@
+import datetime
+
+from async_notifications.models import EmailTemplate
 from django.contrib.auth.models import User
 from django.urls import reverse
 
 from report_builder.Question.tests import QuestionViewAdminTest, QuestionViewRespTest
 from report_builder.Question.tests import QuestionFormTest
 
-from report_builder.models import Question, Answer, Report, ReportByProject
+from report_builder.models import Question, Answer, Report, ReportByProject, ReportType
 
 
 class TableQuestionViewAdminTest(QuestionViewAdminTest):
     url = 'report_builder:table_question_admin'
+    
+    def setUp(self):
+        User.objects.create_user(username='test', password='test')
+        report_type = ReportType.objects.create(
+            type='test_type',
+            name='test_name',
+            app_name='test.app',
+            action_ok=EmailTemplate.objects.create(code='ok_report_type_test', subject='', message=''),
+            revision_turn=EmailTemplate.objects.create(code='turn_report_type_test', subject='', message=''),
+            responsable_change=EmailTemplate.objects.create(code='change_report_type_test', subject='', message=''),
+            report_start=EmailTemplate.objects.create(code='start_report_type_test', subject='', message=''),
+            report_end=EmailTemplate.objects.create(code='end_report_type_test', subject='', message='')
+        )
+        report = Report.objects.create(type=report_type, name='Test report', opening_date=datetime.date.today())
+        Question.objects.create(
+            report=report,
+            class_to_load='table_question',
+            text='NEW TABLE QUESTION',
+            help='NEW TABLE QUESTION HELP',
+            answer_options='{\"catalog\": [\"0\"], \"displays\": [\"code\", \"name\"], \"headers\": [\"Code of your city?\", \"Name of your city?\"]}',
+            required=Question.OPTIONAL
+        )
     
     def test_post_create_with_correct_arguments_with_login(self):
         user = User.objects.first()
@@ -20,7 +45,11 @@ class TableQuestionViewAdminTest(QuestionViewAdminTest):
             'text': 'NEW TABLE QUESTION',
             'help': 'NEW TABLE QUESTION HELP',
             'required': 0,
-            'answer_options': '{\"catalog\": [\"0\"], \"displays\": [\"code\", \"name\", \"location\"], \"headers\": [\"Code of your city?\", \"Name of your city?\", \"Where is located?\"]}',
+            'catalog': 0,
+            'header_0': 'Code of your city?',
+            'display_field_0': ['code'],
+            'header_1': 'Name of your city?',
+            'display_field_1': ['name'],
             'children': 'test'
         }
 
@@ -33,7 +62,7 @@ class TableQuestionViewAdminTest(QuestionViewAdminTest):
         self.assertEqual(new_question.text, 'NEW TABLE QUESTION')
         self.assertEqual(new_question.help, 'NEW TABLE QUESTION HELP')
         self.assertEqual(new_question.required, 0)
-        self.assertEqual(new_question.answer_options,'{\"catalog\": [\"0\"], \"displays\": [\"code\", \"name\", \"location\"], \"headers\": [\"Code of your city?\", \"Name of your city?\", \"Where is located?\"]}')
+        self.assertEqual(new_question.answer_options,'{\"catalog\": [\"0\"], \"displays\": [\"code\", \"name\"], \"headers\": [\"Code of your city?\", \"Name of your city?\"]}')
 
     def test_post_update_with_correct_arguments_with_login(self):
         user = User.objects.first()
@@ -46,8 +75,14 @@ class TableQuestionViewAdminTest(QuestionViewAdminTest):
         data = {
             'text': 'NEW TABLE QUESTION',
             'help': 'NEW TABLE QUESTION HELP',
-            'required': 1,
-            'answer_options': '{\"catalog\": [\"0\"], \"displays\": [\"code\", \"name\", \"location\", \"code\"], \"headers\": [\"Code of your city?\", \"Name of your city?\", \"Where is located?\", \"Repeat code\"]}',
+            'required': 0,
+            'catalog': 0,
+            'header_0': 'Code of your city?',
+            'display_field_0': ['code'],
+            'header_1': 'Name of your city?',
+            'display_field_1': ['name'],
+            'header_2': 'Where is located?',
+            'display_field_2': ['location'],
             'children': 'test'
         }
 
@@ -59,8 +94,8 @@ class TableQuestionViewAdminTest(QuestionViewAdminTest):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(new_question.text, 'NEW TABLE QUESTION')
         self.assertEqual(new_question.help, 'NEW TABLE QUESTION HELP')
-        self.assertEqual(new_question.required, 1)
-        self.assertEqual(new_question.answer_options, '{\"catalog\": [\"0\"], \"displays\": [\"code\", \"name\", \"location\", \"code\"], \"headers\": [\"Code of your city?\", \"Name of your city?\", \"Where is located?\", \"Repeat code\"]}')
+        self.assertEqual(new_question.required, 0)
+        self.assertEqual(new_question.answer_options, '{\"catalog\": [\"0\"], \"displays\": [\"code\", \"name\", \"location\"], \"headers\": [\"Code of your city?\", \"Name of your city?\", \"Where is located?\"]}')
 
     def test_post_create_with_incorrect_arguments_with_login(self):
         '''
@@ -75,7 +110,11 @@ class TableQuestionViewAdminTest(QuestionViewAdminTest):
             'text': 'NEW TABLE QUESTION',
             'help': 'NEW TABLE QUESTION HELP',
             'required': 0,
-            'answer_options': '{\"catalog\": [\"0\"], \"displays\": [\"capital\"], \"headers\": [\"Code of your city?\"]}',
+            'catalog': 0,
+            'header_0': 'Code of your city?',
+            'display_field_0': ['code'],
+            'header_1': 'Name of your country?',
+            'display_field_1': ['capital'],
             'children': 'test'
         }
 
@@ -96,7 +135,11 @@ class TableQuestionViewAdminTest(QuestionViewAdminTest):
             'text': 'NEW TABLE QUESTION',
             'help': 'NEW TABLE QUESTION HELP',
             'required': 5,
-            'answer_options': '{\"catalog\": [\"0\"], \"displays\": [\"code\", \"name\", \"location\", \"code\"], \"headers\": [\"Code of your city?\", \"Name of your city?\", \"Where is located?\", \"Repeat code\"]}',
+            'catalog': 0,
+            'header_0': 'Code of your city?',
+            'display_field_0': ['code'],
+            'header_1': 'Name of your city?',
+            'display_field_1': ['name'],
             'children': 'test'
         }
 
@@ -114,7 +157,9 @@ class TableQuestionViewAdminTest(QuestionViewAdminTest):
         data = {
             'text': 'NEW TABLE QUESTION',
             'help': 'NEW TABLE QUESTION HELP',
-            'answer_options': '{\"catalog\": [\"0\"], \"displays\": [\"code\", \"name\", \"location\"], \"headers\": [\"Code of your city?\", \"Name of your city?\", \"Where is located?\"]}',
+            'catalog': 0,
+            'header_0': 'Code of your city?',
+            'display_field_0': ['code'],
             'children': 'test'
         }
 
@@ -135,6 +180,7 @@ class TableQuestionViewAdminTest(QuestionViewAdminTest):
             'text': 'NEW TABLE QUESTION',
             'help': 'NEW TABLE QUESTION HELP',
             'required': 0,
+            'catalog': 0,
             'children': 'test'
         }
 
