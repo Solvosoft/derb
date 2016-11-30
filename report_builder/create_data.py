@@ -120,8 +120,8 @@ def create_report_types(max=5):
     for i in range(0, max):
         models.ReportType.objects.create(
             type='report_type_%d' % i,
-            app_name='derb',
-            name='Report type # %d' % i,
+            app_name='report_builder',
+            name='report',
             action_ok=EmailTemplate.objects.create(code='ok_report_type_%d' % i, subject='', message=''),
             revision_turn=EmailTemplate.objects.create(code='turn_report_type_%d' % i, subject='', message=''),
             responsable_change=EmailTemplate.objects.create(code='change_report_type_%d' % i, subject='', message=''),
