@@ -71,18 +71,18 @@ class UniqueSelectionQuestionViewAdmin(QuestionView.QuestionViewAdmin):
         # Widget
         widget = None
         if 'widget' in form_data:
-            widget = form_data['widget']
+            widget = form_data['widget'][0]
 
         # Schema
         schema = ''
         if 'schema' in form_data:
-            schema = form_data['schema']
+            schema = form_data['schema'][0]
 
         # Children questions
         children = get_children(form)
 
         answer_options = {
-            'catalog': form_data.get('catalog'),
+            'catalog': form_data.get('catalog')[0],
             'display_fields': form_data.get('display_fields'),
             'widget': widget,
             'children': children,

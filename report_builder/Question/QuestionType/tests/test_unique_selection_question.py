@@ -1,8 +1,8 @@
 import datetime
+import json
 
 from async_notifications.models import EmailTemplate
 from django.contrib.auth.models import User
-from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 
 from report_builder.Question.tests import QuestionViewAdminTest, QuestionViewRespTest
@@ -49,7 +49,8 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
             'catalog': 0,
             'widget': 'radiobox',
             'display_fields': ['name'],
-            'children': '{}'
+            'children': '{}',
+            'schema': ''
         }
 
         self.client.login(username=user.username, password='test')
@@ -57,12 +58,20 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
 
         new_question = Question.objects.last()
 
+        expected_answer_options = {
+            'children': {},
+            'display_fields': ['name'],
+            'schema': '',
+            'widget': 'radiobox',
+            'catalog': '0'
+        }
+
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(new_question.text, 'NEW UNIQUE QUESTION')
         self.assertEqual(new_question.help, 'NEW UNIQUE QUESTION HELP')
         self.assertEqual(new_question.required, 0)
-        self.assertEqual(new_question.answer_options,'{\"display_fields\": [\"name\"], \"catalog\": [\"0\"], \"widget\": [\"radiobox\"]}')
-    
+        self.assertEqual(json.loads(new_question.answer_options), expected_answer_options)
+
    
 class UniqueSelectionQuestionViewRespTest(QuestionViewRespTest):
     '''
