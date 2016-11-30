@@ -59,7 +59,7 @@ class TableQuestionViewAdmin(QuestionView.QuestionViewAdmin):
             displays += form_data[display]
 
         answer_options = {
-            'catalog': form_data.get('catalog'),
+            'catalog': form_data.get('catalog')[0],
             'headers': headers,
             'displays': displays
         }

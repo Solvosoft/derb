@@ -345,9 +345,10 @@ class TableQuestionForm(QuestionForm):
             self.fields['display_field_%d' % i] = forms.ChoiceField()
 
         if self.is_bound:
-            catalog = self.data['catalog']
-            for i in range(0, count):
-                self.fields['display_field_%d' % i].choices = models[int(catalog)][3]
+            if self.data:
+                catalog = self.data['catalog']
+                for i in range(0, count):
+                    self.fields['display_field_%d' % i].choices = models[int(catalog)][3]
 
     class Meta:
         model = Question
