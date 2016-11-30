@@ -30,8 +30,8 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
         Question.objects.create(
             report=report,
             class_to_load='unique_selection_question',
-            text='NEW UNIQUE QUESTION',
-            help='NEW UNIQUE QUESTION HELP',
+            text='NEW QUESTION TEXT',
+            help='NEW QUESTION HELP',
             answer_options='{\"display_fields\": [\"name\"], \"catalog\": [\"0\"], \"widget\": [\"radiobox\"]}',
             required=Question.OPTIONAL
         )
