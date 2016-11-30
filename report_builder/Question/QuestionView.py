@@ -3,7 +3,6 @@ import json
 import random
 import reversion
 
-from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.utils import timezone
@@ -24,8 +23,6 @@ from report_builder.Question.forms import QuestionForm, AnswerForm, ObservationF
 from report_builder.report_shortcuts import get_question_permission
 from report_builder.shortcuts import transform_request_to_get, get_children, get_report_question
 from report_builder.Question import question_loader
-from django.http.request import QueryDict
-
 
 class Question(LoginRequiredMixin, View):
     """
@@ -358,7 +355,7 @@ class QuestionViewResp(Question):
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
         self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
-        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        reportbyproj = get_object_or_404(ReportByProject, report__pk=kwargs['report_pk'])
         if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
             self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
 
@@ -395,7 +392,7 @@ class QuestionViewResp(Question):
         extra = self.additional_template_parameters(**parameters)
         if extra:
             parameters.update(extra)
-        return render(request, self.template_name, parameters, status=302)
+        return render(request, self.template_name, parameters)
 
     def save(self, klass):
         with transaction.atomic(), reversion.create_revision():
