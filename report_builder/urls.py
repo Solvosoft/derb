@@ -18,7 +18,6 @@ from report_builder.Question.QuestionType.unique_selection_question import get_c
 from report_builder.Question.question_loader import process_question
 from report_builder.views import Report
 
-
 # Boolean question
 # Integer question
 # Float question
@@ -32,7 +31,6 @@ question_types_urls = [
         name='base_question_admin'),
     url(r'base/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', QuestionView.QuestionViewResp.as_view(),
         name='base_question_resp'),
-
     url(r'boolean/admin/(?P<report_pk>\d+)/(?P<question_pk>\d+)?$', boolean_question.BooleanQuestionViewAdmin.as_view(),
         name='boolean_question_admin'),
     url(r'boolean/resp/(?P<report_pk>\d+)/(?P<question_pk>\d+)$', boolean_question.BooleanQuestionViewResp.as_view(),

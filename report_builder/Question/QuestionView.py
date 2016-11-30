@@ -3,7 +3,6 @@ import json
 import random
 import reversion
 
-from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.utils import timezone
@@ -16,17 +15,14 @@ from django.utils.datastructures import OrderedDict
 from django.template import Context
 from weasyprint import HTML
 from io import StringIO
-#from savReaderWriter import SavWriter
-from tempfile import NamedTemporaryFile
 from django.conf import settings
 from report_builder.Observation.ObservationView import ObservationView
 from report_builder.Question.question_loader import process_questions
 from report_builder.models import Question as QuestionModel, Answer, Report, ReportByProject
 from report_builder.Question.forms import QuestionForm, AnswerForm, ObservationForm
 from report_builder.report_shortcuts import get_question_permission
-from report_builder.shortcuts import transform_request_to_get, get_children, get_reportbyproj_question_answer
+from report_builder.shortcuts import transform_request_to_get, get_children, get_report_question
 from report_builder.Question import question_loader
-
 
 class Question(LoginRequiredMixin, View):
     """
@@ -198,29 +194,20 @@ class QuestionViewAdmin(Question):
                 - minimal_representation
             Returns the rendered template for the question
         '''
-        question_pk = kwargs.get('question_pk', False)
-        report_pk = kwargs.get('report_pk', False)
-
-        if question_pk and question_pk != '':
-            self.question = get_object_or_404(QuestionModel, pk=question_pk)
-            question_pk = self.question.pk
-        else:
-            question_pk = ''
-
-        self.report = get_object_or_404(Report, pk=report_pk)
-
+        self.report, self.question = get_report_question(kwargs['report_pk'], kwargs['question_pk'])
         self.form_number = random.randint(self.start_number, self.end_number)
         self.request = request
         form = self.get_form(instance=self.question)
+
         parameters = {
             'form': form,
             'question': self.question,
             'report': self.report,
             'name': self.name,
             'form_number': str(self.form_number),
-            'minimal_representation': self.minimal_representation,
-            'question_pk': question_pk
+            'minimal_representation': self.minimal_representation
         }
+
         extra = self.additional_template_parameters(**parameters)
         if extra:
             parameters.update(extra)
@@ -239,18 +226,10 @@ class QuestionViewAdmin(Question):
             Returns the question pk when the POST request is processed correctly
             Return the rendered template (with errors) when the form presents errors
         '''
-        question_pk = kwargs.get('question_pk', False)
-        report_pk = kwargs.get('report_pk', False)
-
-        if question_pk and question_pk != '':
-            self.question = get_object_or_404(QuestionModel, pk=question_pk)
-            redirection_needed = False
-
-        if report_pk and report_pk != '':
-            self.report = get_object_or_404(Report, pk=report_pk)
-
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
+        self.report, self.question = get_report_question(kwargs['report_pk'], kwargs['question_pk'])
+
         form = self.get_form(request.POST, instance=self.question)
 
         if form.is_valid():
@@ -259,11 +238,8 @@ class QuestionViewAdmin(Question):
             question.report = self.report
             question = self.pre_save(question, request, form)
             question.save()
-            messages.add_message(request, messages.SUCCESS, 'Question saved successfully')
 
             return HttpResponse(question.pk, status=200)
-        else:
-            messages.add_message(request, messages.ERROR, 'An error ocurred while creating the question')
 
         parameters = {
             'form': form,
@@ -271,14 +247,13 @@ class QuestionViewAdmin(Question):
             'question': self.question,
             'name': self.name,
             'form_number': str(self.form_number),
-            'minimal_representation': self.minimal_representation,
-            'question_pk': question_pk
+            'minimal_representation': self.minimal_representation
         }
         extra = self.additional_template_parameters(**parameters)
         if extra:
             parameters.update(extra)
 
-        return render(request, template_name=self.template_name, context=parameters, status=302)
+        return render(request, template_name=self.template_name, context=parameters)
 
     def process_children(self, request, parameters, arguments, include=None):
         '''
@@ -311,7 +286,6 @@ class QuestionViewResp(Question):
         By itself, this view shows the simple question created by the template administrator, including the question text and help
         set by the user. Additionally, it provides a form two fields, a text area for the user to answer the question and a text area
         to add annotations for the reviewers. Plus, when a reviewer user has applied observations to the question, it shows such observations.
-
         .. note::
             * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
             you can find it in :mod:`report_builder.Question.QuestionView.Question`
@@ -381,7 +355,7 @@ class QuestionViewResp(Question):
         self.request = request
         self.form_number = random.randint(self.start_number, self.end_number)
         self.question = get_object_or_404(QuestionModel, pk=kwargs['question_pk'])
-        reportbyproj = get_object_or_404(ReportByProject, pk=kwargs['report_pk'])
+        reportbyproj = get_object_or_404(ReportByProject, report__pk=kwargs['report_pk'])
         if Answer.objects.filter(report=reportbyproj, question=self.question).exists():
             self.answer = Answer.objects.get(report=reportbyproj, question=self.question)
 
@@ -418,7 +392,7 @@ class QuestionViewResp(Question):
         extra = self.additional_template_parameters(**parameters)
         if extra:
             parameters.update(extra)
-        return render(request, self.template_name, parameters, status=302)
+        return render(request, self.template_name, parameters)
 
     def save(self, klass):
         with transaction.atomic(), reversion.create_revision():
@@ -429,7 +403,6 @@ class QuestionViewResp(Question):
         '''
             Checks if the question has been answered correctly
             Used when checking if the report is complete before to submit for revision or when the user request the report status
-
             In the case that the question has not been answered correctly or answered at all, returns the error info
         '''
         question = None
@@ -803,8 +776,8 @@ class QuestionViewSPSS(Question):
 
         spss_output = settings.MEDIA_ROOT + 'question.sav'
 
-        #with SavWriter(spss_output, varNames, varTypes) as writer:
-         #   writer.writerow(record)
+        # with SavWriter(spss_output, varNames, varTypes) as writer:
+        #   writer.writerow(record)
 
         return HttpResponse(0)
 
