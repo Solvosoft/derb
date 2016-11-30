@@ -289,12 +289,11 @@ class QuestionViewResp(Question):
         By itself, this view shows the simple question created by the template administrator, including the question text and help
         set by the user. Additionally, it provides a form two fields, a text area for the user to answer the question and a text area
         to add annotations for the reviewers. Plus, when a reviewer user has applied observations to the question, it shows such observations.
-
         .. note::
             * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
             you can find it in :mod:`report_builder.Question.QuestionView.Question`
     """
-    template_name = 'responsable/simple_question.html'
+    template_name = 'responsable/base_question.html'
     form_class = AnswerForm
     name = 'simple_question'
     answer = None
@@ -331,7 +330,7 @@ class QuestionViewResp(Question):
             'question': self.question,
             'question_number': self.question.order,
             'answer': self.answer,
-            'reportbyproj': reportbyproj,
+            'report': reportbyproj,
             'form_number': str(self.form_number)
         }
         extra = self.additional_template_parameters(**parameters)
@@ -365,6 +364,7 @@ class QuestionViewResp(Question):
 
         if self.answer is None:
             self.answer = Answer()
+
         self.answer.question = self.question
         self.answer.user = request.user
 
@@ -386,17 +386,16 @@ class QuestionViewResp(Question):
             'name': self.name,
             'form': form,
             'question': self.question,
-            'reportbyproj': reportbyproj,
+            'report': reportbyproj,
             'question_number': self.question.order,
             'answer': self.answer,
             'form_number': str(self.form_number),
-            # 'observations': self.get_observations(request, args, kwargs),
             'required': get_question_permission(self.question)
         }
         extra = self.additional_template_parameters(**parameters)
         if extra:
             parameters.update(extra)
-        return render(request, self.template_name, parameters)
+        return render(request, self.template_name, parameters, status=302)
 
     def save(self, klass):
         with transaction.atomic(), reversion.create_revision():
@@ -407,7 +406,6 @@ class QuestionViewResp(Question):
         '''
             Checks if the question has been answered correctly
             Used when checking if the report is complete before to submit for revision or when the user request the report status
-
             In the case that the question has not been answered correctly or answered at all, returns the error info
         '''
         question = None
