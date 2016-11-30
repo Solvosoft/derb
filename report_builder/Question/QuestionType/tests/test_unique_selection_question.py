@@ -15,6 +15,13 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
     url = 'report_builder:unique_selection_admin'
     
     def setUp(self):
+        data = {
+                'display_fields': ['name'],
+                'catalog': '0', 
+                'widget': 'radiobox',
+                'children': '{}', 
+                'schema': ''
+        }
         User.objects.create_user(username='test', password='test')
         report_type = ReportType.objects.create(
             type='test_type',
@@ -32,7 +39,7 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
             class_to_load='unique_selection_question',
             text='NEW QUESTION TEXT',
             help='NEW QUESTION HELP',
-            answer_options='{\"display_fields\": [\"name\"], \"catalog\": [\"0\"], \"widget\": [\"radiobox\"]}',
+            answer_options = json.dumps(data),
             required=Question.OPTIONAL
         )
     
@@ -71,6 +78,145 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
         self.assertEqual(new_question.help, 'NEW UNIQUE QUESTION HELP')
         self.assertEqual(new_question.required, 0)
         self.assertEqual(json.loads(new_question.answer_options), expected_answer_options)
+
+    def test_post_update_with_correct_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+        data = {
+            'text': 'NEW UNIQUE QUESTION',
+            'help': 'NEW UNIQUE QUESTION HELP',
+            'required': 2,
+            'catalog': 0,
+            'widget': 'radiobox',
+            'display_fields': ['name','location'],
+            'children': '{}',
+            'schema': ''
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+
+        new_question = Question.objects.last()
+        
+        expected_answer_options = {
+            'children': {},
+            'display_fields': ['name','location'],
+            'schema': '',
+            'widget': 'radiobox',
+            'catalog': '0'
+        }
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(new_question.text, 'NEW UNIQUE QUESTION')
+        self.assertEqual(new_question.help, 'NEW UNIQUE QUESTION HELP')
+        self.assertEqual(new_question.required, 2)
+        self.assertEqual(json.loads(new_question.answer_options), expected_answer_options)
+        
+    def test_post_create_with_incorrect_arguments_with_login(self):
+        '''
+        It is incorrect, because "capital" is not a display_field for the catalog "0"
+        '''
+        user = User.objects.first()
+        report = Report.objects.first()
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk
+        })
+        data = {
+            'text': 'NEW UNIQUE QUESTION',
+            'help': 'NEW UNIQUE QUESTION HELP',
+            'required': 0,
+            'catalog': 0,
+            'widget': 'radiobox',
+            'display_fields': ['capital'],
+            'children': '{}',
+            'schema': ''
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
+
+    def test_post_update_with_incorrect_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+        data = {
+            'text': 'NEW UNIQUE QUESTION',
+            'help': 'NEW UNIQUE QUESTION HELP',
+            'required': 5,
+            'catalog': 0,
+            'widget': 'radiobox',
+            'display_fields': ['name'],
+            'children': '{}',
+            'schema': ''
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
+
+    def test_post_create_with_incomplete_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk
+        })
+        data = {
+            'text': 'NEW UNIQUE QUESTION',
+            'help': 'NEW UNIQUE QUESTION HELP',
+            'required': 0,
+            'catalog': 0,
+            'display_fields': ['name'],
+            'children': '{}',
+            'schema': ''
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
+
+    def test_post_update_with_incomplete_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+        data = {
+            'text': 'NEW UNIQUE QUESTION',
+            'help': 'NEW UNIQUE QUESTION HELP',
+            'required': 0,
+            'widget': 'radiobox',
+            'display_fields': ['name'],
+            'children': '{}',
+            'schema': ''
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
 
    
 class UniqueSelectionQuestionViewRespTest(QuestionViewRespTest):
