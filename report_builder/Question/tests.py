@@ -51,6 +51,7 @@ class QuestionViewAdminTest(TestCase):
         })
         resp = self.client.get(url)
 
+        self.assertTrue(resp.url.startswith(reverse('auth_login')))
         self.assertEqual(resp.status_code, 302)
 
     def test_get_with_report_and_question_pk_without_login(self):
@@ -62,6 +63,7 @@ class QuestionViewAdminTest(TestCase):
         })
         resp = self.client.get(url)
 
+        self.assertTrue(resp.url.startswith(reverse('auth_login')))
         self.assertEqual(resp.status_code, 302)
 
     def test_get_with_report_pk_with_login(self):
@@ -108,8 +110,10 @@ class QuestionViewAdminTest(TestCase):
         })
         self.client.login(username=user.username, password='test')
         resp = self.client.post(url)
+        resp_str = str(resp.content)
 
-        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
 
     def test_post_create_with_correct_arguments_with_login(self):
         user = User.objects.first()
@@ -174,8 +178,10 @@ class QuestionViewAdminTest(TestCase):
 
         self.client.login(username=user.username, password='test')
         resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
 
-        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
 
     def test_post_update_with_incorrect_arguments_with_login(self):
         user = User.objects.first()
@@ -194,8 +200,10 @@ class QuestionViewAdminTest(TestCase):
 
         self.client.login(username=user.username, password='test')
         resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
 
-        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
 
     def test_post_create_with_incomplete_arguments_with_login(self):
         user = User.objects.first()
@@ -211,8 +219,10 @@ class QuestionViewAdminTest(TestCase):
 
         self.client.login(username=user.username, password='test')
         resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
 
-        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
 
     def test_post_update_with_incomplete_arguments_with_login(self):
         user = User.objects.first()
@@ -230,8 +240,10 @@ class QuestionViewAdminTest(TestCase):
 
         self.client.login(username=user.username, password='test')
         resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
 
-        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
 
 
 class QuestionFormTest(TestCase):
