@@ -3,6 +3,7 @@ import json
 
 from async_notifications.models import EmailTemplate
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 
 from report_builder.Question.tests import QuestionViewAdminTest, QuestionViewRespTest
@@ -220,10 +221,57 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
 
    
 class UniqueSelectionQuestionViewRespTest(QuestionViewRespTest):
-    '''
-        Override and extend your tests here
-    '''
-    pass
+    url = 'report_builder:unique_selection_resp'
+    
+    def setUp(self):
+        question_data = {
+                'display_fields': ['name'],
+                'catalog': '0', 
+                'widget': 'radiobox',
+                'children': '{}', 
+                'schema': ''
+        }
+        User.objects.create_user(username='test', password='test')
+        report_type = ReportType.objects.create(
+            type='test_type',
+            name='test_name',
+            app_name='test.app',
+            action_ok=EmailTemplate.objects.create(code='ok_report_type_test', subject='', message=''),
+            revision_turn=EmailTemplate.objects.create(code='turn_report_type_test', subject='', message=''),
+            responsable_change=EmailTemplate.objects.create(code='change_report_type_test', subject='', message=''),
+            report_start=EmailTemplate.objects.create(code='start_report_type_test', subject='', message=''),
+            report_end=EmailTemplate.objects.create(code='end_report_type_test', subject='', message='')
+        )
+        report = Report.objects.create(type=report_type, name='Test report', opening_date=datetime.date.today())
+        question = Question.objects.create(
+            report=report,
+            class_to_load='unique_selection_question',
+            text='NEW UNIQUE QUESTION',
+            help='NEW UNIQUE QUESTION HELP',
+            answer_options=json.dumps(question_data),
+            required=Question.OPTIONAL
+        )
+        report.question_set.add(question)
+        project = Project.objects.create(
+            description='Test Project',
+            content_type=ContentType.objects.first(),
+            object_id=0
+        )
+        ReportByProject.objects.create(
+            report=report,
+            start_date=datetime.date.today(),
+            submit_date=datetime.date.today() + datetime.timedelta(days=30),
+            project=project
+        )
+        Answer.objects.create(
+            user= User.objects.first(),
+            report= ReportByProject.objects.first(),
+            question=question,
+            text= '1',
+            annotation= 'Answer test annotation',
+            display_text= 'Costa Rica'
+        )
+    
 
 class UniqueSelectionQuestionFormTest(QuestionFormTest):
     '''
