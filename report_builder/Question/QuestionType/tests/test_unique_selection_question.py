@@ -9,7 +9,7 @@ from django.urls import reverse
 from report_builder.Question.tests import QuestionViewAdminTest, QuestionViewRespTest
 from report_builder.Question.tests import QuestionFormTest
 
-from report_builder.models import Question, Answer, Report, ReportByProject, ReportType, Project
+from report_builder.models import Question, Answer, Report, ReportByProject, ReportType, Project, City, Country
 
 
 class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
@@ -269,9 +269,143 @@ class UniqueSelectionQuestionViewRespTest(QuestionViewRespTest):
             question=question,
             text= '1',
             annotation= 'Answer test annotation',
-            display_text= 'Costa Rica'
+            display_text= 'Santa Ana'
         )
-    
+        City.objects.create(code='SA',name='Santa Ana',location='San Jose')
+        City.objects.create(code='WA',name='Washington',location='New York')
+        Country.objects.create(code='CR',name='Costa Rica',capital='San Jose')
+        Country.objects.create(code='US',name='Estados Unidos',capital='Washington')
+        
+    def test_post_create_with_correct_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+
+        data = {
+            'text': '1',
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+
+        new_answer = Answer.objects.last()
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(int(resp.content), int(new_answer.pk))
+        self.assertEqual(new_answer.text, '1')
+        self.assertEqual(new_answer.display_text, 'Santa Ana')
+        
+    def test_post_update_with_correct_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+        answer = Answer.objects.last()
+        
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+        data = {
+            'text': '2',
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+
+        new_answer = Answer.objects.last()
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(answer.pk, new_answer.pk)
+        self.assertEqual(int(resp.content), int(new_answer.pk))
+        self.assertEqual(new_answer.text, '2')
+        self.assertEqual(new_answer.display_text, 'Washington')
+
+    def test_post_create_with_incorrect_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+
+        data = {
+            'text': '3',
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
+        
+    def test_post_update_with_incorrect_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+        data = {
+            'text': 'text',
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
+        
+    def test_post_create_with_incomplete_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+
+        data = {
+            'text': '',
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
+
+    def test_post_update_with_incomplete_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+        data = {
+            
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
 
 class UniqueSelectionQuestionFormTest(QuestionFormTest):
     '''
