@@ -18,9 +18,9 @@ class UniqueSelectionQuestionViewAdminTest(QuestionViewAdminTest):
     def setUp(self):
         data = {
                 'display_fields': ['name'],
-                'catalog': '0', 
+                'catalog': '0',
                 'widget': 'radiobox',
-                'children': '{}', 
+                'children': '{}',
                 'schema': ''
         }
         User.objects.create_user(username='test', password='test')
@@ -226,9 +226,9 @@ class UniqueSelectionQuestionViewRespTest(QuestionViewRespTest):
     def setUp(self):
         question_data = {
                 'display_fields': ['name'],
-                'catalog': '0', 
+                'catalog': '0',
                 'widget': 'radiobox',
-                'children': '{}', 
+                'children': '{}',
                 'schema': ''
         }
         User.objects.create_user(username='test', password='test')
@@ -275,7 +275,7 @@ class UniqueSelectionQuestionViewRespTest(QuestionViewRespTest):
         City.objects.create(code='WA',name='Washington',location='New York')
         Country.objects.create(code='CR',name='Costa Rica',capital='San Jose')
         Country.objects.create(code='US',name='Estados Unidos',capital='Washington')
-        
+
     def test_post_create_with_correct_arguments_with_login(self):
         user = User.objects.first()
         report = Report.objects.first()
@@ -285,9 +285,11 @@ class UniqueSelectionQuestionViewRespTest(QuestionViewRespTest):
             'report_pk': report.pk,
             'question_pk': question.pk
         })
+        catalog_pk = City.objects.first().pk
+
 
         data = {
-            'text': '1',
+            'text': str(catalog_pk),
         }
 
         self.client.login(username=user.username, password='test')
@@ -297,7 +299,7 @@ class UniqueSelectionQuestionViewRespTest(QuestionViewRespTest):
 
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(int(resp.content), int(new_answer.pk))
-        self.assertEqual(new_answer.text, '1')
+        self.assertEqual(new_answer.text, str(catalog_pk))
         self.assertEqual(new_answer.display_text, 'Santa Ana')
         
     def test_post_update_with_correct_arguments_with_login(self):
@@ -310,8 +312,9 @@ class UniqueSelectionQuestionViewRespTest(QuestionViewRespTest):
             'report_pk': report.pk,
             'question_pk': question.pk
         })
+        catalog_pk = City.objects.first().pk
         data = {
-            'text': '2',
+            'text': str(catalog_pk),
         }
 
         self.client.login(username=user.username, password='test')
@@ -322,7 +325,7 @@ class UniqueSelectionQuestionViewRespTest(QuestionViewRespTest):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(answer.pk, new_answer.pk)
         self.assertEqual(int(resp.content), int(new_answer.pk))
-        self.assertEqual(new_answer.text, '2')
+        self.assertEqual(new_answer.text, catalog_pk)
         self.assertEqual(new_answer.display_text, 'Washington')
 
     def test_post_create_with_incorrect_arguments_with_login(self):
