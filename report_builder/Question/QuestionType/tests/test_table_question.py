@@ -263,13 +263,152 @@ class TableQuestionViewRespTest(QuestionViewRespTest):
             question=question,
             text= [('display_field_0', '0'), ('display_field_1', '0')],
             annotation= 'Answer test annotation',
-            display_text= 'Code of your city?: SA Name of your city?: Santa Ana'
+            display_text= 'Code of your city?: SA\nName of your city?: Santa Ana\n'
         )
         City.objects.create(code='SA',name='Santa Ana',location='San Jose')
         City.objects.create(code='WA',name='Washington',location='New York')
         Country.objects.create(code='CR',name='Costa Rica',capital='San Jose')
         Country.objects.create(code='US',name='Estados Unidos',capital='Washington')
+        
+    def test_post_create_with_correct_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
 
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+
+        data = {
+            'display_field_0': '0',
+            'display_field_1': '0'
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+
+        new_answer = Answer.objects.last()
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(int(resp.content), int(new_answer.pk))
+        self.assertEqual(new_answer.text, "[('display_field_0', '0'), ('display_field_1', '0')]")
+        self.assertEqual(new_answer.annotation, 'Answer test annotation')
+        self.assertEqual(new_answer.display_text,'Code of your city?: SA\nName of your city?: Santa Ana\n')
+
+    def test_post_update_with_correct_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+        answer = Answer.objects.last()
+
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+        data = {
+            'display_field_0': '1',
+            'display_field_1': '1'
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+
+        new_answer = Answer.objects.last()
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(answer.pk, new_answer.pk)
+        self.assertEqual(int(resp.content), int(new_answer.pk))
+        self.assertEqual(new_answer.text, "[('display_field_0', '1'), ('display_field_1', '1')]")
+        self.assertEqual(new_answer.annotation, 'Answer test annotation')
+        self.assertEqual(new_answer.display_text,'Code of your city?: WA\nName of your city?: Washington\n')
+
+    def test_post_create_with_incorrect_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+
+        data = {
+            'display_field_0': '3',
+            'display_field_1': '3'
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
+
+    def test_post_update_with_incorrect_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+
+        data = {
+            'display_field_0': 'text1',
+            'display_field_1': 'text2'
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
+
+    def test_post_create_with_incomplete_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+
+        data = {
+            'display_field_0': '0',
+            'display_field_1': ''
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
+
+    def test_post_update_with_incomplete_arguments_with_login(self):
+        user = User.objects.first()
+        report = Report.objects.first()
+        question = Question.objects.first()
+
+        url = reverse(self.url, kwargs={
+            'report_pk': report.pk,
+            'question_pk': question.pk
+        })
+        data = {
+            'display_field_0': '0',
+        }
+
+        self.client.login(username=user.username, password='test')
+        resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
+        
 class TableQuestionFormTest(QuestionFormTest):
     '''
         Override and extend your tests here
