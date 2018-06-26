@@ -6,9 +6,12 @@ from django.test import TestCase
 from django.urls import reverse
 from django.urls.exceptions import NoReverseMatch
 
-from report_builder.forms import QuestionForm
+
+
 from report_builder.models import Report, ReportType, Question, ReportByProject, Project, Answer
 from django.contrib.contenttypes.models import ContentType
+from report_builder.Question.forms import QuestionForm
+
 
 
 class QuestionViewAdminTest(TestCase):

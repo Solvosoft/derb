@@ -11,7 +11,30 @@ from report_builder.registry import models
 from ast import literal_eval
 
 class QuestionForm(forms.ModelForm):
-    children = forms.CharField(widget=forms.HiddenInput, max_length=1024 ** 3, initial=' ')
+    '''
+    Form for creating and updating a simple text question
+
+    This implementation is meant to be used or extended for all the different types of questions
+    offered by the system
+
+    This class be extended using an implementation like this:
+
+    ..  code:: python
+
+        from report_builder.forms import QuestionForm
+
+        class MyQuestionForm(QuestionForm):
+            my_new_field = forms.CharField(max_length=100)
+
+            # Override the constructor
+            def __init__(self, *args, **kwargs):
+                # retrieve extra arguments for the form creation
+                if 'extra' in kwargs:
+                    extra = kwargs.pop('extra')
+                super(MyQuestionForm, self)._-init__(*args, **kwargs)
+                # additional code
+    '''
+    children = forms.CharField(widget=forms.HiddenInput, required=False)
 
     class Meta:
         model = Question
@@ -33,10 +56,29 @@ class QuestionForm(forms.ModelForm):
 
 
 class AnswerForm(forms.ModelForm):
-    """
-        TODO: docstring
-    """
+    '''
+    Form for creating and updating an answer to a question
 
+    This implementation to be used is meant to be used or extended for all different question types related answers,
+    especially the processing of question's answer options for displaying and submitting such answer correctly.
+
+    This class can be extended with an implementation like this:
+
+    .. code:: python
+
+        from report_builder.forms import AnswerForm
+
+        class MyAnswerForm(AnswerForm):
+            my_new_field = forms.CharField(max_length=100)
+
+            # Override the constructor
+            def __init__(self, *args, **kwargs):
+                # retrieve extra arguments for the form creation
+                if 'extra' in kwargs:
+                    extra = kwargs.pop('extra')
+                super(MyAnswerForm, self)._-init__(*args, **kwargs)
+                # additional code
+    '''
     def clean_text(self):
         text = self.cleaned_data['text']
         # required = get_question_permission(self.instance.question)
@@ -63,6 +105,7 @@ class AnswerForm(forms.ModelForm):
         }
 
     def save(self, db_use):
+        '''Saves the additional attributes for the answer instance'''
         instance = super(AnswerForm, self).save(db_use)
         instance.display_text = instance.text
         return instance
@@ -213,6 +256,16 @@ class FloatAnswerForm(IntegerAnswerForm):
 
 
 class UniqueSelectionQuestionForm(QuestionForm):
+    '''
+    Form for creating and updating a unique selection question.
+        
+    This class extends from QuestionForm, using an implemention like this:
+    
+    .. code:: python
+        
+        class UniqueSelectionQuestionForm(QuestionForm):
+
+    '''
     catalog = forms.ChoiceField()
     display_fields = forms.Field(required=False)
 
@@ -239,6 +292,10 @@ class UniqueSelectionQuestionForm(QuestionForm):
         }
 
     def __init__(self, *args, **kwargs):
+        '''
+        It allows to init the principal data in the form, through the values in "extra".
+        "Extra" is provided from "UniqueSelectionQuestionViewAdmin".
+        '''
         if 'extra' in kwargs:
             self.extra = kwargs.pop('extra')
         super(UniqueSelectionQuestionForm, self).__init__(*args, **kwargs)
@@ -264,9 +321,23 @@ class UniqueSelectionQuestionForm(QuestionForm):
 
 
 class UniqueSelectionAnswerForm(AnswerForm):
+    '''
+    Form for creating and updating an answer to a unique selection question.
+        
+    This class extends from AnswerForm, using an implemention like this:
+    
+    .. code:: python
+        
+        class UniqueSelectionAnswerForm(AnswerForm):
+
+    '''
     text = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}))
 
     def __init__(self, *args, **kwargs):
+        '''
+        It allows to init the principal data in the form, through the values in "extra".
+        "Extra" is provided from "UniqueSelectionQuestionViewResp".
+        '''
         if 'extra' in kwargs:
             catalog = kwargs.pop('extra')
             super(UniqueSelectionAnswerForm, self).__init__(*args, **kwargs)
@@ -275,6 +346,9 @@ class UniqueSelectionAnswerForm(AnswerForm):
             super(UniqueSelectionAnswerForm, self).__init__(*args, **kwargs)
 
     def save(self, db_use):
+        '''
+        It allows to save the answer of the unique selection question given from the user.
+        '''
         instance = super(AnswerForm, self).save(db_use)
         object_pk = instance.text
         answer_options_json = instance.question.answer_options
@@ -300,11 +374,25 @@ class UniqueSelectionAnswerForm(AnswerForm):
 
 # Table_Question
 class TableQuestionForm(QuestionForm):
+    '''
+    Form for creating and updating a table question.
+        
+    This class extends from QuestionForm, using an implemention like this:
+    
+    .. code:: python
+        
+        class TableQuestionForm(QuestionForm):
+
+    '''
     catalog = forms.ChoiceField()
     header_0 = forms.CharField(max_length=100)
     display_field_0 = forms.ChoiceField()
 
     def __init__(self, *args, **kwargs):
+        '''
+        It allows to init the principal data in the form, through the values in "extra".
+        "Extra" is provided from "TableQuestionViewAdmin".
+        '''
         count = kwargs.pop('extra')
         super(TableQuestionForm, self).__init__(*args, **kwargs)
 
@@ -343,7 +431,21 @@ class TableQuestionForm(QuestionForm):
 
 
 class TableQuestionAnswerForm(AnswerForm):
+    '''
+    Form for creating and updating an answer to a table question.
+        
+    This class extends from AnswerForm, using an implemention like this:
+    
+    .. code:: python
+        
+        class TableQuestionAnswerForm(AnswerForm):
+
+    '''
     def __init__(self, *args, **kwargs):
+        '''
+        It allows to init the principal data in the form, through the values in "extra".
+        "Extra" is provided from "TableQuestionViewResp".
+        '''
         extra = kwargs.pop('extra')
         catalog = extra['catalog_choices']
         headers = extra['headers']
@@ -360,6 +462,9 @@ class TableQuestionAnswerForm(AnswerForm):
             self.fields['display_field_%d' % i].choices = catalog[i]
 
     def save(self, db_use):
+        '''
+        It allows to save the answer of the table question given from the user.
+        '''
         instance = super(AnswerForm, self).save(db_use)
         instance.text = str(sorted(self.cleaned_data.items()))
 

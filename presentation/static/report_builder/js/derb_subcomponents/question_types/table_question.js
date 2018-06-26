@@ -1,6 +1,10 @@
 /**
  * Created by jaquer on 10/10/16.
  */
+
+/**
+ * Checks the html view and implements the functions.
+ */
 $(document).ready(function() {
 	init_table();
 
@@ -17,11 +21,22 @@ $(document).ready(function() {
 
 });
 
+/**
+ * @param {number} catalog_id The catalog value.
+ * @param {object} display_fields Values obtained whit ajax.
+ * @param {number} input_id The counter for the inputs id.
+ * @param {number} select_id The counter for the selects id.
+ */
 var catalog_id;
 var display_fields;
 var input_id;
 var select_id;
 
+/**
+ * @function init_table
+ * Using Ajax, according whit the option selected in the catalog choice, the display fields in the table will
+ * be updated.
+ */
 function init_table() {
 	$("#id_catalog").find("option:selected").each(function() {
 		$('#catalog_name').html($(this).text());
@@ -53,6 +68,10 @@ function init_table() {
 	});
 }
 
+/**
+ * @function do_table
+ * It allows add new rows for the table.
+ */
 function do_table() {
 	input_id += 1;
 	select_id += 1;
@@ -67,6 +86,10 @@ function do_table() {
 	df_selector.append(bodyhtml);
 }
 
+/**
+ * @function remove_table
+ * It allows delete the last row in the table.
+ */
 function remove_table() {
 	if (input_id && select_id > 0) {
 		$('#id_header_' + input_id + '').remove();
@@ -77,6 +100,10 @@ function remove_table() {
 	}
 }
 
+/**
+ * @function init_values
+ * If the question exists, the data in answer_options_json will be used to define the form data.
+ */
 function init_values() {
 	if (answer_options_json != '') {
 		window.setTimeout(function() {
