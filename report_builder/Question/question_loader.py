@@ -102,7 +102,6 @@ def get_view(*args, **kwargs):
 
     if not view_type in views:
         raise Http404
-
     return views[view_type]
 
 
@@ -147,12 +146,13 @@ def process_questions(request, report, question_list, view_type='admin', reportb
             'view_type': question.class_to_load,
             'type': view_type
         }
+
         if view_type in has_answer:
             answers = Answer.objects.filter(user=request.user, question=question, report=reportbyproj.pk)
             if len(answers) > 0:
                 kwargs['answer_pk'] = answers[0].pk
             else:
-                kwargs['anwser_pk'] = None
+                kwargs['answer_pk'] = None
         processed = process_question(request, *args, **kwargs)
         questions_html.append(processed.content)
 

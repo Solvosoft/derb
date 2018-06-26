@@ -10,30 +10,8 @@ from ckeditor.widgets import CKEditorWidget
 from report_builder.registry import models
 from ast import literal_eval
 
+
 class QuestionForm(forms.ModelForm):
-    '''
-    Form for creating and updating a simple text question
-
-    This implementation is meant to be used or extended for all the different types of questions
-    offered by the system
-
-    This class be extended using an implementation like this:
-
-    ..  code:: python
-
-        from report_builder.forms import QuestionForm
-
-        class MyQuestionForm(QuestionForm):
-            my_new_field = forms.CharField(max_length=100)
-
-            # Override the constructor
-            def __init__(self, *args, **kwargs):
-                # retrieve extra arguments for the form creation
-                if 'extra' in kwargs:
-                    extra = kwargs.pop('extra')
-                super(MyQuestionForm, self)._-init__(*args, **kwargs)
-                # additional code
-    '''
     children = forms.CharField(widget=forms.HiddenInput, required=False)
 
     class Meta:
@@ -56,29 +34,10 @@ class QuestionForm(forms.ModelForm):
 
 
 class AnswerForm(forms.ModelForm):
-    '''
-    Form for creating and updating an answer to a question
+    """
+        TODO: docstring
+    """
 
-    This implementation to be used is meant to be used or extended for all different question types related answers,
-    especially the processing of question's answer options for displaying and submitting such answer correctly.
-
-    This class can be extended with an implementation like this:
-
-    .. code:: python
-
-        from report_builder.forms import AnswerForm
-
-        class MyAnswerForm(AnswerForm):
-            my_new_field = forms.CharField(max_length=100)
-
-            # Override the constructor
-            def __init__(self, *args, **kwargs):
-                # retrieve extra arguments for the form creation
-                if 'extra' in kwargs:
-                    extra = kwargs.pop('extra')
-                super(MyAnswerForm, self)._-init__(*args, **kwargs)
-                # additional code
-    '''
     def clean_text(self):
         text = self.cleaned_data['text']
         # required = get_question_permission(self.instance.question)
@@ -105,11 +64,10 @@ class AnswerForm(forms.ModelForm):
         }
 
     def save(self, db_use):
-        '''Saves the additional attributes for the answer instance'''
         instance = super(AnswerForm, self).save(db_use)
         instance.display_text = instance.text
         return instance
-    
+
 
 class ObservationForm(forms.ModelForm):
     class Meta:
@@ -122,7 +80,7 @@ class ObservationForm(forms.ModelForm):
                 'class': 'form-control'
             })
         }
-        
+
 
 class SimpleTextAnswerForm(AnswerForm):
     class Meta:
@@ -146,7 +104,11 @@ class SimpleTextQuestionForm(QuestionForm):
         fields = ('text', 'help', 'id', 'required')
         widgets = {
             'text': CKEditorWidget(config_name='default'),
-            'help': CKEditorWidget(config_name='default')
+            'help': forms.Textarea(attrs={
+                'rows': 1,
+                'placeholder': 'Nombre para el Botón que muestra la información',
+                'class': 'form-control'
+            })
         }
 
     def save(self, db_use):
@@ -156,10 +118,16 @@ class SimpleTextQuestionForm(QuestionForm):
 
     def __init__(self, *args, **kwargs):
         on_modal = False
+        form_number = 'id'
         if 'extra' in kwargs:
             extra = kwargs.pop('extra')
             on_modal = extra['on_modal']
+            form_number = extra['form_number']
         super(SimpleTextQuestionForm, self).__init__(*args, **kwargs)
+
+        self.fields['text'] = forms.CharField(widget=CKEditorWidget(config_name='default', attrs={
+            'id': '%s_text' % str(form_number)
+        }))
 
         self.fields['on_modal'] = forms.BooleanField(
             label='See on modal',
@@ -167,7 +135,7 @@ class SimpleTextQuestionForm(QuestionForm):
             initial=on_modal,
             widget=forms.CheckboxInput(
                 attrs={
-                    'onchange': 'get_button_name_info(this);'
+                    'onchange': 'request_name_button_info(this);'
                 }
             )
         )
@@ -255,17 +223,20 @@ class FloatAnswerForm(IntegerAnswerForm):
     text = forms.DecimalField()
 
 
-class UniqueSelectionQuestionForm(QuestionForm):
-    '''
-    Form for creating and updating a unique selection question.
-        
-    This class extends from QuestionForm, using an implemention like this:
-    
-    .. code:: python
-        
-        class UniqueSelectionQuestionForm(QuestionForm):
+class NumericalSubquestionForm(forms.Form):
+    DESC_CHOICES = (
+        ('gt', 'Greater than'),
+        ('gte', 'Greater or equal to'),
+        ('eq', 'Equal to'),
+        ('lt', 'Less than'),
+        ('lte', 'Less or equal to'),
+        ('neq', 'Not equal to')
+    )
+    description = forms.ChoiceField(choices=DESC_CHOICES)
+    number = forms.FloatField(initial=0)
 
-    '''
+
+class UniqueSelectionQuestionForm(QuestionForm):
     catalog = forms.ChoiceField()
     display_fields = forms.Field(required=False)
 
@@ -292,10 +263,6 @@ class UniqueSelectionQuestionForm(QuestionForm):
         }
 
     def __init__(self, *args, **kwargs):
-        '''
-        It allows to init the principal data in the form, through the values in "extra".
-        "Extra" is provided from "UniqueSelectionQuestionViewAdmin".
-        '''
         if 'extra' in kwargs:
             self.extra = kwargs.pop('extra')
         super(UniqueSelectionQuestionForm, self).__init__(*args, **kwargs)
@@ -308,6 +275,9 @@ class UniqueSelectionQuestionForm(QuestionForm):
         # Catalog
         catalog_choices = ((index, model[1].capitalize()) for index, model in enumerate(models))
         self.fields['catalog'].choices = catalog_choices
+        initial_widget = None
+        if self.extra and 'answer_options' in self.extra and self.extra['answer_options'] is not None:
+            initial_widget = self.extra['answer_options']['widget'][0]
 
         # Widget
         if widgets_choices is not None:
@@ -316,28 +286,15 @@ class UniqueSelectionQuestionForm(QuestionForm):
                     'id': str(random.randint(50, 10000)) + '_select'
                 }),
                 required=True,
-                choices=widgets_choices
+                choices=widgets_choices,
+                initial=initial_widget
             )
 
 
 class UniqueSelectionAnswerForm(AnswerForm):
-    '''
-    Form for creating and updating an answer to a unique selection question.
-        
-    This class extends from AnswerForm, using an implemention like this:
-    
-    .. code:: python
-        
-        class UniqueSelectionAnswerForm(AnswerForm):
-
-    '''
     text = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}))
 
     def __init__(self, *args, **kwargs):
-        '''
-        It allows to init the principal data in the form, through the values in "extra".
-        "Extra" is provided from "UniqueSelectionQuestionViewResp".
-        '''
         if 'extra' in kwargs:
             catalog = kwargs.pop('extra')
             super(UniqueSelectionAnswerForm, self).__init__(*args, **kwargs)
@@ -346,9 +303,6 @@ class UniqueSelectionAnswerForm(AnswerForm):
             super(UniqueSelectionAnswerForm, self).__init__(*args, **kwargs)
 
     def save(self, db_use):
-        '''
-        It allows to save the answer of the unique selection question given from the user.
-        '''
         instance = super(AnswerForm, self).save(db_use)
         object_pk = instance.text
         answer_options_json = instance.question.answer_options
@@ -374,25 +328,11 @@ class UniqueSelectionAnswerForm(AnswerForm):
 
 # Table_Question
 class TableQuestionForm(QuestionForm):
-    '''
-    Form for creating and updating a table question.
-        
-    This class extends from QuestionForm, using an implemention like this:
-    
-    .. code:: python
-        
-        class TableQuestionForm(QuestionForm):
-
-    '''
     catalog = forms.ChoiceField()
     header_0 = forms.CharField(max_length=100)
     display_field_0 = forms.ChoiceField()
 
     def __init__(self, *args, **kwargs):
-        '''
-        It allows to init the principal data in the form, through the values in "extra".
-        "Extra" is provided from "TableQuestionViewAdmin".
-        '''
         count = kwargs.pop('extra')
         super(TableQuestionForm, self).__init__(*args, **kwargs)
 
@@ -431,21 +371,7 @@ class TableQuestionForm(QuestionForm):
 
 
 class TableQuestionAnswerForm(AnswerForm):
-    '''
-    Form for creating and updating an answer to a table question.
-        
-    This class extends from AnswerForm, using an implemention like this:
-    
-    .. code:: python
-        
-        class TableQuestionAnswerForm(AnswerForm):
-
-    '''
     def __init__(self, *args, **kwargs):
-        '''
-        It allows to init the principal data in the form, through the values in "extra".
-        "Extra" is provided from "TableQuestionViewResp".
-        '''
         extra = kwargs.pop('extra')
         catalog = extra['catalog_choices']
         headers = extra['headers']
@@ -462,9 +388,6 @@ class TableQuestionAnswerForm(AnswerForm):
             self.fields['display_field_%d' % i].choices = catalog[i]
 
     def save(self, db_use):
-        '''
-        It allows to save the answer of the table question given from the user.
-        '''
         instance = super(AnswerForm, self).save(db_use)
         instance.text = str(sorted(self.cleaned_data.items()))
 
@@ -592,9 +515,24 @@ class MultipleSelectionAnswerForm(AnswerForm):
 
 class ModelInfoQuestionForm(UniqueSelectionQuestionForm):
     with_text = 'text'
-    widgets = {
-        'text': CKEditorWidget(config_name='default'),
+
+    class Meta:
+        model = Question
+        fields = ('text', 'help', 'id')
+        widgets = {
+        'text': CKEditorWidget(
+config_name='default',
+attrs={
+                'placeholder': _('Write your question here')
+}),
+	'help': forms.Textarea(attrs={
+                'cols': 80,
+                'rows': 5,
+                'placeholder': _('A little help never hurts'),
+                'class': 'form-control'
+            })
     }
+
 
     def __init__(self, *args, **kwargs):
         self.post = args
@@ -604,6 +542,8 @@ class ModelInfoQuestionForm(UniqueSelectionQuestionForm):
             on_modal = extra['on_modal']
 
         super(ModelInfoQuestionForm, self).__init__(*args, **kwargs)
+
+        del self.fields['widget']
 
         self.fields['on_modal'] = forms.BooleanField(
             label='See on modal',
@@ -625,7 +565,15 @@ class QuestionModelInfoQuestionForm(ModelInfoQuestionForm):
         fields = ('text', 'help', 'id', 'required')
         widgets = {
             'text': CKEditorWidget(config_name='default'),
-            'help': CKEditorWidget(config_name='default')
+            'help': forms.Textarea(attrs={
+                'cols': 80,
+                'rows': 5,
+                'placeholder': _('A little help never hurts'),
+                'class': 'form-control'
+            }),
+            'required': forms.Select(attrs={
+                'class': 'form-control'
+            })
         }
 
     def __init__(self, *args, **kwargs):

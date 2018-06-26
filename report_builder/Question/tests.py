@@ -2,16 +2,13 @@ import datetime
 
 from async_notifications.models import EmailTemplate
 from django.contrib.auth.models import User
-from django.test import TestCase
-from django.urls import reverse
-from django.urls.exceptions import NoReverseMatch
-
-
-
-from report_builder.models import Report, ReportType, Question, ReportByProject, Project, Answer
 from django.contrib.contenttypes.models import ContentType
-from report_builder.Question.forms import QuestionForm
+from django.test import TestCase
+from django.urls import NoReverseMatch
+from django.urls import reverse
 
+from report_builder.forms import QuestionForm
+from report_builder.models import Report, ReportType, Question, ReportByProject, Answer, Project
 
 
 class QuestionViewAdminTest(TestCase):
@@ -38,6 +35,12 @@ class QuestionViewAdminTest(TestCase):
             required=Question.OPTIONAL
         )
 
+    def tearDown(self):
+        User.objects.all().delete()
+        ReportType.objects.all().delete()
+        Report.objects.all().delete()
+        Question.objects.all().delete()
+
     def test_get_without_arguments(self):
         resp = None
         try:
@@ -56,6 +59,7 @@ class QuestionViewAdminTest(TestCase):
         })
         resp = self.client.get(url)
 
+        self.assertTrue(resp.url.startswith(reverse('auth_login')))
         self.assertEqual(resp.status_code, 302)
 
     def test_get_with_report_and_question_pk_without_login(self):
@@ -67,6 +71,7 @@ class QuestionViewAdminTest(TestCase):
         })
         resp = self.client.get(url)
 
+        self.assertTrue(resp.url.startswith(reverse('auth_login')))
         self.assertEqual(resp.status_code, 302)
 
     def test_get_with_report_pk_with_login(self):
@@ -113,8 +118,10 @@ class QuestionViewAdminTest(TestCase):
         })
         self.client.login(username=user.username, password='test')
         resp = self.client.post(url)
+        resp_str = str(resp.content)
 
-        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
 
     def test_post_create_with_correct_arguments_with_login(self):
         user = User.objects.first()
@@ -179,8 +186,10 @@ class QuestionViewAdminTest(TestCase):
 
         self.client.login(username=user.username, password='test')
         resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
 
-        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
 
     def test_post_update_with_incorrect_arguments_with_login(self):
         user = User.objects.first()
@@ -199,8 +208,10 @@ class QuestionViewAdminTest(TestCase):
 
         self.client.login(username=user.username, password='test')
         resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
 
-        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
 
     def test_post_create_with_incomplete_arguments_with_login(self):
         user = User.objects.first()
@@ -216,8 +227,10 @@ class QuestionViewAdminTest(TestCase):
 
         self.client.login(username=user.username, password='test')
         resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
 
-        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
 
     def test_post_update_with_incomplete_arguments_with_login(self):
         user = User.objects.first()
@@ -235,9 +248,10 @@ class QuestionViewAdminTest(TestCase):
 
         self.client.login(username=user.username, password='test')
         resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
 
-        self.assertEqual(resp.status_code, 302)
-
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
 
 class QuestionViewRespTest(TestCase):
     url = 'report_builder:base_question_resp'
@@ -258,13 +272,13 @@ class QuestionViewRespTest(TestCase):
         question = Question.objects.create(
             report=report,
             class_to_load='derb',
-            text='Test question text',
+            text='Responsable Test question text',
             answer_options={},
             required=Question.OPTIONAL
         )
         report.question_set.add(question)
         project = Project.objects.create(
-            description='Test Project',
+            description='Responsable Test Project',
             content_type=ContentType.objects.first(),
             object_id=0
         )
@@ -274,6 +288,15 @@ class QuestionViewRespTest(TestCase):
             submit_date=datetime.date.today() + datetime.timedelta(days=30),
             project=project
         )
+
+    def tearDown(self):
+        User.objects.all().delete()
+        ReportType.objects.all().delete()
+        Report.objects.all().delete()
+        Question.objects.all().delete()
+        Project.objects.all().delete()
+        ReportByProject.objects.all().delete()
+
 
     def test_get_without_arguments_without_login(self):
         resp = None
@@ -307,6 +330,7 @@ class QuestionViewRespTest(TestCase):
         })
         resp = self.client.get(url)
 
+        self.assertTrue(resp.url.startswith(reverse('auth_login')))
         self.assertEqual(resp.status_code, 302)
 
     def test_get_without_arguments_with_login(self):
@@ -359,9 +383,9 @@ class QuestionViewRespTest(TestCase):
 
         resp = self.client.post(url)
 
+        self.assertTrue(resp.url.startswith(reverse('auth_login')))
         self.assertEqual(resp.status_code, 302)
 
-    # here
     def test_post_with_null_arguments_with_login(self):
         user = User.objects.first()
         report = Report.objects.first()
@@ -372,8 +396,10 @@ class QuestionViewRespTest(TestCase):
         })
         self.client.login(username=user.username, password='test')
         resp = self.client.post(url)
+        resp_str = str(resp.content)
 
-        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
 
     def test_post_create_with_correct_arguments_with_login(self):
         user = User.objects.first()
@@ -453,8 +479,10 @@ class QuestionViewRespTest(TestCase):
 
         self.client.login(username=user.username, password='test')
         resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
 
-        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
 
     def test_post_update_with_incorrect_arguments_with_login(self):
         user = User.objects.first()
@@ -481,9 +509,10 @@ class QuestionViewRespTest(TestCase):
 
         self.client.login(username=user.username, password='test')
         resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
 
-        self.assertEqual(resp.status_code, 302)
-
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
 
 
     def test_post_create_with_incomplete_arguments_with_login(self):
@@ -502,8 +531,10 @@ class QuestionViewRespTest(TestCase):
 
         self.client.login(username=user.username, password='test')
         resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
 
-        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
 
     def test_post_update_with_incomplete_arguments_with_login(self):
         user = User.objects.first()
@@ -529,8 +560,10 @@ class QuestionViewRespTest(TestCase):
 
         self.client.login(username=user.username, password='test')
         resp = self.client.post(url, data=data)
+        resp_str = str(resp.content)
 
-        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(resp_str.isdigit())
 
 
 class QuestionFormTest(TestCase):

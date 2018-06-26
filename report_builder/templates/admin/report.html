@@ -55,8 +55,11 @@
 
 {% endblock %}
 
-{% block body_js %}
-  <script src="{% url 'report_builder:js_ckeditor_config' %}"></script>
+{% block derbjs %}
   <script src="{% static  'report_builder/js/derb/report_loader.js' %}"></script>
   <script src="{% static 'report_builder/js/derb/derb_admin.js' %}"></script>
+{% endblock %}
+
+{% block body_js %}
+  <script src="{% url 'report_builder:js_ckeditor_config' %}"></script>
 {% endblock %}

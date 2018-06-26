@@ -11,7 +11,7 @@ def get_project(reportbyproj):
     app_name = type.app_name
     name = type.name
 
-    project_type = ContentType.objects.get(app_name=app_name, model=name)
+    project_type = ContentType.objects.get(app_label=app_name, model=name)
     klass = project_type.model_class()
     setattr(reportbyproj, 'projects', klass.objects.get(pk=reportbyproj.project.object_id))
     return ''

@@ -37,8 +37,8 @@
         </div>
       </div>
       <div class="col-md-4">
-        <button onclick="do_table();" type="button" class="btn btn-success">+</button>
-        <button onclick="remove_table();" type="button" class="btn btn-danger">-</button>
+        <button onclick="do_table('#question_{{ form_number }}');" type="button" class="btn btn-success">+</button>
+        <button onclick="remove_table('#question_{{ form_number }}');" type="button" class="btn btn-danger">-</button>
       </div>
     </div>
 
@@ -48,12 +48,13 @@
 
 {% block question_script %}
   {% include 'admin/add_question.html' %}
+  <script
+      src="{% static 'report_builder/js/derb_subcomponents/question_types/table_question.js' %}"></script>
   <script>
+    handle_table_question_load("#question_{{ form_number }}");
     var catalog_url = "{% url 'report_builder:get_catalog_display_fields' %}";
     var m = "{{ question }}";
     var answer_options_json = "{{ question.answer_options | escapejs }}";
   </script>
   <script src="{% static 'report_builder/js/derb_helpers.js' %}"></script>
-  <script
-      src="{% static 'report_builder/js/derb_subcomponents/question_types/table_question.js' %}"></script>
 {% endblock %}

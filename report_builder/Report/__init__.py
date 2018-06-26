@@ -31,6 +31,14 @@ def get_manager(current):
     return manager
 
 
+def get_project_by_responsable(user, responsable=True):
+    ctype = ContentType.objects.get(app_label='report_builder', model='reportbyproject')
+    klass = ctype.model_class()
+    return [t.project.id for t in klass.objects.filter(report__type__app_name='report_builder', report__type__name = 'report')]
+
+def get_project_by_advisor():
+    pass
+
 def get_reports_by_user(user, _type=RESPONSABLE, report_type=None, current=False):
     '''
         TODO: docstring
@@ -58,16 +66,16 @@ def get_reports_by_user(user, _type=RESPONSABLE, report_type=None, current=False
             continue
 
         project = project.model_class()()
-        if type == RESPONSABLE:
-            proj_responsable = project.get_project_by_responsable(
+        if _type == RESPONSABLE:
+            proj_responsable = get_project_by_responsable(
                 user, responsable=True)
-            proj_collaborator = project.get_project_by_responsable(
+            proj_collaborator = get_project_by_responsable(
                 user, responsable=False)
 
             return_value['responsable'] += list(
-                manager.filter(report_type=rtype, project__object_id__in=proj_responsable))
+                manager.filter(report__type=rtype, project__object_id__in=proj_responsable))
             return_value['collaborator'] += list(
-                manager.filter(report_type=rtype, project__object_id__in=proj_collaborator))
+                manager.filter(report__type=rtype, project__object_id__in=proj_collaborator))
         else:
             projects_pks = project.get_project_by_advisor(user)
             result = manager.filter(

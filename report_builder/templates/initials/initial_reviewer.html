@@ -1,45 +1,45 @@
 {% load project_tags %}
 
 <div class="well text-center">
-    <div id="div_table_reviewer_reports" class="form-inline">
-        <table id="table_reviewer_reports">
-            <thead>
-            <tr>
-                <td class="text-center">Project code</td>
-                <td class="text-center">Project name</td>
-                <td class="text-center">Organization</td>
-                <td class="text-center">Project validity</td>
-                <td class="text-center">Review</td>
-                <td class="text-center">Actions</td>
-            </tr>
-            </thead>
-            <tbody>
-            {% for report in object_list %}
-                {{ report | get_project }}
-                <tr>
-                    <td>{{ report.projects.project_code }}</td>
-                    <td>{{ report.projects.project_name }}</td>
-                    <td>{{ report.projects.organization }}</td>
-                    <td>{{ report.start_date }} - {{ report.submit_date }}</td>
-                    <td>
-                        {% include 'initials/components/reviewer_action_modal.html' %}
-                        <a href="#accordion">
-                            <div class="progress progress-striped" data-toggle="modal"
-                                 data-target="#mod_{{ report.pk }}" title="Click for details">
-                                <div class="progress-bar" role="progressbar"
-                                     aria-valuenow="{{ report.review_porcentage }}" aria-valuemin="0"
-                                     aria-valuemax="100" style="width: {{ report.review_porcentage }}%;">
-                                    <span class="text-danger">{{ report.review_porcentage }}%</span>
-                                </div>
-                            </div>
-                        </a>
-                    </td>
-                    <td><a href="{% url 'report_builder:report_reviewer' %}"></a></td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+  <div id="div_table_reviewer_reports" class="form-inline">
+    <table id="table_reviewer_reports" class="table" cellspacing="0" width="100%">
+      <thead>
+      <tr>
+        <td class="text-center">Project code</td>
+        <td class="text-center">Project name</td>
+        <td class="text-center">Organization</td>
+        <td class="text-center">Project validity</td>
+        <td class="text-center">Review</td>
+        <td class="text-center">Actions</td>
+      </tr>
+      </thead>
+      <tbody>
+      {% for report in object_list %}
+        {{ report | get_project }}
+        <tr>
+          <td>{{ report.projects.project_code }}</td>
+          <td>{{ report.projects.project_name }}</td>
+          <td>{{ report.projects.organization }}</td>
+          <td>{{ report.start_date }} - {{ report.submit_date }}</td>
+          <td>
+            {% include 'initials/components/reviewer_action_modal.html' %}
+            <a href="#accordion">
+              <div class="progress progress-striped" data-toggle="modal"
+                   data-target="#mod_{{ report.pk }}" title="Click for details">
+                <div class="progress-bar" role="progressbar"
+                     aria-valuenow="{{ report.review_porcentage }}" aria-valuemin="0"
+                     aria-valuemax="100" style="width: {{ report.review_porcentage }}%;">
+                  <span class="text-danger">{{ report.review_porcentage }}%</span>
+                </div>
+              </div>
+            </a>
+          </td>
+          <td><a href=""></a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 
 {% include 'initials/components/table_reviewer_reports_js_handler.html' %}

@@ -1,7 +1,11 @@
 /**
+ * Created by jaquer on 28/11/16.
+ */
+/**
  * Created by jaquer on 10/10/16.
  */
 catalog_url = '/get_catalog_display_fields';
+
 function handle_catalog_question_load(question_html_id){
 
     update_combo(question_html_id);
@@ -13,13 +17,6 @@ function handle_catalog_question_load(question_html_id){
     initial_values(question_html_id);
 }
 
-/**
- * @function update_combo
- * Using Ajax, according whit the option selected in the catalog choice, the display fields shown to the user will
- * be updated.
- * @param {number} catalog_id The catalog value.
- * @param {object} display_fields Values obtained whit ajax.
- */
 function update_combo(question_html_id) {
     if (question_html_id == undefined){
         question_html_id = question_id;
@@ -51,15 +48,10 @@ function update_combo(question_html_id) {
     });
 }
 
-/**
- * @function initial_values
- * If the question exists, the data in answer_options_json will be used to define the form data.
- */
 function initial_values(question_html_id) {
     if (question_html_id == undefined){
         question_html_id = question_id;
     }
-    console.log(question_html_id);
     if (answer_options_json != '') {
         window.setTimeout(function () {
             var answer_options = JSON.parse(answer_options_json);

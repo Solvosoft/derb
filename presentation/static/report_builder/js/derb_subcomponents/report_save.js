@@ -85,7 +85,7 @@ function get_question_from_id(id) {
     return question;
 }
 
-function add_category(name, human_name) {
+function add_category_to_categories(name, human_name) {
     categories[categories.length] = {
         'name': name,
         'order': categories_len,
@@ -93,10 +93,10 @@ function add_category(name, human_name) {
         'subcategories': [],
         'subcategories_len': 0
     };
-    categories_len -= 1;
+    categories_len += 1;
 }
 
-function add_subcategory(category, name, human_name) {
+function add_subcategory_to_categories(category, name, human_name) {
     var subcategories_len = categories[category].subcategories_len;
     categories[category].subcategories[subcategories_len] = {
         'name': name,
@@ -109,16 +109,16 @@ function add_subcategory(category, name, human_name) {
 }
 
 function find_categories() {
-    delete category;
+    categories = [];
 
-    category = [];
-    var category_li = $('#categories_ul')[0].children;
+    var category_li = $('#ul_categories')[0].children;
     for (var x = 0; x < category_li.length; x++) {
-        var category = $(li_category[x]).find('.category_admin')
+        var category = $(category_li[x]).find('.admin_category');
         if (category.length != 0) {
-            add_category($(category).attr('id').replace('categ_', ''), $(category).attr('title'));
+            add_category_to_categories($(category).attr('id').replace('categ_', ''), $(category).attr('title'));
         }
     }
+    find_subcategories();
 }
 
 function find_subcategories() {
@@ -126,18 +126,17 @@ function find_subcategories() {
         var subcategory_div = $('#' + categories[x].name);
         var subcategory = subcategory_div.find('#ul_subcategories')[0].children;
         for (var y = 0; y < subcategory.length; y++) {
-            var category = $(subcategory[y]).find('.subcategory_admin')
+            var category = $(subcategory[y]).find('.admin_subcategory');
             if (category.length != 0) {
-                add_subcategory(x, category.attr('id').replace('categ_', ''), category.attr('title'));
+                add_subcategory_to_categories(x, category.attr('id').replace('categ_', ''), category.attr('title'));
             }
         }
     }
 }
 
-
 function get_children(html_id) {
     find_html_children(html_id);
-    return $($('#' + html_id + 'form')[0]).find('#id_children').val();
+    return $($('#' + html_id + ' form')[0]).find('#id_children').val();
 }
 
 function process_question(question, prefix) {
@@ -168,13 +167,15 @@ function put_question_number() {
     var counter = 1;
     for (var x = 0; x < categories.length; x++) {
         for (var y = 0; y < categories[x].subcategories.length; y++) {
-            for (var z = 0; z < categories[x].subcategories[y].question.length; z++) {
-                process_question(categories[x].subcategories[y].question[z], counter);
+            for (var z = 0; z < categories[x].subcategories[y].questions.length; z++) {
+
+                process_question(categories[x].subcategories[y].questions[z], counter);
 
                 if (categories[x].subcategories[y].questions[z].type != 'simple_text' &&
                     categories[x].subcategories[y].questions[z].type != 'model_info') {
                     counter += 1;
                 }
+
             }
         }
     }
@@ -182,16 +183,16 @@ function put_question_number() {
 
 function build_tree() {
     var children = undefined;
+
     for (var x = 0; x < question_pool.length; x++) {
         children = get_children(question_pool[x].html_id);
     }
 
     for (var y = 0; y < categories.length; y++) {
-        for (var z = 0; z < categories[y].subcategories.lenth; z++) {
-            for (var w = 0; w < categories[y].subcategories[x].questions.length; w++) {
-                categories[y].subcategories[z].question.push(
-                    question_pool[get_question_from_id(categories[y].subcategories[z].questions[w])]
-                );
+        for (var z = 0; z < categories[y].subcategories.length; z++) {
+            for (var w = 0; w < categories[y].subcategories[z].questions.length; w++) {
+                var pool_id = get_question_from_id(categories[y].subcategories[z].questions[w]);
+                categories[y].subcategories[z].question.push(question_pool[pool_id]);
             }
         }
     }
@@ -200,48 +201,68 @@ function build_tree() {
 
 function save_questions() {
     find_categories();
-    find_subcategories();
     for (var x = 0; x < categories.length; x++) {
         for (var y = 0; y < categories[x].subcategories.length; y++) {
-            var name = categories[x].subcategories[x].name;
+            var name = categories[x].subcategories[y].name;
             var subcategory = $('#' + name);
             var question_li = subcategory[0].children[0].children;
             categories[x].subcategories[y].question = [];
             for (var z = 0; z < question_li.length; z++) {
                 var question_div = $(question_li[z]).find('.question_panel')[0];
                 if (question_div != undefined) {
+                    var key = $(question_div).attr('id');
+                    var question_id = get_question_from_pool(key);
 
+                    if (question_id != undefined) {
+                        categories[x].subcategories[y].questions.push(
+                            parseInt(question_pool[question_id].pk)
+                        );
+                    }
                 }
             }
         }
     }
+    build_tree();
+    submit_report_form();
+    saving = false;
 }
 
 function save_all_questions() {
     saving = true;
     categories = [];
     save_ckeditor();
+    var json_data;
 
     var save_inmediatly = true;
-    for (var q = 0; q < question_pool.length; q++) {
-        question_pool[q].saving = true;
+    for (var qu = 0; qu < question_pool.length; qu++) {
+        question_pool[qu].saving = true;
     }
 
     for (var q = 0; q < question_pool.length; q++) {
         if (question_pool[q].saving) {
-            if (question_pool[q].state == 0 || question_pool[q].pk == -1) {
-                if ($('#' + question_pool[q].html_id).length != 0) {
-                    save_inmediatly = false;
-                    save_form(question_pool[q].html_id, true, false);
-                } else {
-                    remove(question_pool[q].html_id);
-                }
+            if ($('#' + question_pool[q].html_id).length != 0) {
+                save_inmediatly = false;
+                save_form(question_pool[q].html_id, true, false);
+            } else {
+                remove(question_pool[q].html_id);
             }
         }
     }
+
     if (save_inmediatly) {
         save_questions();
     }
+}
+
+function get_json_from_form(question_id) {
+    var json_object = {};
+    var question_div = $('#' + question_id);
+    var question_form = question_div.find('form');
+    var question_form_data = question_form.serializeArray();
+    for (var i = 0; i < question_form_data.length; i++) {
+        json_object[question_form_data[i].name] = question_form_data[i].value;
+    }
+    return json_object;
 }
 
 function set_modified_question(id) {
@@ -277,7 +298,7 @@ function remove(id) {
     if (question_id != undefined) {
         question_pool.splice(question_id, 1);
         var children = $('#' + id).find('.question_panel');
-        for (var c = 0; c < children.length; c++){
+        for (var c = 0; c < children.length; c++) {
             remove($(children[c].attr(id)));
         }
     }

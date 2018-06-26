@@ -8,55 +8,55 @@
       <li><a href="#question_{{ form_number }}_no" data-toggle="tab">No</a></li>
       <li><a href="#question_{{ form_number }}_nr" data-toggle="tab">No response</a></li>
     </ul>
-  </div>
 
-  {# Yes question #}
-  <div class="tab-content boolean_content">
-    <div class="tab-pane active yes" id="question_{{ form_number }}_yes">
-      {% if children.yes %}
-        <ul class="sortable list-group">
-          {% for question in children.yes %}
-            <li class="list-group-item">
-              {{ question | safe }}
-            </li>
-          {% endfor %}
-          <li class="list-group-item">Drag and drop your questions here</li>
-        </ul>
-      {% else %}
-        {% include 'admin/sortable_body.html' %}
-      {% endif %}
-    </div>
+    {# Yes question #}
+    <div class="tab-content boolean_content">
+      <div class="tab-pane active yes" id="question_{{ form_number }}_yes">
+        {% if children.yes %}
+          <ul class="sortable list-group">
+            {% for question in children.yes %}
+              <li class="list-group-item">
+                {{ question | safe }}
+              </li>
+            {% endfor %}
+            <li class="list-group-item">Drag and drop your questions here</li>
+          </ul>
+        {% else %}
+          {% include 'admin/sortable_body.html' %}
+        {% endif %}
+      </div>
 
-    {# No question #}
-    <div class="tab-pane no" id="question_{{ form_number }}_no">
-      {% if children.no %}
-        <ul class="sortable list-group">
-          {% for question in children.no %}
-            <li class="list-group-item">
-              {{ question | safe }}
-            </li>
-          {% endfor %}
-          <li class="list-group-item">Drag and drop your questions here</li>
-        </ul>
-      {% else %}
-        {% include 'admin/sortable_body.html' %}
-      {% endif %}
-    </div>
+      {# No question #}
+      <div class="tab-pane no" id="question_{{ form_number }}_no">
+        {% if children.no %}
+          <ul class="sortable list-group">
+            {% for question in children.no %}
+              <li class="list-group-item">
+                {{ question | safe }}
+              </li>
+            {% endfor %}
+            <li class="list-group-item">Drag and drop your questions here</li>
+          </ul>
+        {% else %}
+          {% include 'admin/sortable_body.html' %}
+        {% endif %}
+      </div>
 
-    {# Don't know/Don't answer question #}
-    <div class="tab-pane nr" id="question_{{ form_number }}_nr">
-      {% if children.nr %}
-        <ul class="sortable list-group">
-          {% for question in question.nr %}
-            <li class="list-group-item">
-              {{ question | safe }}
-            </li>
-          {% endfor %}
-          <li class="list-group-item">Drag and drop your questions here</li>
-        </ul>
-      {% else %}
-        {% include 'admin/sortable_body.html' %}
-      {% endif %}
+      {# Don't know/Don't answer question #}
+      <div class="tab-pane nr" id="question_{{ form_number }}_nr">
+        {% if children.nr %}
+          <ul class="sortable list-group">
+            {% for question in question.nr %}
+              <li class="list-group-item">
+                {{ question | safe }}
+              </li>
+            {% endfor %}
+            <li class="list-group-item">Drag and drop your questions here</li>
+          </ul>
+        {% else %}
+          {% include 'admin/sortable_body.html' %}
+        {% endif %}
+      </div>
     </div>
   </div>
 {% endblock %}

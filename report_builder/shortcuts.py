@@ -56,10 +56,12 @@ def get_children(form):
     """
         TODO: docstring
     """
-    children = None
     if hasattr(form, 'cleaned_data') and 'children' in form.cleaned_data and form.cleaned_data['children']:
-        children = OrderedDict(ast.literal_eval(form.cleaned_data['children']))
-    return children
+        children_ids = ast.literal_eval(form.cleaned_data['children'])
+        if type(children_ids) == list:
+            return children_ids
+        elif dict:
+            return OrderedDict(children_ids)
 
 
 def get_reportbyproject_questions(report_pk, question_pk=None):
@@ -165,11 +167,7 @@ def copy_report(report):
         if report.questions[x]['parent'] != -1:
             new.questions[new_pk]['parent'] = questions[report.questions[x]['parent']]
 
-    new_template = []
-    for template in report.template:
-        new_template.append(process_dict(template, new))
-
-    new.template = new_template
+    new.template = report.template
     return new
 
 

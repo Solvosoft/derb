@@ -1,5 +1,6 @@
-
 $(document).ready(function() {
+    //console.log(observation_url);
+    //submit_observation();
 });
 
 /**

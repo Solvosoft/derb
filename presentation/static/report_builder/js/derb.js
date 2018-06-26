@@ -51,7 +51,7 @@ function _alert(type, message, append) {
             '<div class="alert_body">' + message + '</div></div></li>';
 
         queue.append(m);
-        setTimeout("clean_queue('#" + lid + "')", 15000);
+        setTimeout("clean_queue('#" + li_id + "')", 15000);
     } else {
         $(children[max_length - 1]).find('.alert_body').append('<br>' + message);
     }
@@ -62,7 +62,7 @@ function delete_alert(self) {
 }
 
 function clean_queue(id) {
-    var queue = $('$message_queue');
+    var queue = $('#message_queue');
     queue.find(id).remove();
 }
 
@@ -107,9 +107,9 @@ function save_form(question_id, async, display_alert) {
     } catch (error) {
         return 1;
     }
-
     var question = get_question_from_pool(question_id);
     var url = form.attr('action');
+
     if (question_pool[question].pk != -1) {
         url += question_pool[question].pk
     }
@@ -125,7 +125,7 @@ function save_form(question_id, async, display_alert) {
         success: function (data) {
             if ($.isNumeric(data)) {
                 if (question_pool[question].pk == -1) {
-                    form.find('#id_question').attr('value', data);
+                    form.find('#question_id').attr('value', data);
                     if (display_alert) {
                         _alert('alert-success', 'Question saved successfully');
                     }
@@ -146,7 +146,7 @@ function save_form(question_id, async, display_alert) {
                     queued = true;
                 }
                 question_change[question_id] = new_question;
-                _alert('alert-warning', 'Error saving the question. For more details, click <a onclick="takemeto(\'' + new_question + '\');" href="#' + new_question + '">here</a>')
+                _alert('alert-warning', 'Error saving the question. For more details, click <a onclick="take_me_to(\'' + new_question + '\');" href="#' + new_question + '">here</a>')
             }
         }
     });
@@ -303,7 +303,6 @@ function delete_question_table_row(element, url, form_number) {
 
 function see_hide(button) {
     panel = $(button).closest('.question_panel');
-    console.log(panel);
     body = panel.find('.panel-body');
     content = panel.find('#content');
 
@@ -356,7 +355,7 @@ function edit_subcategory_text(li) {
 
 function add_category() {
     fill_names('', '', 'category', '');
-    $('#categories_modal').find('#categories_modal').text('Add category');
+    $('#categories_modal').find('.modal-title').text('Add category');
     modal.modal();
 }
 
@@ -364,7 +363,7 @@ function add_subcategory(li) {
     var div = $(li).closest('div');
     var category = div.attr('id');
     fill_names('', '', 'subcategory', category);
-    $('#categories_modal').find('#categories_modal').text('Add subcategory');
+    $('#categories_modal').find('.modal-title').text('Add subcategory');
     modal.modal();
 }
 

@@ -68,7 +68,7 @@ function take_me_to(id) {
     var subcategory = $('#categ_' + subcategory_div);
     var category_div = $(subcategory.closest('.category_class')[0]).attr('id');
     var categor = $('#categ_' + category_div);
-    category.click()
+    category.click();
     subcategory.click();
 }
 
@@ -147,8 +147,6 @@ function do_sortable() {
         receive: function (event, ui) {
             if (ui.item.hasClass('palette_item')) {
                 new_item = ui.item.clone();
-                console.log(new_item);
-                console.log(ui.item);
                 ui.item.removeClass('palette_item');
                 ui.item.load(ui.item.attr('url'));
                 ui.item.attr('id', '');
@@ -271,7 +269,6 @@ function load_category(select, change) {
 }
 
 function add_update_category() {
-    console.log('asd');
     var category_func = 'onDblClick="edit_category_text(this);"';
     var subcategory_func = 'onDblClick="edit_subcategory_text(this);"';
     var category_id = 'end_categories';
@@ -288,12 +285,12 @@ function add_update_category() {
                             <ul id="ul_subcategories" class="subcategory nav nav-tabs">\
                             <li ' + subcategory_func + ' class="active">\
                             <button type="button" onclick="delete_category(this);" class="close_category btn" aria-hidden="true">&times;</button>\
-                            <a id="categ_[category_name]" class="admin_subcategoria" href="#[category_name]" data-toggle="tab" title="[help]">[text]</a></li>\
+                            <a id="categ_[category_name]" class="admin_subcategory" href="#[category_name]" data-toggle="tab" title="[help]">[text]</a></li>\
                             <li id="end_subcategories" class="btn btn-success" onclick="add_subcategory(this);" title="Add subcategory"> <span class="glyphicon glyphicon-plus-sign"></span></li></ul>\
                             <div class="tab-content">' + new_subcategory_content + '</div></div>';
 
     var modal = $('#categories_modal');
-    var input = $(modal.find('#category_modal_update'));
+    var input = $(modal).find('#category_modal_update');
     var text = input.val();
     var name = input.attr('name');
     var type = $(modal.find('#modal_category_type')[0]);
@@ -307,27 +304,23 @@ function add_update_category() {
 
     if (name != '') {
         if (type_name == 'category') {
-            cat = $($('#ul_categories .active').find('a')[0]);
-            console.log(cat);
+            cat = $($('#ul_categories').find('.active').find('a')[0]);
             cat.html(text);
             cat.attr('title', help);
         } else {
-            console.log(type_value);
             var div = $('#' + type_value);
             cat = $($(div.find('.active')[0]).find('a')[0]);
-            console.log(cat);
             cat.html(text);
             cat.attr('title', help);
         }
     } else {
-        console.log('abajo');
         var end = category_id;
         var pre = '';
         var type_id = category_id;
         var content = $.find('#category_content')[0];
         var begin = $;
         var func = category_func;
-        var klass = 'class="category_admin"';
+        var klass = 'class="admin_category"';
 
         if (type_name == 'subcategory') {
             end = subcategory_id;
@@ -336,7 +329,7 @@ function add_update_category() {
             type_id = subcategory_id;
             func = subcategory_func;
             begin = $('#' + type_value);
-            klass = 'class="subcategory_admin"';
+            klass = 'class="admin_subcategory"';
             var selector = '#' + type_value + ' .tab-content';
             content = $($('#' + type_value + ' .tab-content')[0]);
         }
@@ -356,7 +349,7 @@ function add_update_category() {
 
         var final_content = new_category_content.replace(/\[text\]/gi, text).replace(/\[name\]/gi,
             name).replace(/\[type_id\]/gi, type_id).replace(/\[category_name\]/gi,
-                category_name).replace(/\[sub_active\]/gi, sub_active).replace(/\[help\]/gi, help);
+            category_name).replace(/\[sub_active\]/gi, sub_active).replace(/\[help\]/gi, help);
 
         end_nav.before(final_nav);
         $(content).append(final_content);
@@ -368,9 +361,9 @@ function add_update_category() {
     do_sortable();
 }
 
-function hide_if_enter(mi, event){
-	var keycode = event.which;
-	if (keycode == 13){
-		$(mi).closest('#modal_categorias').find('#bgm').click();
-	}
+function hide_if_enter(mi, event) {
+    var keycode = event.which;
+    if (keycode == 13) {
+        $(mi).closest('#modal_categorias').find('#bgm').click();
+    }
 }

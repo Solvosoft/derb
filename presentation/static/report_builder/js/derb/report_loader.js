@@ -1,22 +1,27 @@
 /**
  * Created by jaquer on 05/09/16.
  */
+var current_subquestion_ul;
+
+var sortable_html = '<ul class="sortable list-group">';
+sortable_html += '<li class="list-group-item">Drag and drop your questions here</li>';
+sortable_html += '</ul>';
 
 function save_question_sinchronously(question_id) {
     save_form(question_id, false, false);
-
     var pool_id = get_question_from_pool(question_id);
 
     if (pool_id == undefined) {
         pool_id = get_question_from_pool(question_change[question_id]);
     }
 
-    var result = parseInt(question_pool[question_id].pk);
+    var result = parseInt(question_pool[pool_id].pk);
+
     if (result == -1) {
         throw new Error('Unanswered question');
-    } else {
-        return result;
     }
+
+    return result;
 }
 
 function load_questions_id(list) {
@@ -27,7 +32,7 @@ function load_questions_id(list) {
     var qnumber = -1;
 
     for (var x = 0; x < list.length; x++) {
-        question_id = $($(list[0]).find('.question_panel')[0]);
+        question_id = $($(list[x]).find('.question_panel')[0]);
         if (question_id.length > 0) {
             question_id = $($(question_id[0]).find('#question_id')[0]);
 
@@ -51,55 +56,131 @@ function load_questions_id(list) {
 }
 
 function load_simple_text_question(content, html_id) {
-    /* TODO */
+    var div = $('#' + html_id);
+    var text = $(div.find('textarea[name=text]')[0]);
+    content = $(div.find('iframe')[0].contentWindow.document.body).html();
+    text.val(content);
+    return '';
 }
 
 function load_boolean_question(content, html_id) {
-    /* TODO */
+    var target_question = get_question_from_pool(html_id);
+    question_pool[target_question].children = {};
+
+    var question_id = content.closest('.question_panel').attr('id');
+    var yes_list = load_questions_id($(content.find('#' + question_id + '_yes ul')[0]).children());
+    var no_list = load_questions_id($(content.find('#' + question_id + '_no ul')[0]).children());
+    var nr_list = load_questions_id($(content.find('#' + question_id + '_nr ul')[0]).children());
+
+    question_pool[target_question].children['yes'] = yes_list.question_list;
+    question_pool[target_question].children['no'] = no_list.question_list;
+    question_pool[target_question].children['nr'] = nr_list.question_list;
+
+    var result = {
+        'yes': yes_list.txt,
+        'no': no_list.txt,
+        'nr': nr_list.txt
+    };
+
+    return JSON.stringify(result, null, 2);
 }
 
 function load_model_selection_question(content, html_id) {
-    /* TODO */
+    return '';
 }
 
 function load_numeric_question(content, html_id) {
-    /* TODO */
+    var result = {};
+
+    var target_question = get_question_from_pool(html_id);
+    question_pool[target_question].children = {};
+    var ids = [];
+    var children_lists = [];
+    var questions_div= $('#' + html_id).find('#questions');
+    var tab_content = $(questions_div).find('#' + html_id + '_tab_content').children();
+    for (var i = 0; i < tab_content.length; i++){
+        var div_id = $(tab_content[i]).attr('id');
+        var ul = $(tab_content[i]).children('ul');
+        var child_list = load_questions_id($(ul[0]).children());
+        children_lists.push(child_list);
+        ids.push(div_id);
+    }
+
+    for (var x = 0; x < ids.length; x++){
+        question_pool[target_question].children[ids[x]] = children_lists[x].question_list;
+        result[ids[x]] = children_lists[x].txt;
+    }
+
+    return JSON.stringify(result, null, 2);
 }
 
 function load_question_info(content, html_id) {
-    /* TODO */
+    var target_question = get_question_from_pool(html_id);
+
+    if (content.html() != undefined) {
+        var children = load_questions_id($(content.find('ul')[0]).children());
+        question_pool[target_question].children = {
+            'children': children.question_list
+        };
+        return JSON.stringify(children.txt, null, 2);
+    } else {
+        return '';
+    }
 }
 
 function get_question_children_id(content, type, html_id) {
     var answer = "";
 
-    if (type == 'conditional_model') {
+    if (type == 'multiple_selection_question' || type == 'unique_selection_question') {
         answer = load_model_selection_question(content, html_id);
     } else if (type == 'boolean_question') {
         answer = load_boolean_question(content, html_id);
-    } else if (type == 'float_question' || type == 'decimal_question') {
+    } else if (type == 'float_question' || type == 'integer_question') {
         answer = load_numeric_question(content, html_id);
     } else if (type == 'simple_text_question') {
         answer = load_simple_text_question(content, html_id);
-    } else if (type == 'question_info') {
+    } else if (type == 'question_model_info' || type == 'model_info') {
         answer = load_question_info(content, html_id);
     }
-
     return answer;
 }
 
 function load_subquestions(form, html_id) {
-    var type = form.find('#name').val();
-    var content = form.closest('.question_panel').find('#questions');
-    var children = get_question_children_id(content, type, html_id);
-    form.find('#id_children').val(children);
+    var question_type = form.find('#name').val();
+    var question_content = form.closest('.question_panel').find('#questions');
+    var question_children = get_question_children_id(question_content, question_type, html_id);
+    form.find('#id_children').val(question_children);
 }
 
 function find_html_children(question_id) {
-    var form = $($('#' + question_id + '_form')[0]);
+    var form = $($('#' + question_id + ' form')[0]);
     load_subquestions(form, question_id);
 }
 
 function find_children_id(id) {
     find_html_children(get_question_from_id(id).html_id);
+}
+
+function new_numerical_subquestion_section(li) {
+    current_subquestion_ul = $(li).parent().parent();
+    $('#num_subquestion_modal').modal();
+}
+
+function add_numerical_subquestion_section(input) {
+    var form = $(input).parent();
+    var question_id = $(current_subquestion_ul.closest('.question_panel')[0]).attr('id');
+    var id = question_id.split('_')[1];
+    var tab_content = $('#' + question_id).find('#' + question_id + '_tab_content');
+    var desc = form.find('#id_description').val();
+    var desc_verbose = form.find('#id_description option:selected').text();
+    var num = form.find('#id_number').val();
+    var li_html = '<li><a data-toggle="tab" href="#' + id  + '_' + desc + '_' + num + '">' + desc_verbose + ' ' + num + '</a></li>';
+    current_subquestion_ul.prepend(li_html);
+    $('#num_subquestion_modal').modal('hide');
+    var tab_div = '<div id="' + id + '_' + desc + '_' + num  + '" class="tab-pane">';
+    tab_div += sortable_html;
+    tab_div += '</div>';
+
+    tab_content.append(tab_div);
+    do_sortable();
 }

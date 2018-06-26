@@ -6,14 +6,14 @@
   {% endif %}
 
   <form method="post" id="question_{{ report.pk }}_{{ question.pk }}_{{ answer.pk }}"
-        {% if answer.pk %}
+      {% if answer.pk %}
         action="{% url 'report_builder:process_responsable' 'responsable' name report.pk question.pk answer.pk %}"
-        {% else %}
+      {% else %}
         action="{% url 'report_builder:process_responsable' 'responsable' name report.pk question.pk %}"
-        {% endif %}
+      {% endif %}
         onchange="save_answer(this);" onsubmit="return false;">
     {% csrf_token %}
-    <input type="hidden" id="id_question" value="{{ question.pk }}" />
+    <input type="hidden" id="id_question" value="{{ question.pk }}"/>
 
     <div id="question_{{ question.pk }}" class="panel-heading">
       <div class="row">
