@@ -360,19 +360,6 @@ class QuestionViewRespTest(TestCase):
 
         self.assertEqual(url, None)
 
-    def test_get_with_report_question_pk_with_login(self):
-        user = User.objects.first()
-        report = Report.objects.first()
-        question = report.question_set.first()
-        url = reverse(self.url, kwargs={
-            'report_pk': report.pk,
-            'question_pk': question.pk
-        })
-        self.client.login(username=user.username, password='test')
-        resp = self.client.get(url)
-
-        self.assertEqual(resp.status_code, 200)
-
     def test_post_without_arguments_without_login(self):
         report = Report.objects.first()
         question = Question.objects.first()

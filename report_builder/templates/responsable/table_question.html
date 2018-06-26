@@ -22,7 +22,7 @@
           {% trans 'Table Question (responsable)' %}
         </div>
         <div class="panel-body">
-          <form action="{% url 'report_builder:table_question_resp' reportbyproj.pk question.pk %}" method="post">
+          <form action="{% url 'report_builder:table_question_resp' report.pk question.pk %}" method="post">
             {% csrf_token %}
             <div class="row">
               <div class="col-md-offset-1 col-md-10">
