@@ -1,6 +1,9 @@
 import json
 
-from report_builder.Question.QuestionType.unique_selection_question import UniqueSelectionQuestionViewAdmin
+from report_builder.Question.QuestionType.simple_text_question import (
+    SimpleQuestionViewResp)
+from report_builder.Question.QuestionType.unique_selection_question import \
+    UniqueSelectionQuestionViewAdmin
 from report_builder.Question.forms import ModelInfoQuestionForm
 from report_builder.models import Question as QuestionModel
 
@@ -18,14 +21,16 @@ class ModelInfoViewAdmin(UniqueSelectionQuestionViewAdmin):
     registry_type = 'information'
 
     def additional_template_parameters(self, **kwargs):
-        parameters = super(ModelInfoViewAdmin, self).additional_template_parameters(**kwargs)
+        parameters = super(ModelInfoViewAdmin, self
+                           ).additional_template_parameters(**kwargs)
         parameters.update({
             'is_info': True
         })
         return parameters
 
     def pre_save(self, object, request, form):
-        object = super(ModelInfoViewAdmin, self).pre_save(object, request, form)
+        object = super(ModelInfoViewAdmin, self).pre_save(
+            object, request, form)
         object.required = QuestionModel.OPTIONAL
         answer_options = {}
         if object.answer_options:
@@ -38,7 +43,8 @@ class ModelInfoViewAdmin(UniqueSelectionQuestionViewAdmin):
         return object
 
     def get_form(self, post=None, instance=None, extra=None):
-        if extra is None: extra = {}
+        if extra is None:
+            extra = {}
         answer_options = self.get_question_answer_options()
         on_modal = False
         if answer_options is not None and 'on_modal' in answer_options:
@@ -48,6 +54,10 @@ class ModelInfoViewAdmin(UniqueSelectionQuestionViewAdmin):
             'form_number': str(self.form_number),
             'on_modal': on_modal
         })
-        print(extra)
-
         return super(ModelInfoViewAdmin, self).get_form(post=post, instance=instance, extra=extra)
+
+
+class ModelInfoViewResp(SimpleQuestionViewResp):
+    template_name = 'responsable/Informacion_Modelo_Vista.html'
+    nombre = 'informacion_modelo'
+    tipo_registro = 'informacion'

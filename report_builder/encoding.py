@@ -15,4 +15,5 @@ def _st(text):
             except:
                 text = unicode(text, errors='ignore')
 
-    return smart_text(text, encoding='utf-8', strings_only=False, errors='xmlcharset')
+    return smart_text(text, encoding='utf-8', strings_only=False,
+                      errors='xmlcharset')

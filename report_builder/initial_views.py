@@ -1,19 +1,20 @@
-import datetime
-
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, redirect
+from django.utils import timezone
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 
 from report_builder import registry
-from report_builder.Report import get_reports_by_user, RESPONSABLE
+from report_builder.Report import RESPONSABLE, get_reports_by_user
+from report_builder.forms import NewReportForm
 from report_builder.models import RES_SUPPORTED, Report
 from report_builder.registry import register_initial_view
-from report_builder.shortcuts import get_reviewers_by_user, get_reviewers_by_report, copy_report
+from report_builder.shortcuts import copy_report, get_reviewers_by_report, \
+    get_reviewers_by_user
 
 
 class InitialIndexView(LoginRequiredMixin, TemplateView):
@@ -24,7 +25,8 @@ class InitialIndexView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         '''
-            Add the views to be shown to the template's context data for the user to see them
+            Add the views to be shown to the template's context data for the 
+            user to see them
         '''
         context = super(InitialIndexView, self).get_context_data(**kwargs)
         context['views'] = self.get_views(**kwargs)
@@ -32,8 +34,9 @@ class InitialIndexView(LoginRequiredMixin, TemplateView):
 
     def get_views(self, **kwargs):
         '''
-            Renders the views that must be shown to the user. Returns a list that contains
-             the view's title and the HTML content to insert into the main template
+            Renders the views that must be shown to the user. Returns a list 
+            that contains the view's title and the HTML content to insert into
+            the main template
         '''
         return_value = []
 
@@ -53,7 +56,8 @@ class InitialIndexView(LoginRequiredMixin, TemplateView):
 class InitialReviewerView(LoginRequiredMixin, ListView):
     '''
         Initial view for reviewer role.
-        Lists the projects that must be reviewed for the reviewer authenticated user
+        Lists the projects that must be reviewed for the reviewer 
+        authenticated user
     '''
     template_name = 'initials/initial_reviewer.html'
 
@@ -65,8 +69,8 @@ class InitialReviewerView(LoginRequiredMixin, ListView):
         reports = []
         if len(reviewers) > 0:
             for reviewer in reviewers:
-                reviewer.report.review_percentage = calculate_reviewer_list_porcentage(
-                    reviewer.report)
+                reviewer.report.review_percentage = \
+                    calculate_reviewer_list_porcentage(reviewer.report)
                 reports.append(reviewer.report)
         return reports
 
@@ -113,7 +117,7 @@ class InitialTemplateAdminView(LoginRequiredMixin, ListView):
         new_object_list = []
         for report in context['object_list']:
             open_reports = (
-                report, report.opening_date > datetime.datetime.now().date())
+                report, report.opening_date > timezone.now())
             new_object_list.append(open_reports)
         context['object_list'] = new_object_list
         return context
@@ -126,13 +130,14 @@ class NewReportView(LoginRequiredMixin, CreateView):
         Takes advantage of the generic view for creating objects
     '''
     model = Report
-    fields = ('type', 'name', 'opening_date')
+    form_class = NewReportForm
     template_name = 'initials/new_report.html'
 
     def get_success_url(self):
         '''
-            Redirects to the report's edit view, when the report is correctly created and
-             saved in the database with the data retrieved by the user
+            Redirects to the report's edit view, when the report is correctly 
+            created and saved in the database with the data retrieved by 
+            the user
         '''
         return reverse('report_builder:admin_report', args=[self.object.id])
 
@@ -176,16 +181,19 @@ def assign_type_porcentage_to_reports(reports):
 
 class InitialResponsableView(LoginRequiredMixin, ListView):
     '''
-        Initial view for the responsable role. Lists the current projects for responsables and
-        collaborators of the project. Takes advantage of the Django generic view for object creation
+        Initial view for the responsable role. Lists the current projects for
+        responsables and collaborators of the project. 
+        Takes advantage of the Django generic view for object creation
     '''
     template_name = 'initials/initial_responsable.html'
     all_reports = False  # Only the current reports
 
     def get_queryset(self):
         '''
-            Returns the current reports assigned to the responsable user. Plus, returns the permission and
-            review porcentage added with the function :func: `assign_type_porcentage_to_reports`
+            Returns the current reports assigned to the responsable user. Plus, 
+            returns the permission and review porcentage added with the 
+            function
+            :func: `assign_type_porcentage_to_reports`
         '''
         current_reports = get_reports_by_user(
             self.request.user, RESPONSABLE, None, True)

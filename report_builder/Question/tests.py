@@ -285,7 +285,7 @@ class QuestionViewRespTest(TestCase):
         ReportByProject.objects.create(
             report=report,
             start_date=datetime.date.today(),
-            submit_date=datetime.date.today() + datetime.timedelta(days=30),
+            end_date=datetime.date.today() + datetime.timedelta(days=30),
             project=project
         )
 

@@ -1,14 +1,16 @@
-<div class="col-md-12 report_form">
-    <form id="report_form" action="{% url 'report_builder:admin_save_report' report.pk %}" method="post"
-          class="form-inline">
-        {% csrf_token %}
-        {{ form }}
-        <a type="submit" class="btn btn-info pull-right" onclick="save_all_questions();">
-            <span class="glyphicon glyphicon-save"> </span>Save report
-        </a>
+{% load bootstrap i18n %}
+
+<div class="col-md-6 report_form">
+    <form id="report_form" action="{% url 'report_builder:admin_save_report' report.pk %}" 
+    method="post" class="form-horizontal">
+        {% csrf_token %} {{ form|bootstrap_horizontal }}
+        <div class="form-group">
+            <div class="col-sm-10 col-sm-offset-2">
+                <a type="submit" class="btn btn-info " onclick="save_all_questions();">
+                    <span class="glyphicon glyphicon-save"> </span>
+                    {% trans 'Save report' %}
+                </a>
+            </div>
+        </div>
     </form>
 </div>
-
-<script>
-    $('input, select').addClass('form-control');
-</script>

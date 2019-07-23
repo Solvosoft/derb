@@ -29,7 +29,8 @@ class BooleanQuestionViewAdmin(QuestionViewAdmin):
         if not parameters:
             parameters = {}
 
-        parameters['children'] = self.process_children(self.request, parameters, kwargs)
+        parameters['children'] = self.process_children(self.request,
+                                                       parameters, kwargs)
         return parameters
 
 

@@ -1,4 +1,4 @@
-from report_builder.models import City, Country
+from demo.models import City, Country
 from report_builder.registry import register
 
 

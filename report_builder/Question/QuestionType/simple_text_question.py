@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django_ajax.decorators import ajax
 from django.template.loader import render_to_string
 
-from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF, QuestionViewReviewer, QuestionViewCSV,QuestionViewJSON
+from report_builder.Question.QuestionView import QuestionViewAdmin, QuestionViewResp, QuestionViewPDF, QuestionViewReviewer, QuestionViewCSV, QuestionViewJSON
 from report_builder.Question.forms import SimpleTextQuestionForm, SimpleTextAnswerForm
 from report_builder.models import Question
 from report_builder.models import Answer, Observation, Reviewer
@@ -20,7 +20,7 @@ class SimpleTextQuestionViewAdmin(QuestionViewAdmin):
         This view is built to be extended from the different question types of the Derb system
         By itself, this view provides the functionality for ordering and deletion of question, and a form with question
         text and help
-        
+
         This class be extended using an implementation like this:
 
         .. code:: python
@@ -44,9 +44,10 @@ class SimpleTextQuestionViewAdmin(QuestionViewAdmin):
             *kwargs* is a dict that contains the Question attributes 'form', 'report', 'question' and 'name'
             You don't have to append the kwargs content in the return value, only the additional elements
     '''
-    form_class = SimpleTextQuestionForm #: Default form for the class
-    template_name = 'admin/question_types/simple_text_question.html' #: Specifies which template to load
-    name = 'simple_text_question' #: Class reference name
+    form_class = SimpleTextQuestionForm  # : Default form for the class
+    # : Specifies which template to load
+    template_name = 'admin/question_types/simple_text_question.html'
+    name = 'simple_text_question'  # : Class reference name
     minimal_representation = {
         'human_readable_name': 'Simple text question',
         'help': 'Allows you to make simple text questions',
@@ -67,7 +68,8 @@ class SimpleTextQuestionViewAdmin(QuestionViewAdmin):
 
     def pre_save(self, object, request, form):
         object.text = form.cleaned_data['text']
-        object.answer_options = json.dumps({'on_modal': form.cleaned_data['on_modal']})
+        object.answer_options = json.dumps(
+            {'on_modal': form.cleaned_data['on_modal']})
         object.required = Question.OPTIONAL
         return object
 
@@ -88,9 +90,10 @@ class SimpleQuestionViewResp(QuestionViewResp):
             * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
             you can find it in :mod:`report_builder.Question.QuestionView.Question`
     """
-    name = 'simple_text_question' #: Class reference name
-    template_name = 'responsable/simple_text_question.html' #: Specifies which template to load
-    form_class = SimpleTextAnswerForm #: Default form for the class
+    name = 'simple_text_question'  # : Class reference name
+    # : Specifies which template to load
+    template_name = 'responsable/simple_text_question.html'
+    form_class = SimpleTextAnswerForm  #: Default form for the class
 
 
 # class SimpleTextQuestionPDF(QuestionViewPDF):
@@ -107,9 +110,10 @@ class SimpleTextQuestionViewPDF(QuestionViewPDF):
             * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
             you can find it in :mod:`report_builder.Question.QuestionView.Question`
     """
-    name = 'simple_text_question' #: Class reference name
-    template_name = 'pdf/simple_text_question.html' #: Specifies which template to load
-    
+    name = 'simple_text_question'  # : Class reference name
+    # : Specifies which template to load
+    template_name = 'pdf/simple_text_question.html'
+
 
 class SimpleTextQuestionViewReviewer(QuestionViewReviewer):
     """
@@ -124,9 +128,10 @@ class SimpleTextQuestionViewReviewer(QuestionViewReviewer):
             * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
             you can find it in :mod:`report_builder.Question.QuestionView.Question`
     """
-    name = 'simple_text_question' #: Class reference name
-    template_name = 'revisor/simple_text_question.html' #: Specifies which template to load
-    
+    name = 'simple_text_question'  # : Class reference name
+    # : Specifies which template to load
+    template_name = 'revisor/simple_text_question.html'
+
 
 @ajax
 @csrf_exempt
@@ -152,20 +157,23 @@ def submit_new_observation(request):
 
             if report_pk and question_pk and answer_pk:
                 answer = Answer.objects.get(pk=answer_pk)
-                reviewer = Reviewer.objects.get(report__pk=report_pk, user=request.user)
+                reviewer = Reviewer.objects.get(
+                    report__pk=report_pk, user=request.user)
 
                 observation = Observation.objects.create(
                     reviewer=reviewer,
                     text=observation,
                     answer=answer
                 )
-                rendered = render_to_string('revisor/observations.html', {'observation': observation})
+                rendered = render_to_string(
+                    'revisor/observations.html', {'observation': observation})
 
                 return rendered
             else:
                 return False
 
     return HttpResponse(0)
+
 
 class SimpleQuestionViewCSV(QuestionViewCSV):
     """
@@ -180,8 +188,8 @@ class SimpleQuestionViewCSV(QuestionViewCSV):
             * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
             you can find it in :mod:`report_builder.Question.QuestionView.Question`
     """
-    name = 'simple_text_question' #: Class reference name
-    
+    name = 'simple_text_question'  # : Class reference name
+
 
 class SimpleQuestionViewJSON(QuestionViewJSON):
     """
@@ -196,5 +204,4 @@ class SimpleQuestionViewJSON(QuestionViewJSON):
             * Extends from the Question class, so if you want to take a look to the extended methods and attributes,
             you can find it in :mod:`report_builder.Question.QuestionView.Question`
     """
-    name = 'simple_text_question' #: Class reference name
-    
+    name = 'simple_text_question'  # : Class reference name

@@ -87,20 +87,23 @@ def register_view(view, view_type='admin', with_answer=False):
 
 def get_view(*args, **kwargs):
     '''
-    Gets the view that matches the ``type`` and ``view_type`` in the registered views
-    :param kwargs: type (category of the view) and view_type (unique id for the view)
+    Gets the view that matches the ``type`` and ``view_type`` 
+    in the registered views
+    :param kwargs: type (category of the view) and view_type 
+    (unique id for the view)
     :return:
-    :raise Http404 if the parameters given matches the ``type`` and ``view_type`` in the registered views
+    :raise Http404 if the parameters given matches the ``type`` and 
+    ``view_type`` in the registered views
     '''
-    if not 'type' in kwargs:
+    if 'type' not in kwargs:
         raise Http404
     views = get_view_type(kwargs['type'])
 
-    if not 'view_type' in kwargs:
+    if 'view_type' not in kwargs:
         raise Http404
     view_type = kwargs['view_type']
 
-    if not view_type in views:
+    if view_type not in views:
         raise Http404
     return views[view_type]
 
@@ -137,6 +140,7 @@ def process_questions(request, report, question_list, view_type='admin', reportb
     report_pk = report
     for question_pk in question_list:
         question = Question.objects.get(pk=question_pk)
+
         if reportbyproj is not None:
             report_pk = reportbyproj.pk
 
@@ -146,9 +150,9 @@ def process_questions(request, report, question_list, view_type='admin', reportb
             'view_type': question.class_to_load,
             'type': view_type
         }
-
         if view_type in has_answer:
-            answers = Answer.objects.filter(user=request.user, question=question, report=reportbyproj.pk)
+            answers = Answer.objects.filter(
+                user=request.user, question=question, report=reportbyproj.pk)
             if len(answers) > 0:
                 kwargs['answer_pk'] = answers[0].pk
             else:

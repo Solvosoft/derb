@@ -122,11 +122,16 @@ def create_report_types(max=5):
             type='report_type_%d' % i,
             app_name='report_builder',
             name='report',
-            action_ok=EmailTemplate.objects.create(code='ok_report_type_%d' % i, subject='', message=''),
-            revision_turn=EmailTemplate.objects.create(code='turn_report_type_%d' % i, subject='', message=''),
-            responsable_change=EmailTemplate.objects.create(code='change_report_type_%d' % i, subject='', message=''),
-            report_start=EmailTemplate.objects.create(code='start_report_type_%d' % i, subject='', message=''),
-            report_end=EmailTemplate.objects.create(code='end_report_type_%d' % i, subject='', message='')
+            action_ok=EmailTemplate.objects.create(
+                code='ok_report_type_%d' % i, subject='', message=''),
+            revision_turn=EmailTemplate.objects.create(
+                code='turn_report_type_%d' % i, subject='', message=''),
+            responsable_change=EmailTemplate.objects.create(
+                code='change_report_type_%d' % i, subject='', message=''),
+            report_start=EmailTemplate.objects.create(
+                code='start_report_type_%d' % i, subject='', message=''),
+            report_end=EmailTemplate.objects.create(
+                code='end_report_type_%d' % i, subject='', message='')
         )
 
 
@@ -146,7 +151,8 @@ def create_report_by_projects():
         models.ReportByProject.objects.create(
             report=models.Report.objects.get(name=REPORT_NAMES[i]),
             start_date=start_date,
-            submit_date=start_date + datetime.timedelta(days=random.randint(0, 10)),
+            end_date=start_date +
+            datetime.timedelta(days=random.randint(0, 10)),
             state=random_choice(models.ReportByProject.STATES)[0],
             project=random_model_object(models.Project)
         )

@@ -8,7 +8,7 @@ def diff_list(before, after):
     '''
     list = []
     for x in before:
-        if not x in after:
+        if x not in after:
             list.append(x)
     return list
 
@@ -17,11 +17,11 @@ def get_questions(question, save_questions=False):
     '''
         TODO: docstring
     '''
-    pks = [int(question['pk']), ]
+    pks = [int(question['pk'])]
     if save_questions:
-        quest = Question.objects.get(pk=int(question['pk']))
-        quest.order = quest['order']
-        quest.save()
+        quest = Question.objects.filter(pk=int(question['pk'])).update(
+            order=question['order']
+        )
 
     if 'children' in question and question['children']:
         for key, value in question['children'].items():
@@ -37,8 +37,9 @@ def get_report_questions(template, save_questions=False):
     question_list = []
     for category in template:
         for subcategory in category['subcategories']:
-            for question in subcategory['questions']:
+            for question in subcategory['question']:
                 question_list += get_questions(question, save_questions)
+    print(question_list)
     return question_list
 
 
@@ -46,6 +47,7 @@ def get_question_children(question, category, subcategory, parent=1):
     '''
         TODO: docstring
     '''
+
     pk = int(question['pk'])
     quest = Question.objects.get(pk=pk)
     pks = [(pk, {
@@ -61,7 +63,8 @@ def get_question_children(question, category, subcategory, parent=1):
     if 'children' in question and question['children']:
         for key, value in question['children'].items():
             for question in value:
-                pks += get_question_children(question, category, subcategory, parent=pk)
+                pks += get_question_children(question, category, subcategory,
+                                             parent=pk)
 
     return pks
 
@@ -76,9 +79,10 @@ def build_report_object(*args, **kwargs):
     for category in categories:
         for subcategory in category['subcategories']:
             if subcategory['question']:
-                for question in subcategory['questions']:
+                for question in subcategory['question']:
                     report_questions.update(
-                        dict(get_question_children(question, category['name'], subcategory['name'])))
+                        dict(get_question_children(question, category['name'],
+                                                   subcategory['name'])))
 
     kwargs['report'].questions = report_questions
     kwargs['report'].save()
@@ -89,7 +93,7 @@ def delete_questions(*args, **kwargs):
         TODO: docstring
     '''
     questions_before = get_report_questions(kwargs['initial_template'])
-    questions_after = get_report_questions(kwargs['initial_template'], True)
+    questions_after = get_report_questions(kwargs['final_template'], True)
     diff = diff_list(before=questions_before, after=questions_after)
 
     if diff:

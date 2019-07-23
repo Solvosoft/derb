@@ -15,10 +15,6 @@ $(document).ready(function () {
     });
 
     $('#categories_modal').modal('hide');
-
-    $('#id_opening_date').datepicker({
-        'dateFormat': 'dd/mm/yy'
-    });
 });
 
 $(document).ready(function () {

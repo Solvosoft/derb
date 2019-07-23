@@ -16,13 +16,14 @@ class QuestionForm(forms.ModelForm):
 
     class Meta:
         model = Question
-        fields = ('text', 'help', 'required', 'id')
+        fields = ('text', 'help', 'required', 'id', 'order')
         widgets = {
             'text': forms.Textarea(attrs={
                 'rows': 6,
                 'placeholder': _('Write your question here'),
                 'class': 'form-control'
-            }),
+            }), 
+            'order':  forms.HiddenInput(),
             'help': forms.Textarea(attrs={
                 'cols': 80,
                 'rows': 5,
@@ -30,7 +31,6 @@ class QuestionForm(forms.ModelForm):
                 'class': 'form-control'
             })
         }
-        exclude = ('order',)
 
 
 class AnswerForm(forms.ModelForm):
@@ -68,6 +68,7 @@ class AnswerForm(forms.ModelForm):
         instance.display_text = instance.text
         return instance
 
+
 class ObservationForm(forms.ModelForm):
     class Meta:
         model = Observation
@@ -100,9 +101,10 @@ class SimpleTextAnswerForm(AnswerForm):
 class SimpleTextQuestionForm(QuestionForm):
     class Meta:
         model = Question
-        fields = ('text', 'help', 'id', 'required')
+        fields = ('text', 'help', 'id', 'required', 'order')
         widgets = {
             'text': CKEditorWidget(config_name='default'),
+            'order':  forms.HiddenInput(),
             'help': forms.Textarea(attrs={
                 'rows': 1,
                 'placeholder': 'Nombre para el Botón que muestra la información',
@@ -185,6 +187,7 @@ class IntegerQuestionForm(QuestionForm):
                 'placeholder': _('Write your question here'),
                 'class': 'form-control'
             }),
+            'order':  forms.HiddenInput(),
             'help': forms.Textarea(attrs={
                 'cols': 80,
                 'rows': 5,
@@ -193,7 +196,8 @@ class IntegerQuestionForm(QuestionForm):
             }),
 
         }
-        fields = ('text', 'help', 'required', 'minimum', 'maximum', 'steps')
+        fields = ('text', 'help', 'required', 'order', 'minimum',
+                  'maximum', 'steps')
 
 
 # Integer answer form
@@ -243,13 +247,14 @@ class UniqueSelectionQuestionForm(QuestionForm):
 
     class Meta:
         model = Question
-        fields = ('text', 'help', 'required', 'id')
+        fields = ('text', 'help', 'required', 'id', 'order')
         widgets = {
             'text': forms.Textarea(attrs={
                 'rows': 6,
                 'placeholder': _('Write your question here'),
                 'class': 'form-control'
             }),
+            'order':  forms.HiddenInput(),
             'help': forms.Textarea(attrs={
                 'cols': 80,
                 'rows': 5,
@@ -351,13 +356,14 @@ class TableQuestionForm(QuestionForm):
 
     class Meta:
         model = Question
-        fields = ('text', 'help', 'required', 'id')
+        fields = ('text', 'help', 'required', 'id', 'order')
         widgets = {
             'text': forms.Textarea(attrs={
                 'rows': 6,
                 'placeholder': _('Write your question here'),
                 'class': 'form-control'
             }),
+            'order':  forms.HiddenInput(),
             'help': forms.Textarea(attrs={
                 'cols': 80,
                 'rows': 5,
@@ -394,7 +400,8 @@ class TableQuestionAnswerForm(AnswerForm):
         display_text = ''
         for key, value in sorted(self.cleaned_data.items()):
             dictionary = dict(self.fields[key].choices)
-            display_text += '%s: %s\n' % (self.fields[key].label, list(dictionary.values())[int(value)])
+            display_text += '%s: %s\n' % (self.fields[key].label,
+             list(dictionary.values())[int(value)])
         instance.display_text = display_text
         return instance
 
@@ -436,13 +443,14 @@ class MultipleSelectionQuestionForm(QuestionForm):
 
     class Meta:
         model = Question
-        fields = ('text', 'help', 'required', 'id', 'widget')
+        fields = ('text', 'help', 'required', 'id', 'widget', 'order')
         widgets = {
             'text': forms.Textarea(attrs={
                 'rows': 6,
                 'placeholder': _('Write your question here'),
                 'class': 'form-control'
             }),
+            'order':  forms.HiddenInput(),
             'help': forms.Textarea(attrs={
                 'cols': 80,
                 'rows': 5,
@@ -467,7 +475,8 @@ class MultipleSelectionAnswerForm(AnswerForm):
             widget = int(extra['widget'])
 
             if widget == MultipleSelectionQuestionForm.CHECKBOX:
-                self.fields['text'] = forms.MultipleChoiceField(choices=catalog, widget=forms.CheckboxSelectMultiple)
+                self.fields['text'] = forms.MultipleChoiceField(choices=catalog,
+                 widget=forms.CheckboxSelectMultiple)
             elif widget == MultipleSelectionQuestionForm.MULTIPLE_SELECT:
                 self.fields['text'] = forms.MultipleChoiceField(choices=catalog)
             elif widget == MultipleSelectionQuestionForm.COMBOBOX:
@@ -518,21 +527,21 @@ class ModelInfoQuestionForm(UniqueSelectionQuestionForm):
 
     class Meta:
         model = Question
-        fields = ('text', 'help', 'id')
+        fields = ('text', 'help', 'id', 'order')
         widgets = {
-        'text': CKEditorWidget(
-config_name='default',
-attrs={
-                'placeholder': _('Write your question here')
-}),
-	'help': forms.Textarea(attrs={
+            'order': forms.HiddenInput(),
+            'text': CKEditorWidget(
+                config_name='default',
+                attrs={
+                    'placeholder': _('Write your question here')
+                }),
+            'help': forms.Textarea(attrs={
                 'cols': 80,
                 'rows': 5,
                 'placeholder': _('A little help never hurts'),
                 'class': 'form-control'
             })
-    }
-
+        }
 
     def __init__(self, *args, **kwargs):
         self.post = args
@@ -562,7 +571,7 @@ class QuestionModelInfoQuestionForm(ModelInfoQuestionForm):
 
     class Meta:
         model = Question
-        fields = ('text', 'help', 'id', 'required')
+        fields = ('text', 'help', 'id', 'required', 'order')
         widgets = {
             'text': CKEditorWidget(config_name='default'),
             'help': forms.Textarea(attrs={
@@ -571,6 +580,7 @@ class QuestionModelInfoQuestionForm(ModelInfoQuestionForm):
                 'placeholder': _('A little help never hurts'),
                 'class': 'form-control'
             }),
+            'order': forms.HiddenInput(),
             'required': forms.Select(attrs={
                 'class': 'form-control'
             })

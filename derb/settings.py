@@ -36,11 +36,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
     'report_builder',
     'presentation',
     'password_reset',
     'async_notifications',
-    'ckeditor'
+    'ckeditor',
+    "bootstrapform",
+    'datetimewidget',
+    'demo'
+
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -52,6 +57,9 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+
 ]
 
 ROOT_URLCONF = 'derb.urls'
@@ -167,16 +175,20 @@ CKEDITOR_CONFIGS = {
         'width': '100%',
         'toolbar': 'Basic',
         "toolbar_Basic": [['Source', '-', 'Save', 'NewPage', 'DocProps', 'Preview', 'Print', '-', 'Templates'],
-                          ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'],
-                          ['Find', 'Replace', '-', 'SelectAll', '-', 'SpellChecker', 'Scayt'],
+                          ['Cut', 'Copy', 'Paste', 'PasteText',
+                              'PasteFromWord', '-', 'Undo', 'Redo'],
+                          ['Find', 'Replace', '-', 'SelectAll',
+                              '-', 'SpellChecker', 'Scayt'],
                           ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
                            'HiddenField'],
-                          ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
+                          ['Bold', 'Italic', 'Underline', 'Strike',
+                              'Subscript', 'Superscript', '-', 'RemoveFormat'],
                           ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv',
                            '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr',
                            'BidiRtl'],
                           ['Link', 'Unlink', 'Anchor'],
-                          ['Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],
+                          ['Table', 'HorizontalRule', 'Smiley',
+                              'SpecialChar', 'PageBreak'],
                           ['Styles', 'Format', 'Font', 'FontSize'],
                           ['TextColor', 'BGColor'],
                           ['Maximize', 'ShowBlocks', '-', 'About']],
@@ -193,4 +205,5 @@ CKEDITOR_CONFIGS = {
     }
 }
 
-DATE_INPUT_FORMATS = ('%d-%m-%Y')
+#DATE_INPUT_FORMATS = ('%d-%m-%Y')
+INTERNAL_IPS = ['127.0.0.1']

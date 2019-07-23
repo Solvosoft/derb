@@ -56,6 +56,7 @@ REVIEWER_ORDERS = (
     (REV_SEVENTH, _('Seventh'))
 )
 
+
 @python_2_unicode_compatible
 class Project(models.Model):
     # TODO: documentation
@@ -128,7 +129,7 @@ class Report(models.Model):
     name = models.CharField(max_length=200)
     template = JSONField(default=DEFAULT_TEMPLATE)
     questions = JSONField(default={})
-    opening_date = models.DateField()
+    opening_date = models.DateTimeField()
 
     def __str__(self):
         return '%s' % self.name
@@ -153,8 +154,9 @@ class ReportByProject(models.Model):
         (RS_REVIEW, _('In review'))
     )
     report = models.ForeignKey(Report)
-    start_date = models.DateField(verbose_name=_('Opening date'))
-    submit_date = models.DateField(verbose_name=_('Submit date'))
+    start_date = models.DateTimeField(
+        verbose_name=_('Opening date'), null=True)
+    end_date = models.DateTimeField(verbose_name=_('End date'), null=True)
     state = models.SmallIntegerField(choices=STATES,
                                      default=RS_SUBMIT_PENDING)
     project = models.ForeignKey(Project)
@@ -174,7 +176,8 @@ class ReportByProject(models.Model):
     # TODO: Managers
 
     def __str__(self):
-        return '%s - %s - %s' % (self.project.description, self.start_date, self.submit_date)
+        return '%s - %s - %s' % (self.project.description, self.start_date,
+                                 self.end_date)
 
     class Meta:
         # TODO: permissions
@@ -232,7 +235,7 @@ class Question(models.Model):
     help = models.TextField(blank=True)
     answer_options = JSONField(blank=True, null=True)
     required = models.IntegerField(choices=REQUIREMENT_TYPE, default=0)
-    order = models.CharField(max_length=10, blank=True)
+    order = models.CharField(max_length=20, blank=True, null=True)
     auto = models.BooleanField(default=False)
 
     objects = models.Manager()
@@ -309,25 +312,3 @@ class RevisionTree(models.Model):
         # TODO: permissions
         verbose_name = _('Revision Tree')
         verbose_name_plural = _('Revision Tree')
-
-
-# Testing catalogs
-
-@python_2_unicode_compatible
-class City(models.Model):
-    code = models.CharField(max_length=2)
-    name = models.CharField(max_length=255)
-    location = models.CharField(max_length=255)
-
-    def __str__(self):
-        return '%s' % self.name
-
-
-@python_2_unicode_compatible
-class Country(models.Model):
-    code = models.CharField(max_length=2)
-    name = models.CharField(max_length=255)
-    capital = models.CharField(max_length=255)
-
-    def __str__(self):
-        return '%s' % self.name

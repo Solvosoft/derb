@@ -4,8 +4,10 @@ from django.utils.translation import ugettext as _
 
 from report_builder.models import Question, Answer, Report
 from report_builder.report_shortcuts import get_question_permission
+from datetimewidget.widgets import DateTimeWidget
 
 
+# FIXME:  it's required, maybe a orphan form
 class QuestionForm(forms.ModelForm):
     children = forms.CharField
 
@@ -25,7 +27,6 @@ class QuestionForm(forms.ModelForm):
                 'class': 'form-control'
             })
         }
-        exclude = ('order',)
 
 
 class AnswerForm(forms.ModelForm):
@@ -67,9 +68,23 @@ class AdminReportForm(forms.ModelForm):
         Form for creating and updating a Report object
         This is implementation is meant to be used in the admin report view
     '''
-    template = forms.CharField(widget=forms.HiddenInput, max_length=1024**3, initial=' ')
-    order = forms.CharField(widget=forms.HiddenInput, max_length=10, initial='-1')
+    template = forms.CharField(
+        widget=forms.HiddenInput, max_length=1024**3, initial=' ')
+    order = forms.CharField(widget=forms.HiddenInput,
+                            max_length=10, initial='-1')
 
     class Meta:
         model = Report
         exclude = ('type', 'questions')
+#        widgets = {
+#            'opening_date': DateTimeWidget(usel10n=True, bootstrap_version=3)
+#        }
+
+
+class NewReportForm(forms.ModelForm):
+    class Meta:
+        model = Report
+        fields = ('type', 'name', 'opening_date')
+#        widgets = {
+#            'opening_date': DateTimeWidget(usel10n=True, bootstrap_version=3)
+#        }

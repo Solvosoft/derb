@@ -6,10 +6,13 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 
-from report_builder.Question.tests import QuestionViewAdminTest, QuestionViewRespTest
+from report_builder.Question.tests import (QuestionViewAdminTest, 
+                                            QuestionViewRespTest)
 from report_builder.Question.tests import QuestionFormTest
 
-from report_builder.models import Question, Answer, Report, ReportByProject, ReportType, Project, City, Country
+from report_builder.models import (Question, Answer, Report, ReportByProject,
+                                    ReportType, Project)
+from demo.models import City, Country
 
 
 class TableQuestionViewAdminTest(QuestionViewAdminTest):
@@ -254,7 +257,7 @@ class TableQuestionViewRespTest(QuestionViewRespTest):
         ReportByProject.objects.create(
             report=report,
             start_date=datetime.date.today(),
-            submit_date=datetime.date.today() + datetime.timedelta(days=30),
+            end_date=datetime.date.today() + datetime.timedelta(days=30),
             project=project
         )
         Answer.objects.create(

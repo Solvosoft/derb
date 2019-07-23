@@ -1,4 +1,4 @@
-{% load jquery_tags %}
+{% load jquery_tags i18n %}
 
 <div id="question_{{ form_number }}" class="question_panel panel panel-primary question_border">
   <form method="post" id="question_{{ report.pk }}_{{ question.pk }}"
@@ -7,7 +7,6 @@
     {% csrf_token %}
     <input type="hidden" id="name" value="{{ name }}">
     <input type="hidden" id="question_id" value="{{ question.pk }}">
-
     {{ form.children }}
     {{ form.order }}
     {{ form.media }}
@@ -23,7 +22,7 @@
           {% if form.text.errors %}
             <div class="alert alert-warning alert-dismissable">
               <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-              <strong>Warning: </strong>{{ form.text.errors }}
+              <strong>{% trans 'Warning:' %} </strong>{{ form.text.errors }}
             </div>
           {% endif %}
         </div>
@@ -31,27 +30,26 @@
           <div class="pull-right">
             {# Save button (hidden) #}
             <button id="save_button" type="button" class="hidden" onclick="save_form('question_{{ form_number }}');">
-              <span class="glyphicon glyphicon-save"></span> Save
+              <span class="glyphicon glyphicon-save"></span> {% trans 'Save' %}
             </button>
 
             {# See/hide button #}
             <button type="button" class="btn btn-default btn-xs" onclick="see_hide(this);">
-              <span class="glyphicon glyphicon-eye-open"></span> See/Hide
+              <span class="glyphicon glyphicon-eye-open"></span> {% trans 'See/Hide' %}
             </button>
 
             {# Remove button #}
             <button type="button" class="btn btn-default btn-xs" id="question_delete" onclick="delete_question(this);">
-              <span class="glyphicon glyphicon-remove"></span> Remove
+              <span class="glyphicon glyphicon-remove"></span> {% trans 'Remove' %}
             </button>
 
             {# Question order #}
             <span id="order" class="btn btn-xs" title="{{ minimal_representation.help }}"
                   style="background-color: {{ minimal_representation.color }};">
               {% if question.order %}
-                asd
-                {{ question.order }}
+                 {{ question.order }}
               {% else %}
-                Undefined
+                #?
               {% endif %}
             </span>
           </div>

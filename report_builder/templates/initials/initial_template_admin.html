@@ -1,7 +1,10 @@
+{% load i18n %}
+
 <div id="message" class="hide">
     <div class="alert alert-danger alert-dismissable fade in">
         <button type="button" class="close" onclick="$('#message').addClass('hide')">&times;</button>
-        <strong>Atention:</strong> you cannot edit a report template that's already open
+        <strong>{% trans 'Atention:' %} </strong>
+        {% trans "you cannot edit a report template that's already open" %}
     </div>
 </div>
 
@@ -51,9 +54,14 @@
                     <td>{{ report.0.opening_date }}</td>
                     <td>
                         {% if report.1 %}
-                            <a href="{% url 'report_builder:admin_report' report.0.pk %}">Edit</a>
+                            <a href="{% url 'report_builder:admin_report' report.0.pk %}">
+                                {% trans 'Edit' %}</a>
+                                
+                            <a href="{% url 'report_builder:report_responsable' report.0.pk %}">
+                                {% trans 'Preview' %}</a>
                         {% else %}
-                            <a href="#accordion" onclick="$('#message').removeClass('hide');">Edit</a>
+                            <a href="#accordion" onclick="$('#message').removeClass('hide');">
+                            {% trans 'Edit' %}</a>
                         {% endif %}
                     </td>
                 </tr>

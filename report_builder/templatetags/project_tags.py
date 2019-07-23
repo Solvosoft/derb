@@ -13,7 +13,8 @@ def get_project(reportbyproj):
 
     project_type = ContentType.objects.get(app_label=app_name, model=name)
     klass = project_type.model_class()
-    setattr(reportbyproj, 'projects', klass.objects.get(pk=reportbyproj.project.object_id))
+    setattr(reportbyproj, 'projects', klass.objects.get(
+        pk=reportbyproj.project.object_id))
     return ''
 
 
@@ -22,8 +23,8 @@ def project_actions(text):
     return_value = 'No actions'
     if text:
         return_value = u'<div class="table-responsive"><table class="table table-bordered table-hover">' \
-                        '<tr class="success"><th class="text-center">Role</th> <th class="text-center">Name</th>' \
-                        '<th class="text-center">Date</th> <th class="text-center">Action</th> </tr>'
+            '<tr class="success"><th class="text-center">Role</th> <th class="text-center">Name</th>' \
+            '<th class="text-center">Date</th> <th class="text-center">Action</th> </tr>'
         for action in text.split('\n'):
             return_value += '<tr>'
             fields = action.split('\t')

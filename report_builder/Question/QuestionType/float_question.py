@@ -14,10 +14,12 @@ class FloatQuestionViewAdmin(IntegerQuestionViewAdmin):
     }
     evaluator = float
 
+
 class FloatQuestionViewResp(IntegerQuestionViewResp):
     template_name = 'responsable/float_question.html'
     name = 'float_question'
     form_class = FloatAnswerForm
+
 
 class FloatQuestionViewPDF(IntegerQuestionViewPDF):
     name = 'float_question'

@@ -1,12 +1,8 @@
+{% load i18n %}
+
 <ul class="sortable list-group">
     {% for question in subcategory.questions %}
         <li class="list-group-item">{{ question | safe }}</li>
     {% endfor %}
-    <li class="list-group-item">Drag and drop your questions here</li>
+    <li class="list-group-item">{% trans 'Drag and drop your questions here' %}</li>
 </ul>
-
-<script>
-    $(function () {
-        do_sortable();
-    });
-</script>

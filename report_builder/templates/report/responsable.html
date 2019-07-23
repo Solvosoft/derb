@@ -1,0 +1,143 @@
+{% extends 'derb/base.html' %}
+
+{% load static %}
+{% load project_tags %}
+
+{% block header_js %}
+    {{report|get_project}}
+    <link rel="stylesheet" href="{% static 'report_builder/css/jquery.dataTables.css' %}" 
+    type="text/css" />
+{% endblock %}
+
+{% block main_block %}
+
+<div id="mensaje">
+</div>
+<div id='mensaje_revisar' class='hidden col-md-8 col-md-offset-2 text-center'>
+	<div class="alert alert-info alert-dismissable">
+	  <button type="button" class="close" onclick="quitar_mensajes();">&times;</button>
+	  <h3 class="text-info">¿Está seguro de que desea enviar a revisión este report?</h3> 
+	  <p class="text-danger" style="font-size: 20px;">
+	  Recuerde verificar el estado del report para asegurarse de que esté completo</p><p>
+	  <span class="glyphicon glyphicon-info-sign"></span>
+	  <strong>Atención: </strong> Esta operación es <strong>irreversible</strong>, por lo que no podrá realizar cambios al report
+	   después de enviado a revisión
+	  </p><br>
+	  <button type="button" class="btn btn-info" onclick="quitar_mensajes();">Cancelar</button>  
+
+	  <a href="{%url 'enviar_revisar_informe' report.pk%}" data-ajax="true"  type="button" class="btn btn-success"
+	  data-success="revisado_fun" >
+			Enviar a Revisi&oacute;n
+	   </a>
+	</div>
+</div>
+
+<div class="well col-md-offset-3 col-md-5 text-center">
+	<p><strong class="text-primary">Proyecto:</strong> {{report.proyectos.nombre_de_proyecto}}</p>
+	<br/>
+	<p class="pull-left"> <strong class="text-primary">Fecha l&iacute;mite de entrega:</strong> {{report.fecha_fin}}</p> 
+	<p class="pull-right"><strong class="text-primary">Estado:</strong> <span id="estado"> {{report.get_estado_display}} </span></p> 
+</div>
+
+<div class="pull-right">
+	<div class="btn-group">
+		<a class="btn btn-info" id='refescar_estado' href="{%url 'informe_estado' report.pk%}" data-ajax="true" data-success="mostrar_estado"> 
+			<span class="glyphicon glyphicon-refresh"></span> Ver Estado </a>
+		<button  type="button" class="btn btn-success" onclick="revisar_informe();">
+			<span class="glyphicon glyphicon-share"></span> Enviar a Revisi&oacute;n
+		</button>
+		<a class="btn btn-success" href="{%url 'informe_pdf' report.pk%}" target="_blank"><span class="glyphicon glyphicon-file"></span> Ver en PDF</a>
+	</div>
+
+	<div id="errores_preg" class="panel panel-default hidden" style="margin-top: 10px;">
+		<div class="panel-heading">
+			<button type="button" class="close" data-dismiss="#errores_preg" onclick="$('#errores_preg').addClass('hidden');" aria-hidden="true">&times;</button>
+			<span id="info_estado"></span>
+		</div>
+		<div class="panel-body">
+			<ul class="list-group" id="pregs_errores">
+
+			</ul>
+		</div>
+	</div>
+</div>
+
+
+<!-- Categorias -->
+<nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
+	<div  class="container-fluid">
+		<ul id="ul_categorias_resp" class="nav nav-pills">
+			{%for category in categories%}
+			<li  {%if forloop.counter == 1%} class="active" {%endif%}>  
+				<a id="categ_{{category.name}}" href="#{{category.name}}"
+				data-toggle="tab" title="{{category.human_name}}" class="admin_categoria"> {{category.human_name|truncatewords:3 }}</a>
+			</li>
+			{%endfor%}
+			<li id="botones" class="pull-right btn-group">
+				<button id="btn_anterior" type="button" class="btn btn-default disabled" onclick="resp_anterior();">Anterior</button> 
+				<button id="btn_siguiente" type="button" class="btn btn-default" onclick="resp_siguiente();"> Siguiente</button>
+			</li>
+		</ul>
+		
+	</div>
+</nav>
+
+<!-- Subcategorias -->
+<div class="row">
+	<div class="col-md-2"></div>
+	<div  id="contenido_cat" class="col-md-12 tab-content">
+		{%for category in categories%}
+		<div id="{{category.name}}" class="tab-pane {%if forloop.counter == 1%} active {%endif%}" >
+			<ul id="ul_subcategorias" class="nav nav-tabs">
+				{%for subcat in category.subcategorias%}
+					<li {%if forloop.counter == 1%}class="active"{%endif%}>
+						<a id="categ_{{category.name}}_{{subcat.name}}" 
+						class="admin_subcategoria" href="#{{category.name}}_{{subcat.name}}" data-toggle="tab" title="{{subcat.nombre_humano}}">{{subcat.nombre_humano|truncatewords:3}}</a>
+					</li>
+				{%endfor%}
+			</ul>
+			<div id="contenido_sub" class="tab-content">
+				{%for subcat in category.subcategories %}
+			  		<div class="tab-pane {%if forloop.counter == 1%}active{%endif%}" id="{{category.name}}_{{subcat.name}}">
+			  			{% for question in subcat.questions%}
+							{{question|safe}}
+						{%endfor%}
+			  		</div>
+				{%endfor%}
+			</div>
+		</div>
+		{%endfor%}
+	</div>
+	
+
+
+<div class="modal fade" id="modal_contexto" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+                    {% trans 'Answer text when observation is done' %}</h4>
+			</div>
+			<div class="modal-body text-justify" id="id_body_modal_contexto"></div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-info" data-dismiss="modal" aria-hidden="true">
+					{% trans 'Close' %}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+{%endblock%}
+
+
+{% block body_js %}
+	{% load staticfiles %}
+		<script src="{% static 'report_builder/js/jquery.dataTables.min.js' %}"></script>
+		<script type="text/javascript" src="{% static 'django_ajax/js/jquery.ajax.min.js' %}"></script>
+		<script type="text/javascript"> ajax.DEFAULTS["onError"] = alert_django_ajax; </script>
+		<script type="text/javascript" src="{% static 'django_ajax/js/jquery.ajax-plugin.min.js' %}"></script>
+{%endblock%}

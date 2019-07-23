@@ -26,7 +26,7 @@ function submit_report_form() {
         data: form.serialize(),
         success: function (data) {
             if (parseInt(data) == 1) {
-                _alert('alert-succes', 'Report saved');
+                _alert('alert-success', 'Report saved');
             } else {
                 _alert('alert-danger', 'Report not saved');
             }
@@ -142,8 +142,8 @@ function get_children(html_id) {
 function process_question(question, prefix) {
     if (question.type != 'simple_text' && question.type != 'model_info') {
         question.order = prefix;
-        $($('#' + question.html_id + '#order')[0]).html(prefix);
-        $($('#' + question.html_id + '#id_order')[0]).val(prefix);
+        $($('#' + question.html_id + ' #order')[0]).html(prefix);
+        $($('#' + question.html_id + ' #id_order')[0]).val(prefix);
         var counter = 1;
         var suffix = '';
         for (var child in question.children) {
@@ -167,12 +167,11 @@ function put_question_number() {
     var counter = 1;
     for (var x = 0; x < categories.length; x++) {
         for (var y = 0; y < categories[x].subcategories.length; y++) {
-            for (var z = 0; z < categories[x].subcategories[y].questions.length; z++) {
+            for (var z = 0; z < categories[x].subcategories[y].question.length; z++) {
+                process_question(categories[x].subcategories[y].question[z], counter);
 
-                process_question(categories[x].subcategories[y].questions[z], counter);
-
-                if (categories[x].subcategories[y].questions[z].type != 'simple_text' &&
-                    categories[x].subcategories[y].questions[z].type != 'model_info') {
+                if (categories[x].subcategories[y].question[z].type != 'simple_text' &&
+                    categories[x].subcategories[y].question[z].type != 'model_info') {
                     counter += 1;
                 }
 
@@ -232,26 +231,24 @@ function save_all_questions() {
     categories = [];
     save_ckeditor();
     var json_data;
+    save_inmediatly = true;
 
-    var save_inmediatly = true;
+    for(var y=0; y<question_pool.length; y++){
+		question_pool[y].saving = true;
+	}
+
+
     for (var qu = 0; qu < question_pool.length; qu++) {
-        question_pool[qu].saving = true;
-    }
-
-    for (var q = 0; q < question_pool.length; q++) {
-        if (question_pool[q].saving) {
-            if ($('#' + question_pool[q].html_id).length != 0) {
+        if(question_pool[qu].saving ){
+            if ($('#' + question_pool[qu].html_id).length != 0) {
                 save_inmediatly = false;
-                save_form(question_pool[q].html_id, true, false);
+                save_form(question_pool[qu].html_id, true, false);
             } else {
-                remove(question_pool[q].html_id);
+                remove(question_pool[qu].html_id);
             }
         }
     }
-
-    if (save_inmediatly) {
-        save_questions();
-    }
+    if(save_inmediatly) save_questions();
 }
 
 function get_json_from_form(question_id) {

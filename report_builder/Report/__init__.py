@@ -18,7 +18,8 @@ def get_current_report(type=None, app_name=None, name=None):
         if app_name is None or name is None:
             raise Exception('No report type provided')
         type = ReportType.objects.get(app_name=app_name, name=name)
-    return Report.objects.filter(type=type, opening_date__lte=date.today()).order_by('opening_date').last()
+    return Report.objects.filter(type=type, opening_date__lte=date
+                                 ).order_by('opening_date').last()
 
 
 def get_manager(current):
@@ -32,14 +33,19 @@ def get_manager(current):
 
 
 def get_project_by_responsable(user, responsable=True):
-    ctype = ContentType.objects.get(app_label='report_builder', model='reportbyproject')
+    ctype = ContentType.objects.get(
+        app_label='report_builder', model='reportbyproject')
     klass = ctype.model_class()
-    return [t.project.id for t in klass.objects.filter(report__type__app_name='report_builder', report__type__name = 'report')]
+    return [t.project.id for t in klass.objects.filter(
+        report__type__app_name='report_builder', report__type__name='report')]
+
 
 def get_project_by_advisor():
     pass
 
-def get_reports_by_user(user, _type=RESPONSABLE, report_type=None, current=False):
+
+def get_reports_by_user(user, _type=RESPONSABLE, report_type=None,
+                        current=False):
     '''
         TODO: docstring
     :return:
@@ -73,18 +79,20 @@ def get_reports_by_user(user, _type=RESPONSABLE, report_type=None, current=False
                 user, responsable=False)
 
             return_value['responsable'] += list(
-                manager.filter(report__type=rtype, project__object_id__in=proj_responsable))
+                manager.filter(report__type=rtype,
+                               project__object_id__in=proj_responsable))
             return_value['collaborator'] += list(
-                manager.filter(report__type=rtype, project__object_id__in=proj_collaborator))
+                manager.filter(report__type=rtype,
+                               project__object_id__in=proj_collaborator))
         else:
             projects_pks = project.get_project_by_advisor(user)
             result = manager.filter(
                 report__type=rtype, project__object_id__in=projects_pks)
-            ordered_result = result.order_by('-submit_date', 'project')
+            ordered_result = result.order_by('-end_date', 'project')
             result = []
             today = date.today()
             for res in ordered_result:
-                if res.submit_date.year >= today.year - 2:
+                if res.end_date.year >= today.year - 2:
                     result.append(res)
 
             return_value['advisor'] += list(result)
@@ -92,17 +100,20 @@ def get_reports_by_user(user, _type=RESPONSABLE, report_type=None, current=False
     return return_value
 
 
-def report_conflict(project_pk, report_type, start_date, submit_date, exclude=None):
+def report_conflict(project_pk, report_type, start_date, end_date,
+                    exclude=None):
     '''
         TODO: docstring
     '''
     conflict = False
 
-    query = Q(start_date__gte=start_date, submit_date__lte=submit_date) | \
-        Q(start_date__gte=start_date, start_date__lte=submit_date, submit_date__gte=submit_date) | \
-        Q(Q(submit_date__gte=start_date), start_date__lte=start_date, submit_data__gte=submit_date) | \
-        Q(start_date__lte=start_date, submit_date__gte=start_date,
-          submit_date__lte=submit_date)
+    query = Q(start_date__gte=start_date, end_date__lte=end_date) | \
+        Q(start_date__gte=start_date, start_date__lte=end_date,
+          end_date__gte=end_date) | \
+        Q(Q(end_date__gte=start_date), start_date__lte=start_date,
+          submit_data__gte=end_date) | \
+        Q(start_date__lte=start_date, end_date__gte=start_date,
+          end_date__lte=end_date)
 
     reportbyproj = ReportByProject.objects.filter(
         query, project__object_id=project_pk, report__type=report_type)

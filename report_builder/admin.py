@@ -9,32 +9,40 @@ from report_builder.models import Answer
 from report_builder.models import Observation
 
 from report_builder.view_registration import register_admin_views
-from report_builder.catalogs import register_test_catalogs
+
 
 class ProjectAdmin(admin.ModelAdmin):
     search_fields = ('description', 'object_id')
     list_display = ('description',)
 
+
 class ReportTypeAdmin(admin.ModelAdmin):
     list_display = ('app_name', 'name', 'type')
+
 
 class ReportAdmin(admin.ModelAdmin):
     list_display = ('name', 'opening_date')
 
+
 class ReportByProjectAdmin(admin.ModelAdmin):
     search_fields = ('project__description', 'project__object_id')
-    list_display = ('project', 'start_date', 'submit_date', 'state', 'make_another')
+    list_display = ('project', 'start_date',
+                    'end_date', 'state', 'make_another')
+
 
 class ReviewerAdmin(admin.ModelAdmin):
     list_display = ('user', 'order', 'state')
     ordering = ('order',)
 
+
 class QuestionAdmin(admin.ModelAdmin):
     list_filter = ('report',)
+
 
 class AnswerAdmin(admin.ModelAdmin):
     list_display = ('user', 'report', 'question')
     filter = ('question__report')
+
 
 class ObservationAdmin(admin.ModelAdmin):
     raw_id_fields = ('reviewer', 'answer')
@@ -52,6 +60,3 @@ admin.site.register(Observation, ObservationAdmin)
 # Views registration
 # [admin views]
 register_admin_views()
-
-# Register test catalogs
-register_test_catalogs()

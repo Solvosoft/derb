@@ -2,7 +2,8 @@ from django.contrib.contenttypes.models import ContentType
 
 
 def get_project_type_class(type):
-    project_type = ContentType.objects.get(app_label=type.app_name, model=type.name)
+    project_type = ContentType.objects.get(
+        app_label=type.app_name, model=type.name)
     return project_type.model_class()
 
 
@@ -62,11 +63,15 @@ def get_filtered_project(kwargs, filters):
     return base.objects.filter(**parameters)
 
 
-def is_responsable_of_project(reportbyproject, user, responsable=None):
+def is_responsable_of_project(request, reportbyproject, user,
+                              responsable=None):
     '''
         Checks if an user is the responsable of the given report by project
     '''
     project_class = get_project_class(reportbyproject)
     project_instance = project_class()
-    project_list = project_instance.get_projects_by_responsable(user, responsable=responsable)
+    print(project_instance)
+    project_list = project_instance.get_projects_by_responsable(
+        user,
+        responsable=responsable)
     return reportbyproject.project.object_id in project_list
